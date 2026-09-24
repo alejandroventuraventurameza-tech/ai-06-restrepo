@@ -1,0 +1,79 @@
+Please formalize https://www.nber.org/papers/w22252 (NBER Working
+Paper 22252, revised June 2017) using the paper-formalization skill
+and workflow in this repository.
+Use AR18RaceManMachine as the paper folder.
+
+---
+SCOPE AND RULES FOR THIS RUN (from the maintainer; they narrow the task, they do not replace it)
+
+Source pin. Use the NBER June 2017 revision, 87 pages, PDF metadata title
+"man_vs_machine_june_6_2017.dvi", SHA-256
+441d01202afd56ef8002fc24ffc2beb51191741c0b5accb11d2534620dd616b7.
+All numbering below refers to that file.
+
+Selected target (maintainer selection). Exactly one source result:
+Proposition 3 ("Impact of technology on productivity, wages, and factor prices",
+Section 2.2, p. 13 of the PDF numbering printed as 13), with every clause of both bullets:
+  (P3.a) regime I* = I < Ĩ: the ordering W/γ(I*) > R > W/γ(N); the formula for
+         d ln Y|_{K,L} in dI and dN; "both technologies increase productivity";
+         the formulas for d ln W and d ln R; "a higher N always increases the
+         equilibrium wage but may reduce the rental rate"; "a higher I always
+         increases the rental rate but may reduce the equilibrium wage"; and the
+         sentence beginning "In particular, there exists ..." with its exact
+         quantifier structure, strict inequalities and both directions as printed.
+  (P3.b) regime I* = Ĩ < I: the equality/ordering of W/γ(I*), R, W/γ(N); the
+         formula for d ln Y|_{K,L}; the formulas for d ln W and d ln R with σ^free;
+         "an increase in I ... has no effect on factor prices".
+Governing prerequisites only as needed by P3: the environment of Section 2.1,
+equations (1)–(3), (5)–(12), Assumptions 1–3, the definitions of σ̂, B, Λ_I, Λ_N,
+ε_L, ε_γ, σ^free, s_L from Proposition 2, and relations (B9)–(B10) from the proof
+in Appendix B. Do NOT formalize Propositions 4–9 or the dynamic sections.
+
+Conditions and configurations you must include explicitly (list each one in the
+Spec docstring, and say which hypothesis of the Lean statement encodes it):
+  C1  Assumption 1: γ strictly increasing. If you need continuity or
+      differentiability of γ, add it as a named, declared extra assumption.
+  C2  Assumption 2 has two branches, (i) η → 0 and (ii) ζ = 1. State which
+      branch(es) the Lean statement covers and how the limit η → 0 is represented.
+      Do not drop a branch silently.
+  C3  Assumption 3: K below the capital level at which R = W/γ(N).
+  C4  σ̂ ∈ (0, ∞). The formulas divide by 1 − σ̂: cover σ̂ < 1 and σ̂ > 1, and
+      handle σ̂ = 1 explicitly (a limit version, or a declared exclusion).
+  C5  ε_L > 0, labor supply L = L^s(W/(RK)) increasing.
+  C6  Regimes: (a) I* = I < Ĩ, (b) I* = Ĩ < I, and (c) the boundary I* = I = Ĩ,
+      which the paper leaves out (footnote 15). Say what the Lean statement does
+      with (c).
+  C7  Domains: I ∈ (N−1, N]; K, L, W, R, Y > 0; η ∈ (0,1); B̃ > 0.
+  C8  The differentials d ln Y|_{K,L}, d ln W, d ln R: state how they are
+      represented (derivatives of equilibrium objects with respect to I or N, or a
+      linearized system). If you use anything other than actual derivatives of the
+      equilibrium, report it as a change of domain/representation.
+
+Hard rules.
+  R1  After the intake/audit phase has produced the source inventory and the
+      extracted passages for the target, do NOT re-read the full paper. Consult
+      only the extracted passages (Section 2, pp. 5–14 of the printed numbering, and
+      the proof of Proposition 3 in Appendix B, pp. B-12–B-13).
+  R2  No abstract predicates that empty a statement: no structure fields or
+      hypotheses of the form `name : ... -> Prop` (or `→ Prop`) standing in for
+      an equation, an equilibrium condition or a conclusion. Every equilibrium
+      condition and every conclusion must be a concrete equation or inequality
+      over ℝ (integrals, rpow, exp, log as needed).
+  R3  Never add the desired conclusion, or an equivalent of it, as a hypothesis.
+  R4  For every clause of P3, the final status must be exactly one of:
+      proved exactly as printed / proved after a named added assumption or
+      domain change / false as printed (give an explicit counterexample, checked
+      in Lean if possible) / open (give the exact blocker).
+  R5  Do not stop after a single `lake build`. Rebuild and repair until the
+      build succeeds.
+
+This session (reasoning effort: high). Do source pinning, audit, inventory,
+the target's Spec statements and the paper interface, and get them to compile.
+Proof bodies may still be `sorry` in this session ONLY. Proofs come in the next
+session.
+
+At the end, report in the chat: (1) every file you created or changed, with its
+path; (2) the Lean statement of each Spec, and which C1–C8 hypothesis encodes
+which condition; (3) every place where the source was ambiguous, with page and
+equation number, and the reading you chose; (4) every assumption you added that
+the paper does not state; (5) the status of each P3 clause.

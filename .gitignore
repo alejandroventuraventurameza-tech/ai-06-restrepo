@@ -47,3 +47,8 @@ DNI*
 # Do not let any rule above hide files inside the generated lean/ folder;
 # lean/.gitignore (generated) decides what is ignored there.
 !lean/**
+
+# Raw Codex session transcripts (can be large; curated excerpts go to prompts.md)
+extra/lean-run/*.jsonl
+# Snapshots of the in-progress AppliedModelingLib folder (for review only; lean/ gets the final copy)
+extra/lean-run/*.tgz

@@ -1,0 +1,19 @@
+Continue the AR18RaceManMachine formalization in this repository (paper folder
+papers/AR18RaceManMachine). Same source pin, same selected target (Proposition 3,
+clauses P3.a and P3.b), and same conditions C1–C8 and hard rules R1–R5 as the
+previous session; they are recorded in the paper folder and in the scope
+addendum of the previous session.
+
+This session (reasoning effort: xhigh). Replace every `sorry` in the target's proof
+endpoints with checked proofs. Do not change a Spec in order to make a proof go
+through. If a Spec has to change, stop, explain why, and give the exact source passage.
+Rebuild and repair until `lake build` succeeds with no `sorry`, `admit` or new
+`axiom`. Then continue the repository workflow as far as it applies to
+this scope: audit, closeout, validation report, and the paper_contribution
+check.
+
+At the end, report in the chat: (1) files created or changed; (2) the final status
+of each P3 clause under R4; (3) any Spec you changed, and why; (4) the output of
+the last `lake build` and of
+`python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`;
+(5) where the source was ambiguous or, in your judgment, wrong.
