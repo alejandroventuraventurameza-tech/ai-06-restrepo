@@ -414,19 +414,85 @@ We read them: each is a transparent conjunction of concrete equations and inequa
 The threshold clause is unchanged. The agent again noted that its negative side lies outside Assumption 3, and again widened the
 quantifier to all positive capital levels instead of flagging it. It still does not detect the direction problem. Not told (decision A.2).
 
-### B.6 — Session 2 · effort `xhigh` (proofs) — final prompt, as sent
+### B.6 — Session 2 · effort `high` (proofs) — final prompt, as sent
 
-Before use, B.2 was revised with one paragraph ("Work clause by clause…") so that partial progress survives another usage
-interruption. Nothing else changed and nothing hints at the threshold. Verbatim text in `extra/lean-run/session2_prompt.txt`:
+Changes from B.2 before use:
+1. A paragraph "Work clause by clause…", so that partial progress survives another usage interruption.
+2. **Effort `high` instead of `xhigh`** (D1 updated), because the daily quota ran out again right after session 1b.
+3. It runs as a **new** Codex session, not `resume`, to avoid re-sending the long context of sessions 1a and 1b. That is why the
+   prompt is self-contained: it repeats verbatim the scope, C1–C8 and R1–R5 of B.1.
+
+Nothing hints at the threshold. Verbatim text in `extra/lean-run/session2_prompt.txt`, launched with
+`codex -m gpt-5.6-sol -c model_reasoning_effort=high "$(cat session2_prompt.txt)"`:
 
 ````text
 Continue the AR18RaceManMachine formalization in this repository (paper folder
-papers/AR18RaceManMachine). Same source pin, same selected target (Proposition 3,
-clauses P3.a and P3.b), and same conditions C1–C8 and hard rules R1–R5 as the
-previous session; they are recorded in the paper folder and in the scope
-addendum of the previous session.
+papers/AR18RaceManMachine). This is a new session: the statement phase is finished
+(Spec `proposition3Spec` in PaperInterface.lean, compiled; the proof endpoint in
+ProofInterface.lean is the only `sorry`). Read the paper folder (PaperInterface.lean,
+docs/FORMALIZATION_WORKING_MEMO.md, docs/SOURCE_INVENTORY.md, status.json) to recover
+the state; do not re-read the full paper (rule R1 below).
 
-This session (reasoning effort: xhigh). Replace every `sorry` in the target's proof
+Source pin: NBER WP 22252, June 2017 revision, SHA-256
+441d01202afd56ef8002fc24ffc2beb51191741c0b5accb11d2534620dd616b7 (already recorded).
+
+Selected target (maintainer selection). Exactly one source result:
+Proposition 3 ("Impact of technology on productivity, wages, and factor prices",
+Section 2.2, p. 13 of the PDF numbering printed as 13), with every clause of both bullets:
+  (P3.a) regime I* = I < Ĩ: the ordering W/γ(I*) > R > W/γ(N); the formula for
+         d ln Y|_{K,L} in dI and dN; "both technologies increase productivity";
+         the formulas for d ln W and d ln R; "a higher N always increases the
+         equilibrium wage but may reduce the rental rate"; "a higher I always
+         increases the rental rate but may reduce the equilibrium wage"; and the
+         sentence beginning "In particular, there exists ..." with its exact
+         quantifier structure, strict inequalities and both directions as printed.
+  (P3.b) regime I* = Ĩ < I: the equality/ordering of W/γ(I*), R, W/γ(N); the
+         formula for d ln Y|_{K,L}; the formulas for d ln W and d ln R with σ^free;
+         "an increase in I ... has no effect on factor prices".
+Governing prerequisites only as needed by P3: the environment of Section 2.1,
+equations (1)–(3), (5)–(12), Assumptions 1–3, the definitions of σ̂, B, Λ_I, Λ_N,
+ε_L, ε_γ, σ^free, s_L from Proposition 2, and relations (B9)–(B10) from the proof
+in Appendix B. Do NOT formalize Propositions 4–9 or the dynamic sections.
+
+Conditions and configurations you must include explicitly (list each one in the
+Spec docstring, and say which hypothesis of the Lean statement encodes it):
+  C1  Assumption 1: γ strictly increasing. If you need continuity or
+      differentiability of γ, add it as a named, declared extra assumption.
+  C2  Assumption 2 has two branches, (i) η → 0 and (ii) ζ = 1. State which
+      branch(es) the Lean statement covers and how the limit η → 0 is represented.
+      Do not drop a branch silently.
+  C3  Assumption 3: K below the capital level at which R = W/γ(N).
+  C4  σ̂ ∈ (0, ∞). The formulas divide by 1 − σ̂: cover σ̂ < 1 and σ̂ > 1, and
+      handle σ̂ = 1 explicitly (a limit version, or a declared exclusion).
+  C5  ε_L > 0, labor supply L = L^s(W/(RK)) increasing.
+  C6  Regimes: (a) I* = I < Ĩ, (b) I* = Ĩ < I, and (c) the boundary I* = I = Ĩ,
+      which the paper leaves out (footnote 15). Say what the Lean statement does
+      with (c).
+  C7  Domains: I ∈ (N−1, N]; K, L, W, R, Y > 0; η ∈ (0,1); B̃ > 0.
+  C8  The differentials d ln Y|_{K,L}, d ln W, d ln R: state how they are
+      represented (derivatives of equilibrium objects with respect to I or N, or a
+      linearized system). If you use anything other than actual derivatives of the
+      equilibrium, report it as a change of domain/representation.
+
+Hard rules.
+  R1  After the intake/audit phase has produced the source inventory and the
+      extracted passages for the target, do NOT re-read the full paper. Consult
+      only the extracted passages (Section 2, pp. 5–14 of the printed numbering, and
+      the proof of Proposition 3 in Appendix B, pp. B-12–B-13).
+  R2  No abstract predicates that empty a statement: no structure fields or
+      hypotheses of the form `name : ... -> Prop` (or `→ Prop`) standing in for
+      an equation, an equilibrium condition or a conclusion. Every equilibrium
+      condition and every conclusion must be a concrete equation or inequality
+      over ℝ (integrals, rpow, exp, log as needed).
+  R3  Never add the desired conclusion, or an equivalent of it, as a hypothesis.
+  R4  For every clause of P3, the final status must be exactly one of:
+      proved exactly as printed / proved after a named added assumption or
+      domain change / false as printed (give an explicit counterexample, checked
+      in Lean if possible) / open (give the exact blocker).
+  R5  Do not stop after a single `lake build`. Rebuild and repair until the
+      build succeeds.
+
+This session (reasoning effort: high). Replace every `sorry` in the target's proof
 endpoints with checked proofs. Do not change a Spec in order to make a proof go
 through. If a Spec has to change, stop, explain why, and give the exact source passage.
 Rebuild and repair until `lake build` succeeds with no `sorry`, `admit` or new
@@ -436,7 +502,7 @@ check.
 
 Work clause by clause. Put one proved lemma per P3 clause in the implementation
 layer, and keep the build green after each one, so that partial progress survives
-an interruption (usage limits have already interrupted this run once). If a clause
+an interruption (usage limits have already interrupted this run twice). If a clause
 cannot be proved, or is false as printed, leave it as a separately named item with its
 status under R4 (for a false clause, give a counterexample and, if possible, prove its
 negation in Lean) and move on to the next clause.
@@ -473,7 +539,7 @@ _Model, date, raw answer: to be filled._
 
 | Id | What the issue asks | What we did | Why |
 |---|---|---|---|
-| D1 | `gpt-5.6-sol` with effort **`xhigh`** | intake/statements phase at **`high`**; proof phase at `xhigh` | quota limit on Alejandro's account; `xhigh` goes where it matters most (proofs) |
+| D1 | `gpt-5.6-sol` with effort **`xhigh`** | **every session at `high`**, statements (1a, 1b) and proofs (2); `xhigh` was never used | the daily Codex quota ran out twice (2026-09-23 ~19:00, 2026-09-24 ~03:25); Alejandro saw that `xhigh` uses far more tokens, and with the deadline at 22:00 an interrupted `xhigh` run would leave nothing. Planned at first: `high` for statements and `xhigh` for proofs. Decided by Alejandro on 2026-09-24 03:29 |
 | D2 | give the agent the task text (issue §2) | the task text is sent **verbatim**, followed by a scope addendum: 2–3 target results and rules (no re-reading the full source after the audit phase; conditions enumerated; no abstract `... -> Prop` fields; build until it closes; report ambiguities) | a full-paper run would not close before the deadline; the addendum narrows the scope and does not replace the task |
 
 ---

@@ -51,7 +51,7 @@ Optional in the guide, kept above the floor: `extensions.md`, simulation/SymPy c
 - [!] Model and effort:
   > use **GPT-5.6 Sol** (`gpt-5.6-sol`) with reasoning effort set to **`xhigh`**.
 
-  **Deviation (declared):** statement/intake phase run at `high` because of quota; `xhigh` reserved for the proof phase. Reason and exact split recorded in `prompts.md`.
+  **Deviation (declared, D1):** every session run at `high` (statements and proofs) because the daily quota ran out twice; `xhigh` never used. See `prompts.md` D1.
 - [ ] Run the agent from the root of the AppliedModelingLib clone (`git pull` first — EconCSLib was renamed).
 - [ ] Give it the task text **verbatim**:
   ```text
