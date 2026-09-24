@@ -1,0 +1,544 @@
+% =====================================================================
+% Tutorial: Acemoglu & Restrepo, "The Race Between Machine and Man"
+% NBER WP 22252, revised June 2017 (87 pp). All equation, page and
+% result numbers refer to that version.
+% Part I: reading questions, the task framework and the static model.
+% Part II (Sections 3-5 of the paper) is appended in a later block.
+% Compile: latexmk -pdf tutorial.tex
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}\usepackage{microtype}}{}
+\IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands,es-nodecimaldot]{babel}}{}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% --- theorem-like environments (Spanish names) ---
+\theoremstyle{definition}
+\newtheorem{definicion}{Definición}[section]
+\newtheorem{supuesto}{Supuesto}
+\renewcommand{\thesupuesto}{\arabic{supuesto}}
+\theoremstyle{plain}
+\newtheorem{proposicion}{Proposición}
+\newtheorem{lema}[definicion]{Lema}
+\theoremstyle{remark}
+\newtheorem{observacion}[definicion]{Observación}
+\numberwithin{equation}{section}
+\providecommand{\proofname}{Demostración}
+\renewcommand{\proofname}{Demostración}
+\providecommand{\contentsname}{Índice}
+\renewcommand{\contentsname}{Índice}
+
+% --- boxes ---
+\newtcolorbox{nota}[1][]{colback=blue!3,colframe=blue!40!black,boxrule=0.5pt,arc=2pt,
+  fonttitle=\bfseries\small,title={#1}}
+\newtcolorbox{alerta}[1][]{colback=red!3,colframe=red!50!black,boxrule=0.5pt,arc=2pt,
+  fonttitle=\bfseries\small,title={#1}}
+\newtcolorbox{intuicion}{colback=green!3,colframe=green!35!black,boxrule=0.5pt,arc=2pt,
+  fonttitle=\bfseries\small,title={Intuición}}
+
+% --- macros ---
+\newcommand{\sh}{\hat\sigma}
+\newcommand{\It}{\tilde I}
+\newcommand{\Is}{I^{*}}
+\newcommand{\Bt}{\tilde B}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\Kl}{\underline K}
+\newcommand{\Kb}{\overline K}
+\newcommand{\sfree}{\sigma^{\mathrm{free}}}
+\newcommand{\eps}{\varepsilon}
+
+\title{\textbf{La carrera entre la máquina y el hombre}\\[2pt]
+\large Tutorial de lectura de Acemoglu \& Restrepo (NBER WP 22252, junio 2017)\\[2pt]
+\normalsize Parte I: preguntas de lectura, marco de tareas y modelo estático}
+\author{Alejandro Ventura \\ \small IA y Modelamiento Económico, UP 2026-II — repositorio \texttt{ai-06-restrepo}}
+\date{Septiembre 2026}
+
+\begin{document}
+\maketitle
+
+\begin{nota}[Versión leída y convenciones]
+Todas las referencias (páginas, ecuaciones, proposiciones) son a la \textbf{versión NBER revisada en junio de 2017}
+(87 pp., SHA-256 en \texttt{paper/README.md}), que es la fijada para la corrida de Lean. La versión publicada
+(AER 108(6), 2018) invierte el título y puede numerar distinto. Cuando este tutorial dice ``(ec.~12)'' se refiere a la
+ecuación (12) del paper; las ecuaciones propias de este documento llevan la numeración con sección, p.~ej.\ (3.4).
+Las afirmaciones marcadas como \emph{preliminares} se verifican con rigor en \texttt{derivation/} y \texttt{sim/}.
+\end{nota}
+
+\tableofcontents
+
+% =====================================================================
+\section{Las cinco preguntas de lectura}
+% =====================================================================
+
+Primera respuesta. Se afinan al cierre de la Parte II y en el \texttt{README.md}.
+
+\paragraph{1. ¿Cuál es la pregunta del paper (no el tema)?}
+¿Puede una economía en la que el capital reemplaza continuamente al trabajo en tareas que antes hacía el trabajo
+(automatización) crecer de manera balanceada con \emph{participación laboral y empleo estables}? Y si puede,
+¿qué fuerzas de mercado impiden que el trabajo se vuelva redundante, y bajo qué condiciones fallan?
+El tema es ``automatización y mercado laboral''. La pregunta es si la automatización es \emph{autolimitante}.
+
+\paragraph{2. ¿Cuál es la respuesta?}
+En tres capas.
+(i) \emph{Estática, capital fijo, tecnología exógena}: la automatización reduce la participación laboral y el
+empleo y \emph{puede} reducir el salario; la creación de tareas nuevas hace lo contrario (Props.~2–3).
+(ii) \emph{Dinámica, capital endógeno}: el capital se ajusta hasta devolver la tasa de alquiler a su valor de largo
+plazo, de modo que las ganancias de productividad terminan en el factor inelástico, el trabajo: a largo plazo la
+automatización \emph{sube} el salario pero sigue bajando la participación laboral (Prop.~5).
+(iii) \emph{Tecnología endógena (cambio técnico dirigido)}: si el costo de alquiler del capital es muy bajo
+respecto del salario, el largo plazo es automatización total (el ``equilibrio de los caballos''); si no, existe una
+senda de crecimiento balanceado estable en la que automatización y tareas nuevas avanzan a la par. La estabilidad
+viene de que la automatización abarata el trabajo efectivo, lo que desincentiva más automatización e incentiva
+tareas nuevas (Prop.~6).
+
+\paragraph{3. ¿Cómo llegan y se sigue la conclusión del análisis?}
+Combinan un modelo de tareas (continuo de tareas, un umbral que separa capital de trabajo) con cambio técnico
+dirigido. La estática comparativa del modelo estático se sigue por diferenciación directa bajo el Supuesto~2, con
+una excepción importante que discutimos en la Sección~\ref{sec:trampa}: la frase de la Prop.~3 sobre el umbral de
+capital $\Kb$ no se demuestra en el Apéndice~B y, tal como está impresa, parece invertida. La Parte~II revisa si
+los resultados dinámicos se siguen.
+
+\paragraph{4. Contribución marginal frente a predecesores.}
+\begin{itemize}[nosep]
+  \item \textbf{Zeira (1998)}: automatización sin tareas nuevas; es un caso particular de este modelo. Sin la segunda
+        tecnología, la participación laboral tiende a cero. AR añaden la fuerza compensatoria.
+  \item \textbf{Acemoglu \& Autor (2011)}: modelo de tareas estático y exógeno. AR le dan elasticidad general entre
+        tareas, un umbral que depende a la vez de precios y tecnología, capital endógeno y dirección endógena de la
+        innovación.
+  \item \textbf{Acemoglu (2002, 2003)}: cambio técnico dirigido con tecnologías que \emph{aumentan factores}; ahí la
+        estabilidad exige elasticidad capital--trabajo menor que 1. En AR la estabilidad no requiere esa condición:
+        viene de la reasignación de tareas.
+  \item \textbf{Hémous \& Olsen (2015)}: automatización e innovación horizontal, pero sin una fuerza que corrija el
+        desbalance en el largo plazo.
+\end{itemize}
+
+\paragraph{5. ¿Qué me parece poco convincente y por qué? (primera lista)}
+\begin{enumerate}[nosep,label=(\alph*)]
+  \item \textbf{El umbral $\Kb$ de la Prop.~3.} Impreso: ``existe $\Kb>\Kl$ tal que un aumento en $I$ sube el salario
+        si $K<\Kb$ y lo baja si $K>\Kb$''. Pero el Supuesto~3 ya impone $K<\Kl$, y el propio texto dice que la
+        ganancia de productividad es pequeña cuando el capital es escaso, no cuando es abundante. Ver
+        Sección~\ref{sec:trampa}.
+  \item \textbf{Homotecia de filo de navaja (Supuesto~2).} Las fórmulas cerradas usan $\eta\to0$ (un límite) o
+        $\zeta=1$. El caso general (Apéndice A) solo afirma resultados cualitativos bajo el Supuesto~2$'$.
+  \item \textbf{Las tareas nuevas destruyen mecánicamente la tarea más vieja.} La ventana $[N-1,N]$ tiene medida 1:
+        subir $N$ agrega una tarea laboral arriba \emph{y} elimina una tarea automatizada abajo. Parte de la ganancia
+        de participación laboral por $dN$ es esa eliminación, no solo la ``reinstauración''.
+  \item \textbf{El empleo depende de la forma de la oferta de trabajo.} Que la automatización baje el empleo se apoya
+        en las preferencias de crecimiento balanceado (efecto ingreso); los autores lo reconocen.
+  \item \textbf{El capital es igual de productivo en todas las tareas} y sustituto perfecto del trabajo en las
+        automatizadas (nota 10). Es lo que permite la senda balanceada, pero es fuerte.
+  \item \textbf{La evidencia de la Figura 1 es correlacional}: el empleo crece más en ocupaciones con más títulos
+        nuevos, sin identificación.
+\end{enumerate}
+
+% =====================================================================
+\section{Un cambio de unidad de análisis}
+% =====================================================================
+
+Todos los papers anteriores del curso modelan a un \emph{agente} que decide (un trabajador que elige esfuerzo, una
+firma que elige adoptar IA, etc.). Aquí nadie resuelve un problema interesante por sí solo: las firmas minimizan
+costos tarea por tarea y el hogar ofrece trabajo. El objeto de estudio es la \textbf{asignación de tareas a factores
+en la economía entera} y cómo esa asignación determina precios de factores y participaciones. La pregunta ``¿cuál es
+el problema del agente?'' del \texttt{README} tiene aquí una respuesta doble:
+\begin{itemize}[nosep]
+  \item las firmas de cada tarea $i$ minimizan el costo unitario eligiendo capital o trabajo, ec.~(5);
+  \item el hogar representativo elige consumo y trabajo con preferencias (4) (y, en la Sección 3, ahorro).
+\end{itemize}
+Lo que importa no es ninguno de los dos problemas por separado, sino el \emph{equilibrio}: un umbral $\Is$ endógeno que
+resulta de precios de factores endógenos, que a su vez dependen de $\Is$.
+
+% =====================================================================
+\section{Entorno (Sección 2.1)}
+% =====================================================================
+
+\subsection{El continuo de tareas}
+El bien final se produce combinando una \emph{medida unitaria} de tareas indexadas por $i\in[N-1,N]$:
+\begin{equation}\label{eq:Y}
+  Y=\Bt\left(\int_{N-1}^{N} y(i)^{\frac{\sigma-1}{\sigma}}\dd i\right)^{\frac{\sigma}{\sigma-1}},
+  \qquad \sigma\in(0,\infty),\ \Bt>0. \tag{ec.~1}
+\end{equation}
+Un índice más alto es una tarea más compleja. Crear una tarea nueva (subir $N$) mueve toda la ventana: entra la
+tarea $N$ y sale la $N-1$.
+
+\subsection{Dos tecnologías}
+\begin{itemize}[nosep]
+  \item \textbf{Automatización} $I\in(N-1,N]$: las tareas $i\le I$ \emph{pueden} hacerse con capital. Que se hagan
+        con capital depende de los precios.
+  \item \textbf{Tareas nuevas} $N$: amplían la frontera en la que el trabajo tiene ventaja comparativa.
+\end{itemize}
+Producción de una tarea no automatizable ($i>I$) y de una automatizable ($i\le I$):
+\begin{align}
+  y(i)&=B(\zeta)\Big[\eta^{\frac1\zeta}q(i)^{\frac{\zeta-1}{\zeta}}+(1-\eta)^{\frac1\zeta}\big(\gamma(i)l(i)\big)^{\frac{\zeta-1}{\zeta}}\Big]^{\frac{\zeta}{\zeta-1}}, \tag{ec.~2}\\
+  y(i)&=B(\zeta)\Big[\eta^{\frac1\zeta}q(i)^{\frac{\zeta-1}{\zeta}}+(1-\eta)^{\frac1\zeta}\big(k(i)+\gamma(i)l(i)\big)^{\frac{\zeta-1}{\zeta}}\Big]^{\frac{\zeta}{\zeta-1}}. \tag{ec.~3}
+\end{align}
+$q(i)$ es un intermedio específico de la tarea (cuesta $\psi$ unidades del bien final), $\zeta$ la elasticidad
+entre intermedio y factor, $\eta\in(0,1)$ su peso, y $\gamma(i)$ la productividad del trabajo en la tarea $i$. El
+capital tiene productividad 1 en todas las tareas.
+
+\begin{supuesto}[ventaja comparativa]\label{sup:1}
+$\gamma(i)$ es estrictamente creciente.
+\end{supuesto}
+\begin{supuesto}[homotecia]\label{sup:2}
+Se cumple una de dos: (i) $\eta\to0$, o (ii) $\zeta=1$.
+\end{supuesto}
+
+\begin{intuicion}
+El Supuesto~\ref{sup:1} dice que el trabajo es \emph{relativamente} mejor en tareas complejas. Eso es lo que genera un
+umbral: si conviene usar capital en la tarea $i$, conviene en toda tarea $i'<i$. El Supuesto~\ref{sup:2} hace que la
+demanda de capital y trabajo en cada tarea sea homotética, lo que da fórmulas cerradas.
+\end{intuicion}
+
+\subsection{Hogar}
+Preferencias $u(C,L)=\frac{(Ce^{-\nu(L)})^{1-\theta}-1}{1-\theta}$ (ec.~4), con $\nu$ creciente y convexa. En el
+modelo estático $K$ está dado. En equilibrio $\nu'(L)=W/C$ y $C=RK+WL$, lo que da una oferta de trabajo creciente
+en $\omega\equiv W/(RK)$:
+\begin{equation}
+  L=L^s\!\left(\frac{W}{RK}\right)=L^s(\omega), \qquad \eps_L\equiv\frac{d\ln L^s}{d\ln\omega}>0. \tag{ec.~11}
+\end{equation}
+
+% =====================================================================
+\section{Precios de tareas y el umbral (Sección 2.2)}
+% =====================================================================
+
+\subsection{Costo unitario}
+Con competencia, el precio de cada tarea es su costo unitario mínimo. Bajo el Supuesto~\ref{sup:2}:
+\begin{equation}\label{eq:p}
+  p(i)=\begin{cases}\min\left\{R,\dfrac{W}{\gamma(i)}\right\}^{1-\eta} & i\le I,\\[8pt]
+  \left(\dfrac{W}{\gamma(i)}\right)^{1-\eta} & i>I.\end{cases} \tag{ec.~5}
+\end{equation}
+$W/\gamma(i)$ es el \emph{salario efectivo} (costo del trabajo por unidad de eficiencia) en la tarea $i$.
+
+\subsection{El umbral}
+\begin{definicion}[umbrales]
+$\It$ es la tarea en la que capital y trabajo cuestan lo mismo, y $\Is$ el umbral de equilibrio:
+\[
+  \frac{W}{R}=\gamma(\It) \quad\text{(ec.~6)},\qquad\qquad \Is=\min\{I,\It\}.
+\]
+Convención (nota 12): en caso de indiferencia se usa capital, así que las tareas $i\le \Is$ usan capital y las
+$i>\Is$ usan trabajo.
+\end{definicion}
+
+\begin{lema}[asignación por umbral]\label{lem:umbral}
+Bajo el Supuesto~\ref{sup:1}, en toda tarea $i\le I$ conviene capital si y solo si $i\le\It$. Por lo tanto, capital
+exactamente en $[N-1,\Is]$ y trabajo en $(\Is,N]$.
+\end{lema}
+\begin{proof}
+Para $i\le I$ se compara $R$ con $W/\gamma(i)$. Como $\gamma$ es estrictamente creciente, $W/\gamma(i)$ es
+estrictamente decreciente en $i$, y $R\le W/\gamma(i)\iff\gamma(i)\le W/R=\gamma(\It)\iff i\le\It$. Para $i>I$ el
+capital no es factible. Juntando: capital si y solo si $i\le I$ \emph{y} $i\le\It$, es decir $i\le\min\{I,\It\}$.
+\end{proof}
+
+\paragraph{Los tres casos admisibles.} Solo hay tres, y conviene enumerarlos explícitamente:
+\begin{center}
+\begin{tabular}{@{}p{3.4cm}p{2.6cm}p{8.4cm}@{}}
+\toprule
+Caso & Condición & Qué pasa \\
+\midrule
+(R) restringido por tecnología & $\Is=I<\It$ & $R<W/\gamma(I)$: las firmas automatizarían más si pudieran.\\
+(L) libre (minimiza costos) & $\Is=\It<I$ & La tecnología sobra; el precio decide.\\
+(F) frontera & $\Is=I=\It$ & $R=W/\gamma(I)$. El paper lo excluye (nota 15): derivadas laterales distintas.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{supuesto}[las tareas nuevas se usan]\label{sup:3}
+Sea $\Kl$ el nivel de capital tal que $R=W/\gamma(N)$. Se cumple $K<\Kl$.
+\end{supuesto}
+Esto garantiza $R>W/\gamma(N)$: en la tarea más compleja el trabajo es más barato que el capital, así que una
+tarea nueva se hace con trabajo y se adopta de inmediato.
+
+% =====================================================================
+\section{Equilibrio estático (Proposición 1)}
+% =====================================================================
+
+\subsection{Demandas}
+Tomando el bien final como numerario, la demanda de la tarea $i$ es $y(i)=\Bt^{\sigma-1}Yp(i)^{-\sigma}$ (ec.~7).
+Definimos
+\[
+  \sh\equiv\sigma(1-\eta)+\zeta\eta,\qquad B\equiv\Bt^{\frac{\sigma-1}{\sh-1}}.
+\]
+$\sh$ es la elasticidad efectiva entre tareas una vez que se toma en cuenta el intermedio. Con $\eta\to0$,
+$\sh=\sigma$. Bajo el Supuesto~\ref{sup:2}:
+\[
+  k(i)=\begin{cases}B^{\sh-1}(1-\eta)YR^{-\sh} & i\le\Is\\ 0 & i>\Is\end{cases},\qquad
+  l(i)=\begin{cases}0 & i\le\Is\\ B^{\sh-1}(1-\eta)Y\frac{1}{\gamma(i)}\left(\frac{W}{\gamma(i)}\right)^{-\sh} & i>\Is\end{cases}
+\]
+
+\subsection{Condiciones de equilibrio}
+Abreviamos la masa de tareas con capital y el ``tamaño efectivo'' del conjunto de tareas con trabajo:
+\begin{equation}\label{eq:aGamma}
+  a(\Is)\equiv\Is-N+1\in(0,1],\qquad \Gamma(\Is)\equiv\int_{\Is}^{N}\gamma(i)^{\sh-1}\dd i>0 .
+\end{equation}
+\begin{definicion}[equilibrio estático]
+Dados $N$, $I\in(N-1,N]$ y $K$: precios $W,R$, umbrales $\It,\Is$ y producto $Y$ tales que
+\begin{align}
+  &\Is=\min\{I,\It\},\quad W/R=\gamma(\It), \nonumber\\
+  &B^{\sh-1}(1-\eta)Y\,a(\Is)\,R^{-\sh}=K, \tag{ec.~8}\\
+  &B^{\sh-1}(1-\eta)Y\,W^{-\sh}\,\Gamma(\Is)=L, \tag{ec.~9}\\
+  &a(\Is)R^{1-\sh}+\int_{\Is}^{N}\left(\frac{W}{\gamma(i)}\right)^{1-\sh}\dd i=B^{1-\sh}, \tag{ec.~10}\\
+  &L=L^s(\omega),\qquad \omega=W/(RK). \tag{ec.~11}
+\end{align}
+\end{definicion}
+
+\begin{proposicion}[Prop.~1 del paper]
+Bajo los Supuestos 1–3 existe un único equilibrio estático, y en él
+\begin{equation}\label{eq:Ycies}
+  Y=\frac{B}{1-\eta}\Big[a(\Is)^{\frac1\sh}K^{\frac{\sh-1}{\sh}}+\Gamma(\Is)^{\frac1\sh}L^{\frac{\sh-1}{\sh}}\Big]^{\frac{\sh}{\sh-1}}. \tag{ec.~12}
+\end{equation}
+\end{proposicion}
+
+\begin{intuicion}
+(ec.~12) es una CES entre $K$ y $L$ con elasticidad $\sh$, pero sus \emph{pesos} son endógenos: $a(\Is)$ para el
+capital y $\Gamma(\Is)$ para el trabajo. Automatizar ($\Is\uparrow$) sube $a$ y baja $\Gamma$: cambia la función de
+producción agregada misma, no la eficiencia de un factor. Esa es la diferencia con los modelos de tecnología que
+aumenta factores.
+\end{intuicion}
+
+\paragraph{Cómo se prueba (Apéndice A, bajo el Supuesto~\ref{sup:2}).}
+\begin{enumerate}[nosep]
+  \item Dividiendo (ec.~9) entre (ec.~8) y usando $W=\omega RK$:
+        \begin{equation}\label{eq:relD}
+          \omega^{\sh}\,L^s(\omega)=\frac{\Gamma(\Is)}{a(\Is)}\,K^{1-\sh}.
+        \end{equation}
+        El lado izquierdo es estrictamente creciente en $\omega$ (porque $L^s$ es creciente) y el derecho no depende
+        de $\omega$. Por eso para cada $\Is$ hay a lo sumo un $\omega(\Is,N,K)$, que es la \emph{demanda relativa de
+        trabajo}. El Apéndice A garantiza que existe.
+  \item $\Gamma/a$ es estrictamente decreciente en $\Is$ (el numerador baja y el denominador sube), así que
+        $\omega(\Is,N,K)$ es \emph{decreciente} en $\Is$.
+  \item El umbral $\Is=\min\{I,\It\}$ con $\gamma(\It)=\omega K$ es \emph{no decreciente} en $\omega$.
+  \item Una curva decreciente y otra no decreciente se cortan a lo sumo una vez. La existencia sale de las condiciones
+        de borde: cuando $\Is\to N-1$, $a\to0$ y $\omega\to\infty$.
+  \item Con $W,R$ de (ec.~8)–(ec.~9) en (ec.~10) se obtiene (ec.~12).
+\end{enumerate}
+Es la Figura~3 del paper: el corte en el plano $(\omega,I)$.
+
+% =====================================================================
+\section{Estática comparativa de precios relativos (Proposición 2)}
+% =====================================================================
+
+Tomando logaritmos en \eqref{eq:relD} (es la ec.~13 del paper):
+\begin{equation}\label{eq:13}
+  \sh\ln\omega+\ln L^s(\omega)=\ln\Gamma(\Is)-\ln a(\Is)+(1-\sh)\ln K.
+\end{equation}
+Diferenciando y usando $\Gamma'(\Is)=-\gamma(\Is)^{\sh-1}$ (teorema fundamental del cálculo) y $a'(\Is)=1$:
+\begin{equation}\label{eq:dlnomega}
+  (\sh+\eps_L)\,d\ln\omega=-\underbrace{\left(\frac{\gamma(\Is)^{\sh-1}}{\Gamma(\Is)}+\frac{1}{a(\Is)}\right)}_{\Lambda_I}d\Is
+  \;+\;\underbrace{\left(\frac{\gamma(N)^{\sh-1}}{\Gamma(\Is)}+\frac{1}{a(\Is)}\right)}_{\Lambda_N}dN
+  \;+\;(1-\sh)\,d\ln K .
+\end{equation}
+Ojo con $dN$: sube $N$, así que $\Gamma$ gana $\gamma(N)^{\sh-1}dN$ y $a=\Is-N+1$ pierde $dN$. Los dos términos van
+en la misma dirección.
+
+\begin{proposicion}[Prop.~2 del paper, reescrita]
+Bajo los Supuestos 1–3, con $\eps_L>0$, $\eps_\gamma\equiv d\ln\gamma(I)/dI>0$:
+\begin{itemize}[nosep]
+  \item \textbf{Caso (R)} $\Is=I<\It$: $d\Is=dI$ y
+    \[\frac{d\ln\omega}{dI}=-\frac{\Lambda_I}{\sh+\eps_L}<0,\qquad \frac{d\ln\omega}{dN}=\frac{\Lambda_N}{\sh+\eps_L}>0,\qquad
+      \frac{d\ln(W/R)}{d\ln K}=\frac{1+\eps_L}{\sh+\eps_L}>0.\]
+  \item \textbf{Caso (L)} $\Is=\It<I$: $I$ no afecta nada ($d\Is/dI=0$) y el umbral se mueve con los precios. Con
+    $\sfree\equiv\sh+\Lambda_I/\eps_\gamma>\sh$:
+    \[\frac{d\ln\omega}{dI}=0,\qquad \frac{d\ln\omega}{dN}=\frac{\Lambda_N}{\sfree+\eps_L}>0,\qquad
+      \frac{d\ln(W/R)}{d\ln K}=\frac{1+\eps_L}{\sfree+\eps_L}>0.\]
+  \item En todos los casos, la participación laboral $s_L=\frac{WL}{WL+RK}$ y el empleo se mueven con $\omega$.
+\end{itemize}
+\end{proposicion}
+
+\begin{proof}[Verificación de los puntos clave]
+Caso (R): \eqref{eq:dlnomega} con $d\Is=dI$, dividiendo entre $\sh+\eps_L>0$. Para $d\ln(W/R)/d\ln K$: con $K$
+variando, $d\ln(W/R)=d\ln\omega+d\ln K$, y \eqref{eq:dlnomega} da $d\ln\omega/d\ln K=(1-\sh)/(\sh+\eps_L)$, así que
+$d\ln(W/R)/d\ln K=(1-\sh+\sh+\eps_L)/(\sh+\eps_L)=(1+\eps_L)/(\sh+\eps_L)$.
+Caso (L): ahora $\gamma(\Is)=W/R=\omega K$, así que $\eps_\gamma\,d\Is=d\ln\omega+d\ln K$. Sustituyendo $d\Is$ en
+\eqref{eq:dlnomega} se agrega $\Lambda_I/\eps_\gamma$ al coeficiente de $d\ln\omega$ (de ahí $\sfree$).
+Participación: $s_L=\frac{\omega L}{\omega L+1}$ (dividiendo entre $RK$), creciente en $\omega$ y en $L$, y
+$L=L^s(\omega)$ es creciente en $\omega$.
+\end{proof}
+
+\begin{nota}[Lectura]
+$\Lambda_I>0$ \emph{siempre}. Por eso, en el caso (R), la automatización baja $W/R$, la participación laboral y el
+empleo \emph{sin condiciones adicionales}: no depende de $\sh$. Con tecnología que aumenta factores, en cambio, el
+sesgo depende de si la elasticidad es mayor o menor que 1. Esto vale bajo el Supuesto~2. Sin él (Apéndice A) hace
+falta el Supuesto~2$'$, que limita cuán no homotética es la producción.
+\end{nota}
+
+% =====================================================================
+\section{Productividad y salarios (Proposición 3)}\label{sec:prop3}
+% =====================================================================
+
+\subsection{El efecto productividad}
+Llamamos $d\ln Y|_{K,L}$ al cambio del producto manteniendo $K$ y $L$ fijos.
+
+\begin{lema}[efecto productividad como una integral]\label{lem:prod}
+En el caso (R), a partir de (ec.~12),
+\[
+  \frac{\partial\ln Y}{\partial I}\Big|_{K,L}
+  =\frac{B^{\sh-1}}{1-\sh}\left[\left(\frac{W}{\gamma(I)}\right)^{1-\sh}-R^{1-\sh}\right]
+  \;=\;B^{\sh-1}\int_{R}^{W/\gamma(I)}x^{-\sh}\dd x\;\equiv\;\pi_I ,
+\]
+\[
+  \frac{\partial\ln Y}{\partial N}\Big|_{K,L}
+  =\frac{B^{\sh-1}}{1-\sh}\left[R^{1-\sh}-\left(\frac{W}{\gamma(N)}\right)^{1-\sh}\right]
+  \;=\;B^{\sh-1}\int_{W/\gamma(N)}^{R}x^{-\sh}\dd x\;\equiv\;\pi_N .
+\]
+La forma integral vale para todo $\sh\in(0,\infty)$, \emph{incluido $\sh=1$}, donde se vuelve
+$B^{\sh-1}\ln\frac{W}{\gamma(I)R}$, sin el problema de dividir entre $1-\sh$.
+\end{lema}
+\begin{proof}
+Sea $r=(\sh-1)/\sh$ y $X=a^{1/\sh}K^{r}+\Gamma^{1/\sh}L^{r}$, así que $\ln Y=\ln\frac{B}{1-\eta}+\frac{1}{r}\ln X$.
+Con $K,L$ fijos, $\partial a/\partial I=1$ y $\partial\Gamma/\partial I=-\gamma(I)^{\sh-1}$:
+\[
+  \frac{\partial\ln Y}{\partial I}=\frac{1}{rX}\cdot\frac1\sh\left[a^{\frac1\sh-1}K^{r}-\Gamma^{\frac1\sh-1}\gamma(I)^{\sh-1}L^{r}\right]
+  =\frac{1}{(\sh-1)X}\left[\Big(\frac{K}{a}\Big)^{r}-\gamma(I)^{\sh-1}\Big(\frac{L}{\Gamma}\Big)^{r}\right].
+\]
+De (ec.~8), $K/a=MR^{-\sh}$, y de (ec.~9), $L/\Gamma=MW^{-\sh}$, con $M\equiv B^{\sh-1}(1-\eta)Y$. Como $-\sh r=1-\sh$:
+$(K/a)^r=M^rR^{1-\sh}$ y $\gamma(I)^{\sh-1}(L/\Gamma)^r=M^r(W/\gamma(I))^{1-\sh}$. Además
+$X=\big(\frac{(1-\eta)Y}{B}\big)^{r}$ por (ec.~12). Entonces
+$M^r/X=\big(B^{\sh-1}\cdot B\big)^{r}=B^{\sh r}=B^{\sh-1}$, y
+\[
+  \frac{\partial\ln Y}{\partial I}=\frac{B^{\sh-1}}{\sh-1}\left[R^{1-\sh}-\Big(\frac{W}{\gamma(I)}\Big)^{1-\sh}\right],
+\]
+que es la fórmula del enunciado. La forma integral es $\int_R^{b}x^{-\sh}\dd x=\frac{b^{1-\sh}-R^{1-\sh}}{1-\sh}$ para
+$\sh\ne1$, y $\ln(b/R)$ para $\sh=1$. Para $\pi_N$ es análogo, con $\partial a/\partial N=-1$ y
+$\partial\Gamma/\partial N=\gamma(N)^{\sh-1}$ (con $\Is=I$ fijo, $\Gamma=\int_I^N\gamma^{\sh-1}$ depende de $N$ solo por el límite superior).
+\end{proof}
+
+\begin{lema}[signos]\label{lem:signos}
+Para $b,R>0$ y cualquier $\sh>0$: $\int_R^{b}x^{-\sh}\dd x>0\iff b>R$, $=0\iff b=R$, $<0\iff b<R$.
+En particular, en el caso (R), $\pi_I>0$ porque $W/\gamma(I)>R$, y bajo el Supuesto~3, $\pi_N>0$ porque $R>W/\gamma(N)$.
+En el caso (L), $W/\gamma(\Is)=R$ y la ganancia de mover el umbral es exactamente cero.
+\end{lema}
+\begin{proof}
+El integrando $x^{-\sh}$ es estrictamente positivo en $(0,\infty)$, y la integral orientada cambia de signo al
+invertir los límites. Caso (R): $\Is=I<\It$ y $\gamma$ creciente dan $\gamma(I)<\gamma(\It)=W/R$, o sea
+$W/\gamma(I)>R$. Supuesto 3: $R>W/\gamma(N)$ por construcción.
+\end{proof}
+\noindent Este lema es la única desigualdad que necesita el ``ambas tecnologías aumentan la productividad'', y cubre de
+una sola vez los subcasos $\sh<1$, $\sh=1$ y $\sh>1$.
+
+\subsection{La descomposición del salario}
+Dos ecuaciones lineales en $(d\ln W,d\ln R)$:
+\begin{align}
+  s_L\,d\ln W+(1-s_L)\,d\ln R&=d\ln Y|_{K,L}, \tag{B9}\\
+  d\ln W-d\ln R&=\frac{\Lambda_N}{\sh+\eps_L}dN-\frac{\Lambda_I}{\sh+\eps_L}dI. \tag{B10}
+\end{align}
+(B9) es la dualidad: el costo unitario de la canasta de factores es 1 (numerario), así que un cambio técnico que
+ahorra costos tiene que repartirse entre $W$ y $R$ en proporción a sus participaciones. (B10) es la Prop.~2 con $K$
+fijo, porque entonces $d\ln\omega=d\ln(W/R)$. Resolviendo:
+\begin{align}
+  d\ln W&=d\ln Y|_{K,L}+(1-s_L)\left(\frac{\Lambda_N}{\sh+\eps_L}dN-\frac{\Lambda_I}{\sh+\eps_L}dI\right),\label{eq:dW}\\
+  d\ln R&=d\ln Y|_{K,L}-s_L\left(\frac{\Lambda_N}{\sh+\eps_L}dN-\frac{\Lambda_I}{\sh+\eps_L}dI\right).\label{eq:dR}
+\end{align}
+Comprobación: multiplicando \eqref{eq:dW} por $s_L$ y \eqref{eq:dR} por $1-s_L$ y sumando, los paréntesis se cancelan
+y se recupera (B9). Restando, se recupera (B10).
+
+\subsection{Las fuerzas y sus signos}
+Para la automatización ($dI>0$, $dN=0$) en el caso (R):
+\begin{equation}\label{eq:trap}
+  \boxed{\;\frac{d\ln W}{dI}=\underbrace{\pi_I}_{\text{productividad}\,(+)}\;-\;\underbrace{(1-s_L)\frac{\Lambda_I}{\sh+\eps_L}}_{\text{desplazamiento}\,(-)}\;}
+\end{equation}
+\begin{center}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Tecnología & Fuerza & sobre $W$ & sobre $R$ & sobre $s_L$, $L$\\
+\midrule
+Automatización $dI$ (caso R) & productividad $\pi_I$ & $+$ & $+$ & 0\\
+ & desplazamiento $\Lambda_I$ & $-$ & $+$ & $-$\\
+ & \textbf{neto} & \textbf{ambiguo} & $+$ & $-$\\
+\midrule
+Tareas nuevas $dN$ & productividad $\pi_N$ & $+$ & $+$ & 0\\
+ & ``reinstauración'' $\Lambda_N$ & $+$ & $-$ & $+$\\
+ & \textbf{neto} & $+$ & \textbf{ambiguo} & $+$\\
+\midrule
+Automatización $dI$ (caso L) & — & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{alerta}[Vocabulario: ``reinstauración'' no aparece en este paper]
+El issue habla de desplazamiento y \emph{reinstauración}. En la versión de junio de 2017 la palabra no aparece
+(búsqueda en el texto completo). Para la automatización, el paper nombra el \emph{efecto productividad} ($+$) y el
+\emph{efecto desplazamiento} ($-$). Lo que después (Acemoglu \& Restrepo, 2019, \emph{JEP}) se llamó ``efecto
+reinstauración'' es aquí el efecto de las tareas nuevas ($dN$) sobre la demanda relativa de trabajo, el término con
+$\Lambda_N$. Consecuencia para la trampa: el signo de $d\ln W/dI$ lo decide la carrera \emph{productividad vs.\
+desplazamiento}. La reinstauración entra por otra tecnología, $N$.
+\end{alerta}
+
+% =====================================================================
+\section{La trampa: ¿la automatización baja necesariamente salarios y participación laboral?}\label{sec:trampa}
+% =====================================================================
+
+\subsection{Respuesta con todas sus condiciones}
+\textbf{No necesariamente.} Depende de la variable, del régimen y del horizonte:
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.6cm}p{3.2cm}p{3.4cm}p{3.6cm}@{}}
+\toprule
+ & Corto plazo, caso (R): $\Is=I<\It$ & Corto plazo, caso (L): $\Is=\It<I$ & Largo plazo (Prop.~5), $n>\tilde n(\rho)$\\
+\midrule
+Producto $Y$ & sube ($\pi_I>0$) & sin cambio & (Parte II)\\
+Salario $W$ & \textbf{sube si y solo si} $\pi_I>(1-s_L)\frac{\Lambda_I}{\sh+\eps_L}$ & sin cambio & \textbf{sube siempre}\\
+Participación $s_L$ & baja siempre & sin cambio & baja\\
+Empleo $L$ & baja siempre & sin cambio & baja\\
+Alquiler $R$ & sube siempre & sin cambio & vuelve a $\rho+\delta+\theta g$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Condiciones que sostienen la tabla: Supuestos 1, 2 y 3; $\eps_L>0$; caso (F) excluido; y en la columna de largo
+plazo, además, los Supuestos $1'$ ($\gamma(i)=e^{Ai}$) y el rango de $n$ indicado en la Prop.~5. La Parte II lo revisa.
+
+\paragraph{La condición bajo la cual la automatización \emph{sube} el salario (corto plazo).} Por
+\eqref{eq:trap} y el Lema~\ref{lem:prod}:
+\[
+  \frac{d\ln W}{dI}>0\iff B^{\sh-1}\int_{R}^{W/\gamma(I)}x^{-\sh}\dd x\;>\;(1-s_L)\,\frac{1}{\sh+\eps_L}\left(\frac{\gamma(I)^{\sh-1}}{\int_I^N\gamma(i)^{\sh-1}\dd i}+\frac{1}{I-N+1}\right).
+\]
+En palabras: el \emph{ahorro de costos} de reemplazar trabajo caro por capital barato en la tarea marginal, que
+es la brecha entre el salario efectivo $W/\gamma(I)$ y $R$, tiene que superar la presión a la baja por amontonar a los
+trabajadores en menos tareas. Esa presión es mayor cuanto mayor es la participación del capital, cuanto más
+inelástica es la sustitución entre tareas y cuanto menos elástica es la oferta de trabajo. Las tecnologías
+``más o menos'' (\emph{so-so}), con $W/\gamma(I)\approx R$, son las que bajan el salario: el ahorro es casi nulo y el
+desplazamiento está entero.
+
+\subsection{El umbral de capital: lo que dice el paper y por qué no le creo}
+La Prop.~3 (p.~13) afirma: \emph{``there exists $\Kb>\Kl$ such that an increase in $I$ increases the equilibrium wage
+when $K<\Kb$ and reduces it when $K>\Kb$''}. Y el texto (p.~14) agrega que la ganancia de productividad es pequeña,
+\emph{``which is guaranteed when $K>\Kb$''}.
+
+\begin{observacion}[preliminar; se demuestra en \texttt{derivation/}]\label{obs:umbral}
+Tal como está impresa, la afirmación no puede ser correcta. Hay dos problemas, y cada uno basta:
+\begin{enumerate}[nosep]
+  \item \textbf{Orden de los umbrales.} El Supuesto~3 impone $K<\Kl$. Si $\Kb>\Kl$, toda $K$ admisible cumple $K<\Kb$,
+        y la cláusula ``la reduce cuando $K>\Kb$'' queda vacía. Leída literalmente, la frase diría que la
+        automatización siempre sube el salario, lo que contradice el propio texto (``may reduce the equilibrium wage'').
+  \item \textbf{Dirección.} Por la Prop.~2, $W/R$ es estrictamente creciente en $K$. Sea $K_I$ el capital en el que
+        $\It=I$, o sea $W/R=\gamma(I)$. El caso (R) ocurre para $K\in(K_I,\Kl)$. Cuando $K\downarrow K_I$,
+        $W/\gamma(I)\to R$ y por el Lema~\ref{lem:signos} $\pi_I\to0$, mientras que el desplazamiento
+        $(1-s_L)\Lambda_I/(\sh+\eps_L)$ se mantiene estrictamente positivo. Luego $d\ln W/dI<0$ para $K$ cerca de $K_I$:
+        con \emph{poco} capital la automatización \emph{baja} el salario. La ganancia es pequeña cuando el capital es
+        escaso, no cuando es abundante.
+\end{enumerate}
+Lo que sí parece cierto (a verificar): existe un $\hat K$ tal que la automatización baja el salario para
+$K\in(K_I,\hat K)$ y lo sube para $K\in(\hat K,\Kl)$ si $\hat K<\Kl$. Si el cruce es único no es obvio, porque $s_L$
+también cambia con $K$. Un chequeo numérico rápido (caso $\eta\to0$, trabajo inelástico) encontró a lo sumo un cambio
+de signo, y en esa dirección. Además, el Apéndice~B (pp.~B-12–B-13) demuestra la descomposición pero \emph{no}
+demuestra la existencia del umbral.
+\end{observacion}
+
+\begin{nota}[Qué se verifica después]
+(1) La derivación propia (\texttt{derivation/}) enuncia el umbral correcto como teorema en un modelo simplificado.
+(2) \texttt{sim/} lo prueba sobre miles de sorteos de primitivas, incluido si el cruce es único.
+(3) La corrida de Lean recibió la Prop.~3 \emph{sin aviso} sobre este punto, para ver si el agente lo detecta.
+\end{nota}
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+\noindent\emph{Parte II (Secciones 3–5 del paper: crecimiento balanceado, tecnología endógena, extensiones) se
+agrega en el siguiente bloque.}
+
+\end{document}
