@@ -28,7 +28,7 @@ __pycache__/
 .venv/
 
 # Lean sandbox build cache (lives on the Linux disk; never commit)
-extra/lean-sandbox/.lake/
+extra/lean-sandbox/.lake
 extra/lean-sandbox/lake-packages/
 
 # The article itself: third-party PDF, fetch it from NBER (see paper/README.md)
