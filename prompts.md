@@ -362,6 +362,92 @@ Maintainer review of the compiled Spec after the interruption found one source-t
 Then finish the scope of this session (source map, architecture pre-pass / semantic preflight as the workflow requires). Proof bodies may remain `sorry` in this session only. At the end, report in the chat: (1) files created or changed; (2) the Lean statement of each Spec and which C1-C8 hypothesis encodes which condition; (3) every place where the source was ambiguous, with page and equation, and the reading you chose; (4) every assumption you added that the paper does not state; (5) the status of each P3 clause.
 ````
 
+### B.5 — Session 1b · effort `high` · 2026-09-24 ~02:50–03:20 (Lima) · resumed with `codex resume --last`
+
+Prompt: B.4 verbatim. Raw transcript `extra/lean-run/session1b-transcript.jsonl` (git-ignored, 9.2 MB).
+**The agent's full final report, raw:** `extra/lean-run/session1b-final-report.md`.
+
+Relevant excerpts of that report (verbatim):
+
+```text
+Implemented and compiled the statement-first formalization of Proposition 3. The corrected `normalizedB` is:
+  def normalizedB (Btilde sigma sigmaHat : ℝ) : ℝ := Real.rpow Btilde ((sigma - 1) / (sigmaHat - 1))
+...
+- Printed p. 9, immediately after equation (7): the PDF clearly gives B = B̃^((σ−1)/(σ̂−1)). The earlier draft's
+  σ̂/(σ̂−1) numerator was a transcription error and is now corrected.
+...
+- Printed p. 13 threshold sentence versus Assumption 3 on p. 8: the negative side K > KBar > KUnder lies outside the
+  current point's K < KUnder premise. Lean treats it as a statement about the declared equilibrium path over
+  alternative positive capital levels.
+...
+Because proposition3 still has the session-permitted `sorry`, every clause is currently classified as **open**.
+```
+
+**Checks after session 1b (raw):**
+
+```text
+# checks: session1b  —  2026-09-24 03:21:04 -05
+# AppliedModelingLib commit: 2db7d108
+
+## 1. abstract predicates (-> Prop / → Prop); every hit is reviewed by hand
+(no hits)
+
+## 2. sorry / admit / axiom
+papers/AR18RaceManMachine/ProofInterface.lean:14:  sorry
+
+## 3. lake build AR18RaceManMachine (last 40 lines)
+⚠ [8315/8317] Replayed AR18RaceManMachine.ProofInterface
+warning: papers/AR18RaceManMachine/ProofInterface.lean:13:8: declaration uses `sorry`
+Build completed successfully (8317 jobs).
+lake build exit code: 0
+
+## 4. paper_contribution check --fast
++ lake build +AR18RaceManMachine.PaperInterface
+Build completed successfully (8314 jobs).
++ git diff --check -- papers/AR18RaceManMachine papers/AR18RaceManMachine.lean lakefile.toml ':(exclude)papers/AR18RaceManMachine/source/'
+check exit code: 0
+```
+
+**Claude's review:** E2 fixed (normalization now matches the printed p. 9). The agent split the long list of premises into
+four definitions (`proposition3Conditions`, `…StaticEquilibrium`, `…EquilibriumPaths`, `…ComparativeStaticQuantities`).
+We read them: each is a transparent conjunction of concrete equations and inequalities, **not** an abstract predicate, so R2 holds.
+The threshold clause is unchanged. The agent again noted that its negative side lies outside Assumption 3, and again widened the
+quantifier to all positive capital levels instead of flagging it. It still does not detect the direction problem. Not told (decision A.2).
+
+### B.6 — Session 2 · effort `xhigh` (proofs) — final prompt, as sent
+
+Before use, B.2 was revised with one paragraph ("Work clause by clause…") so that partial progress survives another usage
+interruption. Nothing else changed and nothing hints at the threshold. Verbatim text in `extra/lean-run/session2_prompt.txt`:
+
+````text
+Continue the AR18RaceManMachine formalization in this repository (paper folder
+papers/AR18RaceManMachine). Same source pin, same selected target (Proposition 3,
+clauses P3.a and P3.b), and same conditions C1–C8 and hard rules R1–R5 as the
+previous session; they are recorded in the paper folder and in the scope
+addendum of the previous session.
+
+This session (reasoning effort: xhigh). Replace every `sorry` in the target's proof
+endpoints with checked proofs. Do not change a Spec in order to make a proof go
+through. If a Spec has to change, stop, explain why, and give the exact source passage.
+Rebuild and repair until `lake build` succeeds with no `sorry`, `admit` or new
+`axiom`. Then continue the repository workflow as far as it applies to
+this scope: audit, closeout, validation report, and the paper_contribution
+check.
+
+Work clause by clause. Put one proved lemma per P3 clause in the implementation
+layer, and keep the build green after each one, so that partial progress survives
+an interruption (usage limits have already interrupted this run once). If a clause
+cannot be proved, or is false as printed, leave it as a separately named item with its
+status under R4 (for a false clause, give a counterexample and, if possible, prove its
+negation in Lean) and move on to the next clause.
+
+At the end, report in the chat: (1) files created or changed; (2) the final status
+of each P3 clause under R4; (3) any Spec you changed, and why; (4) the output of
+the last `lake build` and of
+`python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`;
+(5) where the source was ambiguous or, in your judgment, wrong.
+````
+
 ### Checks Alejandro runs after each session (from the AppliedModelingLib root)
 
 ```bash
@@ -423,4 +509,4 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
   (printed p. 9, right after eq. 7) says $B=\tilde B^{(\sigma-1)/(\hat\sigma-1)}$. Because the Spec takes eq. (7) and eq. (9) as
   hypotheses at the same time, the wrong exponent makes them compatible only when $\tilde B=1$, so it **silently shrinks the
   domain** of the theorem instead of breaking the build. Caught by Claude reading the Spec against a
-  200-dpi render of the page. Fix requested in session 1b (B.4).
+  200-dpi render of the page. Fix requested in session 1b (B.4); **fixed by the agent in session 1b** (B.5).

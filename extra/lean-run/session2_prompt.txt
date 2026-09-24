@@ -12,6 +12,13 @@ Rebuild and repair until `lake build` succeeds with no `sorry`, `admit` or new
 this scope: audit, closeout, validation report, and the paper_contribution
 check.
 
+Work clause by clause. Put one proved lemma per P3 clause in the implementation
+layer, and keep the build green after each one, so that partial progress survives
+an interruption (usage limits have already interrupted this run once). If a clause
+cannot be proved, or is false as printed, leave it as a separately named item with its
+status under R4 (for a false clause, give a counterexample and, if possible, prove its
+negation in Lean) and move on to the next clause.
+
 At the end, report in the chat: (1) files created or changed; (2) the final status
 of each P3 clause under R4; (3) any Spec you changed, and why; (4) the output of
 the last `lake build` and of
