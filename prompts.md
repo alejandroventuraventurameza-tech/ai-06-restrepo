@@ -514,6 +514,99 @@ the last `lake build` and of
 (5) where the source was ambiguous or, in your judgment, wrong.
 ````
 
+### B.7 — Session 2 · effort `high` · 2026-09-24 11:34–11:42 (Lima) · new session · stopped at a Spec mismatch
+
+Prompt: B.6 verbatim. Raw transcript `extra/lean-run/session2-transcript.jsonl` (git-ignored).
+**The agent's full final report, raw:** `extra/lean-run/session2-final-report.md`. Key part (verbatim):
+
+```text
+I stopped without changing the repository because the frozen Spec needs maintainer review.
+
+The blocking mismatch is in [PaperInterface.lean](/home/asus/AppliedModelingLib/papers/AR18RaceManMachine/PaperInterface.lean:300): the source’s capital-threshold sentence occurs inside the standing regime \(I^*=I<\widetilde I\), but lines 316–320 quantify over every positive comparison capital `k` without requiring that regime at `k`.
+
+For sufficiently low capital, the equilibrium can enter the free regime \(\widetilde I<I\). The second bullet then requires the wage’s \(I\)-derivative to be zero, while lines 317–318 require it to be strictly positive because \(k<KBar\). A concrete specialization illustrating this uses
+\(\hat\sigma=2\), \(\gamma(i)=e^i\), \(L^s(\omega)=\omega\), \(B=1\), \(N=1\), and \(I=1/2\): below the constrained/free transition, equilibrium wages are independent of \(I\).
+
+The likely repair is to restrict both threshold quantifiers to comparison configurations satisfying `I < freeThreshold I N k`, or otherwise quantify over equilibria satisfying the entire constrained-regime premise. I did not make that change.
+```
+
+**Checks after session 2 (raw):**
+
+```text
+# checks: session2  —  2026-09-24 11:44:54 -05
+# AppliedModelingLib commit: 2db7d108
+
+## 1. abstract predicates (-> Prop / → Prop); every hit is reviewed by hand
+(no hits)
+
+## 2. sorry / admit / axiom
+papers/AR18RaceManMachine/ProofInterface.lean:14:  sorry
+
+## 3. lake build AR18RaceManMachine (last 40 lines)
+⚠ [8315/8317] Replayed AR18RaceManMachine.ProofInterface
+warning: papers/AR18RaceManMachine/ProofInterface.lean:13:8: declaration uses `sorry`
+Build completed successfully (8317 jobs).
+lake build exit code: 0
+
+## 4. paper_contribution check --fast
++ lake build +AR18RaceManMachine.PaperInterface
+Build completed successfully (8314 jobs).
++ git diff --check -- papers/AR18RaceManMachine papers/AR18RaceManMachine.lean lakefile.toml ':(exclude)papers/AR18RaceManMachine/source/'
+check exit code: 0
+```
+
+**Claude's review.** The agent did what rule R4 and the "do not change a Spec" instruction asked: it stopped and reported. It found a real
+encoding defect: the regime condition is dropped from the threshold clause, so the clause contradicts P3.b in the free regime.
+**But its proposed repair (restrict $k$ to the constrained regime) still leaves a false clause.** With that restriction, and with
+Assumption 3, the clause says that automation raises the wage for every admissible $k$. Yet just above $K_I$ the productivity gain
+vanishes and the wage falls (derivation, Prop. 5.1; Lean sandbox, `printed_threshold_claim_false`). The direction problem went
+undetected in all three sessions (see E3).
+
+### A.3 — 2026-09-24 ~12:00 — how to continue after session 2 (question from Claude, answer from Alejandro, verbatim)
+
+```text
+Q: El agente se detuvo (sesión 2, ~8 min): la cláusula del umbral cuantifica sobre todo k>0 y olvida el régimen
+   restringido, lo que choca con la viñeta (L). Propone restringirla al régimen (R), pero NO detectó que la dirección
+   está invertida: aun corregida, la cláusula sigue siendo falsa. ¿Cómo seguimos?
+   [ ] Aprobar y 1 sesión más (Recommended)   [ ] Entregar como está
+A: "Entreguemos el error, pero ahora me gustaría que le hiciéramos saber dicho error a Codex para que lo tenga en
+   cuenta y nos dé la versión fina. ¿Qué te parece?"
+```
+
+Decision: the "do not tell the agent" test (A.2) is **closed** with the result recorded in E3. The maintainer now supplies the
+correction (deviation D3), limited to the threshold clause.
+
+### B.8 — Session 3 · effort `high` · maintainer corrections + proofs — prompt as drafted
+
+Sent with `codex resume --last` (continues session 2, whose context is short). Verbatim text in `extra/lean-run/session3_prompt.txt`:
+
+````text
+Maintainer review of your stop report. Two maintainer decisions authorize Spec changes for the capital-threshold sentence of Proposition 3 ONLY; everything else (source pin, target P3.a/P3.b, C1-C8, R1-R5, clause-by-clause work) is unchanged.
+
+1. Regime scope: APPROVED. Your reading is correct. The threshold sentence (printed p. 13) sits inside the bullet whose standing condition is I* = I < Ĩ, and Proposition 3 assumes Assumptions 1-3 throughout. Every comparison capital level k in that clause must satisfy the constrained regime at k (I < freeThreshold I N k) and Assumption 3 at k. Record this as an approved reading in audit/source_proof_fidelity.json (model_conventions) and cite it on the affected source-map item.
+
+2. The printed threshold sentence is false even after that restriction. This is an approved-corrected target. Maintainer analysis (checked by hand, symbolically, numerically, and in Lean in a separate sandbox):
+   (a) With K̄ > K̲ and Assumption 3 (k < K̲), the clause "reduces it when K > K̄" is vacuous.
+   (b) At the lower edge K_I of the constrained regime, W/γ(I) = R. So the productivity coefficient B^(σ̂-1)/(1-σ̂)·((W/γ(I))^(1-σ̂) - R^(1-σ̂)) tends to 0, while the displacement term (1 - s_L)·Λ_I/(σ̂ + ε_L) stays strictly positive. Hence d ln W/dI < 0 for k just above K_I, which contradicts "increases the equilibrium wage when K < K̄".
+   (c) In the special case η = 0, σ = 1, with an increasing labor supply of elasticity ε_L > 0 (the paper's own Corollary 1 setting, with γ strictly increasing), the exact result is d ln W/dI > 0 iff K > K̂ = K_I·exp(1/((N-I)(1+ε_L))). That is the opposite direction.
+   (d) For σ̂ ≠ 1, numerical checks on 400 random economies found at most one sign change, always from - to +. A unique threshold is NOT proved for σ̂ ≠ 1, so do not assert one.
+   Required treatment:
+   - Keep the printed sentence as a separately named statement (it is source-faithful). Record it in docs/FORMALIZATION_WORKING_MEMO.md under "Possible Printed Typos Or Errors" with its exact location, and later in the validation report. If feasible, prove its negation or document an explicit counterexample.
+   - In proposition3Spec, replace the threshold conjunct with the corrected content that follows from the source's own formulas: in the constrained regime,
+       0 < ∂ln W/∂I  ↔  automationCoefficient > (1 - sL) · LambdaI / (sigmaHat + epsilonL),
+     together with the corresponding "< 0" and "= 0" cases.
+   - Do not change any other part of the Spec.
+
+3. Then continue the proof campaign clause by clause, under the same rules, keeping the build green after each clause. Priority:
+   (i) the orderings W/γ(I*) > R > W/γ(N) (constrained regime) and W/γ(I*) = R > W/γ(N) (free regime);
+   (ii) strict positivity of the productivity coefficients (equivalently, the sign of the integral of x^(-σ̂) from R to W/γ(I));
+   (iii) the corrected wage condition of item 2;
+   (iv) the differential formulas and the remaining sign clauses.
+   End this session with a green build even if some clauses remain open, and give each clause's status under R4.
+
+At the end, report in the chat: (1) files created or changed; (2) the final status of each P3 clause under R4, including the printed threshold sentence; (3) the exact Spec change you made, and where the two maintainer decisions are recorded; (4) the output of the last `lake build` and of `python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`; (5) any remaining source ambiguity.
+````
+
 ### Checks Alejandro runs after each session (from the AppliedModelingLib root)
 
 ```bash
@@ -541,6 +634,7 @@ _Model, date, raw answer: to be filled._
 |---|---|---|---|
 | D1 | `gpt-5.6-sol` with effort **`xhigh`** | **every session at `high`**, statements (1a, 1b) and proofs (2); `xhigh` was never used | the daily Codex quota ran out twice (2026-09-23 ~19:00, 2026-09-24 ~03:25); Alejandro saw that `xhigh` uses far more tokens, and with the deadline at 22:00 an interrupted `xhigh` run would leave nothing. Planned at first: `high` for statements and `xhigh` for proofs. Decided by Alejandro on 2026-09-24 03:29 |
 | D2 | give the agent the task text (issue §2) | the task text is sent **verbatim**, followed by a scope addendum: 2–3 target results and rules (no re-reading the full source after the audit phase; conditions enumerated; no abstract `... -> Prop` fields; build until it closes; report ambiguities) | a full-paper run would not close before the deadline; the addendum narrows the scope and does not replace the task |
+| D3 | the agent formalizes the paper on its own run (issue §2) | after the test of A.2 was closed (E3), the maintainer told the agent that the printed threshold is false, gave the analysis, and asked it to keep the printed sentence as a named source error and to put the corrected condition in the Spec (session 3, B.8) | a Spec that encodes a false statement cannot be proved, and the whole Proposition 3 endpoint would stay unprovable. Limited to that one clause; the regime-scope reading was the agent's own proposal |
 
 ---
 
@@ -576,3 +670,11 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
   hypotheses at the same time, the wrong exponent makes them compatible only when $\tilde B=1$, so it **silently shrinks the
   domain** of the theorem instead of breaking the build. Caught by Claude reading the Spec against a
   200-dpi render of the page. Fix requested in session 1b (B.4); **fixed by the agent in session 1b** (B.5).
+- **E3 — Codex (`gpt-5.6-sol`, sessions 1a, 1b and 2), the trap itself: it never detected that the capital threshold of Prop. 3
+  points the wrong way.** Session 1a noticed that the negative half ("reduces it when $K>\overline K$") falls outside Assumption 3 and
+  *widened the quantifier to every positive capital level* ("No claimed printed error"). Session 1b noticed it again and kept the
+  widening. Session 2 found that the widened clause contradicts the free regime and proposed restricting it to the constrained regime.
+  But under that restriction and Assumption 3 the clause is still false, because the wage falls just above $K_I$. Three encounters with
+  the symptom, three repairs of the encoding, never a question about the economics. Caught by Claude and Alejandro in the derivation
+  (Thm 4.2, Cor 4.3), the simulation (P5, P7) and the Lean sandbox (`printed_threshold_claim_false`). Test of A.2 closed here;
+  correction supplied in session 3 (D3).
