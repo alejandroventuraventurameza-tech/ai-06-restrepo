@@ -8,6 +8,7 @@ with numbers. The derivation itself contains no numerical examples by design.
 | `model.py` | Equilibrium solvers built only from equilibrium conditions (root finding + quadrature). `ModelS` = the hand-derivable special case (η = 0, σ = 1, elastic labor). `ModelG` = the paper's static model with η → 0 and σ̂ ≠ 1. |
 | `verify_symbolic.py` | SymPy, no numbers: re-derives Lemmas 3.1–3.2, Theorem 3.3, the threshold $\hat K$ of Theorem 4.2, and checks that the paper's Prop. 3 at σ̂ = 1 gives the same terms (Obs. 3.4). |
 | `test_properties.py` | Randomized property test (P1–P7, PL of derivation §7) over thousands of draws of primitives $(N, I, K, \gamma, L^s, \hat\sigma)$. All "true" derivatives are central finite differences of equilibria recomputed from scratch. |
+| `figure_data.py` | Data for the presentation figure: $d\ln W/dI$ against $K/K_I$ for $\hat\sigma\in\{0.5,1,2\}$ (`results/wage_response_curves.csv`). |
 | `results/` | Raw output of the last run of each script. |
 
 ## How to run (from this folder)
