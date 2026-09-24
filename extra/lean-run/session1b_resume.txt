@@ -1,0 +1,7 @@
+Continue exactly where you stopped (the previous turn was interrupted by a usage limit). Same source pin, same selected target (Proposition 3, clauses P3.a and P3.b), same conditions C1-C8 and hard rules R1-R5 as in the original task of this conversation.
+
+Maintainer review of the compiled Spec after the interruption found one source-transcription mismatch that must be fixed before any proof work:
+
+- Printed page 9 (PDF page 11), the sentence right after equation (7): "Let us define sigma_hat = sigma(1 - eta) + zeta*eta and B = Btilde^((sigma - 1)/(sigma_hat - 1))". In PaperInterface.lean, `normalizedB` uses the exponent sigmaHat/(sigmaHat - 1), and its docstring misquotes the source. Fix the definition and the docstring to match the printed source, record the change in docs/FORMALIZATION_WORKING_MEMO.md as a corrected transcription, rebuild, and check whether any other definition was affected.
+
+Then finish the scope of this session (source map, architecture pre-pass / semantic preflight as the workflow requires). Proof bodies may remain `sorry` in this session only. At the end, report in the chat: (1) files created or changed; (2) the Lean statement of each Spec and which C1-C8 hypothesis encodes which condition; (3) every place where the source was ambiguous, with page and equation, and the reading you chose; (4) every assumption you added that the paper does not state; (5) the status of each P3 clause.

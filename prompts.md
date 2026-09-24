@@ -276,6 +276,92 @@ the last `lake build` and of
 (5) where the source was ambiguous or, in your judgment, wrong.
 ````
 
+### B.3 — Session 1a · effort `high` · 2026-09-23 17:47–~19:00 (Lima) · interrupted by the Codex usage limit
+
+Launched from branch `run/AR18RaceManMachine` of the AppliedModelingLib clone (commit `2db7d108`),
+with the B.1 prompt verbatim (`codex -m gpt-5.6-sol -c model_reasoning_effort=high "$(cat session1_prompt.txt)"`).
+The previous week's run (IT25KnowledgeEconomy) was first moved to its own local branch so this run starts clean.
+Raw transcript: `extra/lean-run/session1a-transcript.jsonl` (git-ignored, 4.9 MB).
+
+**What the agent wrote before the limit:** paper folder scaffolded through the repository entry point;
+one transparent `proposition3Spec` in `PaperInterface.lean` covering both bullets of Prop. 3, with
+C1–C8 mapped to named hypotheses in its docstring; `ProofInterface.lean` with a single `sorry`;
+working memo, source inventory and audit sidecars. It stopped while promoting the source map for the
+semantic preflight.
+
+**Last agent messages (raw, verbatim):**
+
+```text
+The extracted target exposes a typography issue that matters formally: plain text collapses the barred and hatted capital thresholds in Proposition 3's final sentence. I'm visually checking only the pinned target page to recover the exact quantifier and inequalities before encoding it.
+
+The formal target will use one transparent `proposition3Spec`, matching the workflow's "one source-presented result, one Spec" rule. I'm representing the paper's differentials as actual directional combinations of partial derivatives of declared equilibrium output, wage, and rental functions; this avoids treating the claimed comparative statics as assumed linear-system data. Equations (B9)–(B10) remain concrete auxiliary relations, not hypotheses that smuggle in the answer.
+
+The first repaired build now succeeds, with the expected single `sorry` warning in the proof endpoint.
+```
+
+**From the agent's working memo (raw excerpt, `docs/FORMALIZATION_WORKING_MEMO.md`):**
+
+```text
+- Printed p. 13 uses two decorated capital thresholds. Assumption 3 on printed
+  p. 8 defines the lower threshold `KUnder`; Proposition 3 says there exists
+  `KBar > KUnder` and then gives strict signs below and above `KBar`. The Lean
+  reading quantifies over every positive comparison capital on both sides, so
+  the second direction is not vacuous under the current equilibrium's
+  `K < KUnder` premise.
+...
+## Possible Printed Typos Or Errors
+- No claimed printed error. The extraction loses the underline/overline on the
+  two capital thresholds; the pinned PDF was visually checked to restore them.
+```
+
+**Checks after session 1a (`extra/lean-run/checks-session1a.txt`, raw):**
+
+```text
+# checks: session1a  —  2026-09-23 19:10:53 -05
+# AppliedModelingLib commit: 2db7d108
+
+## 1. abstract predicates (-> Prop / → Prop); every hit is reviewed by hand
+(no hits)
+
+## 2. sorry / admit / axiom
+papers/AR18RaceManMachine/ProofInterface.lean:14:  sorry
+
+## 3. lake build AR18RaceManMachine (last 40 lines)
+⚠ [8315/8317] Replayed AR18RaceManMachine.ProofInterface
+warning: papers/AR18RaceManMachine/ProofInterface.lean:13:8: declaration uses `sorry`
+Build completed successfully (8317 jobs).
+lake build exit code: 0
+
+## 4. paper_contribution check --fast
++ lake build +AR18RaceManMachine.PaperInterface
+Build completed successfully (8314 jobs).
++ git diff --check -- papers/AR18RaceManMachine papers/AR18RaceManMachine.lean lakefile.toml ':(exclude)papers/AR18RaceManMachine/source/'
+check exit code: 0
+```
+
+**Claude's review of the Spec (2026-09-23 ~20:00):**
+1. *Transcription error (E2 below):* `normalizedB` uses $B=\tilde B^{\hat\sigma/(\hat\sigma-1)}$; the source (printed p. 9) says $B=\tilde B^{(\sigma-1)/(\hat\sigma-1)}$.
+2. *Threshold clause:* encoded literally (`∃ KBar, KUnder < KBar ∧ ∀ k<KBar … > 0 ∧ ∀ k>KBar … < 0`). The agent **noticed** that under
+   $K<\underline K$ the second half is vacuous, but instead of flagging it, it widened the quantifier to every positive capital level
+   (including levels where Assumption 3 fails and the unconstrained regime, where $\partial\ln W/\partial I=0$) and wrote
+   "No claimed printed error". It did **not** detect the direction problem. Per decision A.2, the agent is **not** told; outcome to be judged after the proof session.
+3. *Minor:* the $\eta\to0$ branch is represented by a sequence `etaPath` that no other hypothesis uses; in effect the formulas are
+   evaluated at $\eta=0$. Declared by the agent; kept as a representation change for the Lean slide.
+
+### B.4 — Session 1b · effort `high` · resume after the usage limit — prompt as drafted
+
+Sent with `codex resume --last` (same conversation). Verbatim text in `extra/lean-run/session1b_resume.txt`:
+
+````text
+Continue exactly where you stopped (the previous turn was interrupted by a usage limit). Same source pin, same selected target (Proposition 3, clauses P3.a and P3.b), same conditions C1-C8 and hard rules R1-R5 as in the original task of this conversation.
+
+Maintainer review of the compiled Spec after the interruption found one source-transcription mismatch that must be fixed before any proof work:
+
+- Printed page 9 (PDF page 11), the sentence right after equation (7): "Let us define sigma_hat = sigma(1 - eta) + zeta*eta and B = Btilde^((sigma - 1)/(sigma_hat - 1))". In PaperInterface.lean, `normalizedB` uses the exponent sigmaHat/(sigmaHat - 1), and its docstring misquotes the source. Fix the definition and the docstring to match the printed source, record the change in docs/FORMALIZATION_WORKING_MEMO.md as a corrected transcription, rebuild, and check whether any other definition was affected.
+
+Then finish the scope of this session (source map, architecture pre-pass / semantic preflight as the workflow requires). Proof bodies may remain `sorry` in this session only. At the end, report in the chat: (1) files created or changed; (2) the Lean statement of each Spec and which C1-C8 hypothesis encodes which condition; (3) every place where the source was ambiguous, with page and equation, and the reading you chose; (4) every assumption you added that the paper does not state; (5) the status of each P3 clause.
+````
+
 ### Checks Alejandro runs after each session (from the AppliedModelingLib root)
 
 ```bash
@@ -332,3 +418,9 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
   right away, asked for delete permission, and removed the lock. **Rule from now on:**
   Claude only inspects the repository with `git --no-optional-locks ...` (read-only) and never
   writes to `.git/`.
+- **E2 — Codex (`gpt-5.6-sol`, session 1a), statement transcription.** In `PaperInterface.lean`,
+  `normalizedB` defines $B=\tilde B^{\hat\sigma/(\hat\sigma-1)}$ and its docstring calls this "the paper's normalization". The source
+  (printed p. 9, right after eq. 7) says $B=\tilde B^{(\sigma-1)/(\hat\sigma-1)}$. Because the Spec takes eq. (7) and eq. (9) as
+  hypotheses at the same time, the wrong exponent makes them compatible only when $\tilde B=1$, so it **silently shrinks the
+  domain** of the theorem instead of breaking the build. Caught by Claude reading the Spec against a
+  200-dpi render of the page. Fix requested in session 1b (B.4).
