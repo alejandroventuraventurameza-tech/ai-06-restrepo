@@ -58,5 +58,11 @@ $\hat\sigma\neq1$ over 400 random economies: at most one sign change, always fro
 | [`extensions.md`](extensions.md) | Extension that could grow into the term project |
 
 ## Handwritten derivation
-`hand/` — *(to be added)*: Theorem 3.3 of the derivation, $d\ln W/dI$ in the Cobb–Douglas case, and solving for $\hat K$. This is the
-step where we did not believe the printed statement: the threshold goes the other way.
+Six photos in [`hand/`](hand/), the full proof of Theorem 4.2 of the derivation, written out by hand. This is the step where we did not
+believe the printed Proposition 3, nor the Lean agent, which never saw the problem (`prompts.md` E3):
+- `hand/hand_1.jpeg` — named assumptions (A1, S-η, S-σ, LS, regime R, A3), notation $a,b$; Lemma 1 (equal expenditure per task, from the FOC).
+- `hand/hand_2.jpeg` — Lemma 2 (factor prices, $\ln Y$, $s_L=b$) and Lemma 3 (employment by implicit differentiation, $d\ln L/dI<0$).
+- `hand/hand_3.jpeg` — Theorem: productivity effect term by term (FTC) and $d\ln W/dI=\ln\frac{W}{\gamma(I)R}-\frac{1}{b(1+\varepsilon_L)}$.
+- `hand/hand_4.jpeg` — the threshold: $K_I$, $\underline K$, and $d\ln W/dI>0\iff K>\hat K=K_I e^{1/(b(1+\varepsilon_L))}$.
+- `hand/hand_5.jpeg` — every region of $K$ and why none is empty.
+- `hand/hand_6.jpeg` — corollary: the printed "∃ $\overline K>\underline K$ …" is **false**; conclusion: with scarce capital, automation lowers the wage.
