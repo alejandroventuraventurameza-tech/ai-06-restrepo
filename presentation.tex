@@ -413,10 +413,10 @@ Premisa añadida y declarada: que $\ln\omega$ sea diferenciable (\texttt{hlw}), 
 \begin{columns}[T]
 \column{0.56\textwidth}
 \begin{enumerate}\setlength\itemsep{2pt}
-  \item \textbf{Modelo ``en frío''} ante la pregunta del issue: \emph{[respuesta en prompts.md §C]}.
-  \item \textbf{Agente Lean (E2)}: copió mal la normalización $B$. El enunciado compilaba, pero su dominio se reducía en silencio a $\tilde B=1$.
-  \item \textbf{Agente Lean (umbral)}: vio que la mitad negativa quedaba fuera del Supuesto~3, amplió el cuantificador a todo $k>0$ y escribió ``No claimed printed error''. No detectó la dirección.
-  \item \textbf{Claude (E1)}: dejó un \texttt{.git/index.lock} que habría bloqueado los commits.
+  \item \textbf{Modelo en frío} (Claude aislado): acierta en la ambigüedad del salario; omite los regímenes, la condición exacta y el papel de $K$.
+  \item \textbf{Agente Lean (E2)}: copió mal $B$; compilaba, pero el dominio se reducía a $\tilde B=1$.
+  \item \textbf{Agente Lean (E3)}: vio el síntoma 3 veces y parchó el cuantificador; nunca detectó la dirección.
+  \item \textbf{Claude (E1)}: dejó un \texttt{.git/index.lock} que bloqueaba commits.
   \item \textbf{El propio issue}: pide ``reinstauración'', término que no está en esta versión.
 \end{enumerate}
 \textbf{Veredicto}: el titular (``la automatización puede bajar salarios'') es correcto; la \emph{condición} impresa sobre $K$ no. Con poco capital la automatización baja el salario.

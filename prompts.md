@@ -743,7 +743,65 @@ python3 scripts/paper_contribution.py check AR18RaceManMachine --fast
 
 > Ask the model: **does automation necessarily reduce wages and the labour share in this model?**
 
-_Model, date, raw answer: to be filled._
+**Model:** Claude, run as an **isolated sub-agent** with no access to this conversation, the repository or any tool
+(no web search, no files). Asked 2026-09-24 20:33 (Lima). Why not ChatGPT: Alejandro's ChatGPT quota was used up that evening.
+Why not the main Claude session: it already knew the answer, so it would not have been a cold answer.
+
+**Question, verbatim** (the issue's sentence plus the paper reference, so the model knows which model is meant):
+
+```text
+In Acemoglu and Restrepo (2018), "The Race between Man and Machine: Implications of Technology for Growth, Factor Shares, and Employment" (AER; NBER WP 22252), does automation necessarily reduce wages and the labour share in this model?
+```
+
+**Answer, raw (not edited):**
+
+````markdown
+**Short answer:** No for wages, and only conditionally for the labour share. In the static model, holding the set of tasks fixed, automation always lowers the labour share. Its effect on wages is ambiguous. Over the long run, the model's self-correcting mechanism means continued automation need not lower either one.
+
+**The setup.** Output is produced from a continuum of tasks in [N−1, N]. Tasks below a threshold I can be done by capital, and N indexes the most complex tasks available. Automation raises I, so capital takes over tasks labour used to do. Creating new, labour-intensive tasks raises N.
+
+**Effects of automation (a rise in I), holding N fixed:**
+
+1. **Displacement effect.** Labour is moved out of the tasks that get automated. This shrinks the range of tasks labour performs, and it always pushes the labour share and labour demand down. In the static model the labour share falls when I rises.
+
+2. **Productivity effect.** Firms automate only where capital is cheaper, so costs fall and output rises. That raises demand for labour in the tasks that are not automated. The size of this effect depends on the cost saving, roughly the gap between the effective cost of labour and of capital in the marginal task.
+
+   - When the saving is large, the productivity effect can outweigh displacement, and wages rise even though the labour share falls.
+   - With "so-so technologies", machines are only slightly cheaper than workers. The productivity gain is then small and displacement dominates, so wages can fall.
+
+3. **Capital accumulation.** Automation raises the demand for capital, which pushes up investment and capital deepening. In the long run the rental rate of capital is pinned down by the discount and depreciation rates. With it fixed, automation reduces costs, which tends to raise wages, but the labour share is still lower for a given N.
+
+4. **Employment.** When labour supply is elastic, automation can also reduce employment through the same displacement channel.
+
+**The dynamic (endogenous technology) part.** Automation and new-task creation are both driven by profit incentives. Automation lowers the effective cost of labour relative to capital. That makes it more profitable to create new labour-intensive tasks (raising N) and less profitable to automate further.
+
+- This "race between man and machine" is stable. Periods of rapid automation set off forces that restore the labour share toward its steady-state level.
+- On the balanced growth path, I and N grow at the same rate. The labour share and employment stay constant, and wages grow with productivity, even though automation never stops.
+
+**Caveats the authors stress:**
+
+- The adjustment can be slow, so the labour share and wages can fall for long periods during the transition.
+- If automation becomes very cheap, for example because the rental rate of capital falls low enough, the self-correcting mechanism can break down and all tasks may eventually be automated.
+- When skills differ across workers, automation and new tasks can raise inequality even when the economy as a whole self-corrects. New tasks tend to favour high-skill workers first.
+
+**Bottom line:**
+
+| | Short run (N fixed) | Long run |
+|---|---|---|
+| Labour share | Always falls | Pulled back as new tasks are created; constant on the balanced growth path |
+| Wages | Can rise or fall (fall with so-so technologies) | Rise if new tasks keep pace |
+
+Whether automation hurts workers depends on how productive it is and whether new tasks for labour keep being created.
+````
+
+**Verdict (Claude main session + Alejandro).** Better than the issue feared on the headline, and flatter on the conditions, as it predicted:
+
+* **Right:** wages are ambiguous in the short run; productivity vs displacement; "so-so" technologies lower wages; the labour share falls; the long-run rental rate is pinned down; the stability of the race.
+* **Missing: the regimes.** It never says that automation only matters in the **constrained regime** ($I^*=I<\tilde I$). In the free regime ($I^*=\tilde I<I$) a higher $I$ changes **nothing**: not wages, not the labour share. "In the static model the labour share falls when I rises" is true only in the constrained regime.
+* **Missing: the exact condition.** It gives no formula: $B^{\hat\sigma-1}\int_R^{W/\gamma(I)}x^{-\hat\sigma}dx>(1-s_L)\Lambda_I/(\hat\sigma+\varepsilon_L)$.
+* **Missing: capital.** It does not say that the wage effect depends on $K$: automation lowers the wage when capital is scarce ($K_I<K<\hat K$) and raises it when capital is abundant. So it neither repeats nor catches the inverted threshold of the printed Prop. 3.
+* **Imprecise:** "employment *can* fall when labour supply is elastic". In the constrained regime employment **always** falls (Prop. 2). "Long-run wages rise **if new tasks keep pace**": Prop. 5 says the long-run wage rises with automation even at fixed $n$ in the interior region, because capital adjusts. "Labour share pulled back": the paper says it returns to its initial level only if the automation burst was random; if the innovation-possibilities frontier shifted, the new balanced growth path has a **lower** labour share.
+
 
 ---
 
