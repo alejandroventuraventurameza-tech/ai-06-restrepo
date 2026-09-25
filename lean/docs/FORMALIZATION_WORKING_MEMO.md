@@ -112,5 +112,28 @@ formula or statement is actually false.
 
 ## Deferred Formalization Or Library Work
 
-- All proof bodies, including derivations of (B9)--(B10), are deferred to the
-  next session. No Propositions 4--9 or dynamic sections are scheduled.
+- The common real-power sign lemma, the free-regime ordering, both
+  variable-limit FTC derivatives, the lower- and upper-endpoint raw log
+  derivatives of equation (12), the differential assembly algebra, and the
+  corrected wage-sign trichotomy are proved without `sorry` in
+  `ProofInterface.lean`.
+- **Open constrained-ordering blocker.** C3 relates the current positive
+  equilibrium at `K` to factor prices at `KUnder`, but C7 only states positivity
+  of `W`, `R`, `Y`, and `L` at the current capital. The global path equations do
+  not require positive wage, rental, employment, or output at comparison
+  capitals and provide no continuity or monotonicity in the capital argument.
+  Since Mathlib's `Real.rpow` is total on negative bases, equations (8)--(12)
+  alone do not let the current proof derive that the comparison equilibrium is
+  on the intended positive economic branch. Consequently `K < KUnder` cannot
+  yet be converted into `ITilde < N`, which is exactly the missing fact for
+  `R > W / gamma N` in P3(a). No extra premise was added because the Spec is
+  frozen after the two maintainer-approved threshold changes.
+- **Open response-derivative blocker.** The FTC and raw production derivatives
+  are complete, but the six paper-facing partial identities still require
+  local regime stability, positivity of the local equilibrium branch, and
+  differentiation and solution of equations (8)--(11). In particular the free
+  regime requires proving local equilibrium invariance with respect to the
+  nonbinding technology parameter from the path equations, while the
+  constrained wage/rental identities require the Lean derivations of
+  (B9)--(B10).
+- No Propositions 4--9 or dynamic sections are scheduled.

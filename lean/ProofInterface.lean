@@ -10,6 +10,240 @@ the concrete equilibrium paths.
 
 namespace AR18RaceManMachine
 
+open Filter Set MeasureTheory
+
+/-- The two variable-limit derivative facts used in every productivity and
+market-clearing calculation. -/
+lemma gammaRpow_interval_derivatives
+    {gamma : ℝ → ℝ} {sigmaHat a b : ℝ}
+    (hab : a < b) (hgammaDiff : Differentiable ℝ gamma)
+    (hgammaPos : ∀ x ∈ Set.Icc a b, 0 < gamma x) :
+    HasDerivAt (fun u ↦ ∫ x in u..b, Real.rpow (gamma x) (sigmaHat - 1))
+        (-Real.rpow (gamma a) (sigmaHat - 1)) a ∧
+      HasDerivAt (fun u ↦ ∫ x in a..u, Real.rpow (gamma x) (sigmaHat - 1))
+        (Real.rpow (gamma b) (sigmaHat - 1)) b := by
+  have hcontGamma : Continuous gamma := hgammaDiff.continuous
+  have hcont : ContinuousOn (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1))
+      (Set.Icc a b) := by
+    intro x hx
+    exact (hcontGamma.continuousAt.rpow_const
+      (Or.inl (ne_of_gt (hgammaPos x hx)))).continuousWithinAt
+  have hint : IntervalIntegrable
+      (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) volume a b :=
+    (show ContinuousOn (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) (uIcc a b) by
+      rwa [uIcc_of_le hab.le]).intervalIntegrable
+  let s : Set ℝ := gamma ⁻¹' Set.Ioi 0
+  have hsOpen : IsOpen s := isOpen_Ioi.preimage hcontGamma
+  have hcontOpen : ContinuousOn
+      (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) s := by
+    intro x hx
+    exact (hcontGamma.continuousAt.rpow_const
+      (Or.inl (ne_of_gt hx))).continuousWithinAt
+  have hmeasA : StronglyMeasurableAtFilter
+      (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) (nhds a) volume :=
+    hcontOpen.stronglyMeasurableAtFilter hsOpen a (hgammaPos a ⟨le_rfl, hab.le⟩)
+  have hmeasB : StronglyMeasurableAtFilter
+      (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) (nhds b) volume :=
+    hcontOpen.stronglyMeasurableAtFilter hsOpen b (hgammaPos b ⟨hab.le, le_rfl⟩)
+  have hca : ContinuousAt (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) a :=
+    hcontGamma.continuousAt.rpow_const
+      (Or.inl (ne_of_gt (hgammaPos a ⟨le_rfl, hab.le⟩)))
+  have hcb : ContinuousAt (fun x ↦ Real.rpow (gamma x) (sigmaHat - 1)) b :=
+    hcontGamma.continuousAt.rpow_const
+      (Or.inl (ne_of_gt (hgammaPos b ⟨hab.le, le_rfl⟩)))
+  constructor
+  · exact intervalIntegral.integral_hasDerivAt_left hint hmeasA hca
+  · exact intervalIntegral.integral_hasDerivAt_right hint hmeasB hcb
+
+/-- Log derivative of equation (12) with respect to its lower task cutoff.
+This is the analytic core of the constrained automation productivity partial. -/
+lemma production12_logDeriv_lower
+    {gamma : ℝ → ℝ} {B etaEffective sigmaHat t N K L : ℝ}
+    (hs : sigmaHat ≠ 0)
+    (hB : 0 < B) (heta : etaEffective < 1)
+    (ha : 0 < t - N + 1) (hK : 0 < K) (hL : 0 < L)
+    (hG : 0 < ∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1))
+    (hint : HasDerivAt
+      (fun u ↦ ∫ x in u..N, Real.rpow (gamma x) (sigmaHat - 1))
+      (-Real.rpow (gamma t) (sigmaHat - 1)) t) :
+    deriv (fun u ↦ Real.log (production12 gamma B etaEffective sigmaHat u N K L)) t =
+      (sigmaHat / (sigmaHat - 1)) *
+        (((1 / sigmaHat) * Real.rpow (t - N + 1) (1 / sigmaHat - 1) *
+            Real.rpow K ((sigmaHat - 1) / sigmaHat) -
+          (1 / sigmaHat) *
+            Real.rpow (∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1))
+              (1 / sigmaHat - 1) *
+            Real.rpow (gamma t) (sigmaHat - 1) *
+            Real.rpow L ((sigmaHat - 1) / sigmaHat)) /
+          (Real.rpow (t - N + 1) (1 / sigmaHat) *
+              Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+            Real.rpow (∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1))
+                (1 / sigmaHat) *
+              Real.rpow L ((sigmaHat - 1) / sigmaHat))) := by
+  let G : ℝ := ∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1)
+  let core : ℝ :=
+    Real.rpow (t - N + 1) (1 / sigmaHat) * Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+      Real.rpow G (1 / sigmaHat) * Real.rpow L ((sigmaHat - 1) / sigmaHat)
+  let coreD : ℝ :=
+    (1 / sigmaHat) * Real.rpow (t - N + 1) (1 / sigmaHat - 1) *
+        Real.rpow K ((sigmaHat - 1) / sigmaHat) -
+      (1 / sigmaHat) * Real.rpow G (1 / sigmaHat - 1) *
+        Real.rpow (gamma t) (sigmaHat - 1) *
+        Real.rpow L ((sigmaHat - 1) / sigmaHat)
+  have hAderiv : HasDerivAt (fun u : ℝ ↦ u - N + 1) 1 t := by
+    convert ((hasDerivAt_id t).sub_const N).add_const 1 using 1
+  have hArpow := hAderiv.rpow_const (Or.inl (ne_of_gt ha)) (p := 1 / sigmaHat)
+  have hGrpow := hint.rpow_const (Or.inl (ne_of_gt hG)) (p := 1 / sigmaHat)
+  have hcore : HasDerivAt
+      (fun u ↦
+        Real.rpow (u - N + 1) (1 / sigmaHat) * Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+        Real.rpow (∫ x in u..N, Real.rpow (gamma x) (sigmaHat - 1))
+            (1 / sigmaHat) * Real.rpow L ((sigmaHat - 1) / sigmaHat))
+      coreD t := by
+    convert
+      (hArpow.mul_const (Real.rpow K ((sigmaHat - 1) / sigmaHat))).add
+        (hGrpow.mul_const (Real.rpow L ((sigmaHat - 1) / sigmaHat))) using 1; (
+      dsimp [G, coreD]; ring)
+  have hcorePos : 0 < core := by
+    dsimp [core]
+    positivity
+  have houter := hcore.rpow_const (Or.inl (ne_of_gt hcorePos))
+      (p := sigmaHat / (sigmaHat - 1))
+  have hC : 0 < B / (1 - etaEffective) := div_pos hB (sub_pos.mpr heta)
+  have hprod : HasDerivAt
+      (fun u ↦ production12 gamma B etaEffective sigmaHat u N K L)
+      ((B / (1 - etaEffective)) *
+        (coreD * (sigmaHat / (sigmaHat - 1)) *
+          Real.rpow core (sigmaHat / (sigmaHat - 1) - 1))) t := by
+    simpa only [production12, G, core, coreD] using
+      houter.const_mul (B / (1 - etaEffective))
+  have hprodPos : 0 < production12 gamma B etaEffective sigmaHat t N K L := by
+    rw [production12]
+    exact mul_pos hC (Real.rpow_pos_of_pos hcorePos _)
+  have hlog := hprod.log (ne_of_gt hprodPos)
+  rw [hlog.deriv]
+  have hCne : B / (1 - etaEffective) ≠ 0 := ne_of_gt hC
+  have hcoreNe : core ≠ 0 := ne_of_gt hcorePos
+  have hpowNe : Real.rpow core (sigmaHat / (sigmaHat - 1) - 1) ≠ 0 :=
+    ne_of_gt (Real.rpow_pos_of_pos hcorePos _)
+  have hpowrel : Real.rpow core (sigmaHat / (sigmaHat - 1)) =
+      Real.rpow core (sigmaHat / (sigmaHat - 1) - 1) * core := by
+    conv_lhs => rw [show sigmaHat / (sigmaHat - 1) =
+      (sigmaHat / (sigmaHat - 1) - 1) + 1 by ring]
+    simpa only [Real.rpow_one] using
+      Real.rpow_add hcorePos (sigmaHat / (sigmaHat - 1) - 1) 1
+  rw [production12]
+  change
+    (B / (1 - etaEffective) *
+      (coreD * (sigmaHat / (sigmaHat - 1)) *
+        Real.rpow core (sigmaHat / (sigmaHat - 1) - 1))) /
+      (B / (1 - etaEffective) * Real.rpow core (sigmaHat / (sigmaHat - 1))) = _
+  rw [hpowrel]
+  change
+    (B / (1 - etaEffective) *
+      (coreD * (sigmaHat / (sigmaHat - 1)) *
+        Real.rpow core (sigmaHat / (sigmaHat - 1) - 1))) /
+      (B / (1 - etaEffective) *
+        (Real.rpow core (sigmaHat / (sigmaHat - 1) - 1) * core)) =
+      (sigmaHat / (sigmaHat - 1)) * (coreD / core)
+  apply (div_eq_iff (mul_ne_zero hCne (mul_ne_zero hpowNe hcoreNe))).2
+  field_simp [hcoreNe]
+
+/-- Log derivative of equation (12) with respect to the upper task endpoint.
+This is the analytic core of the new-task productivity partial. -/
+lemma production12_logDeriv_upper
+    {gamma : ℝ → ℝ} {B etaEffective sigmaHat t N K L : ℝ}
+    (hs : sigmaHat ≠ 0)
+    (hB : 0 < B) (heta : etaEffective < 1)
+    (ha : 0 < t - N + 1) (hK : 0 < K) (hL : 0 < L)
+    (hG : 0 < ∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1))
+    (hint : HasDerivAt
+      (fun u ↦ ∫ x in t..u, Real.rpow (gamma x) (sigmaHat - 1))
+      (Real.rpow (gamma N) (sigmaHat - 1)) N) :
+    deriv (fun u ↦ Real.log (production12 gamma B etaEffective sigmaHat t u K L)) N =
+      (sigmaHat / (sigmaHat - 1)) *
+        ((-(1 / sigmaHat) * Real.rpow (t - N + 1) (1 / sigmaHat - 1) *
+            Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+          (1 / sigmaHat) *
+            Real.rpow (∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1))
+              (1 / sigmaHat - 1) *
+            Real.rpow (gamma N) (sigmaHat - 1) *
+            Real.rpow L ((sigmaHat - 1) / sigmaHat)) /
+          (Real.rpow (t - N + 1) (1 / sigmaHat) *
+              Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+            Real.rpow (∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1))
+                (1 / sigmaHat) *
+              Real.rpow L ((sigmaHat - 1) / sigmaHat))) := by
+  let G : ℝ := ∫ x in t..N, Real.rpow (gamma x) (sigmaHat - 1)
+  let core : ℝ :=
+    Real.rpow (t - N + 1) (1 / sigmaHat) * Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+      Real.rpow G (1 / sigmaHat) * Real.rpow L ((sigmaHat - 1) / sigmaHat)
+  let coreD : ℝ :=
+    -(1 / sigmaHat) * Real.rpow (t - N + 1) (1 / sigmaHat - 1) *
+        Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+      (1 / sigmaHat) * Real.rpow G (1 / sigmaHat - 1) *
+        Real.rpow (gamma N) (sigmaHat - 1) *
+        Real.rpow L ((sigmaHat - 1) / sigmaHat)
+  have hAderiv : HasDerivAt (fun u : ℝ ↦ t - u + 1) (-1) N := by
+    convert ((hasDerivAt_const N t).sub (hasDerivAt_id N)).add_const 1 using 1
+    norm_num
+  have hArpow := hAderiv.rpow_const (Or.inl (ne_of_gt ha)) (p := 1 / sigmaHat)
+  have hGrpow := hint.rpow_const (Or.inl (ne_of_gt hG)) (p := 1 / sigmaHat)
+  have hcore : HasDerivAt
+      (fun u ↦
+        Real.rpow (t - u + 1) (1 / sigmaHat) * Real.rpow K ((sigmaHat - 1) / sigmaHat) +
+        Real.rpow (∫ x in t..u, Real.rpow (gamma x) (sigmaHat - 1))
+            (1 / sigmaHat) * Real.rpow L ((sigmaHat - 1) / sigmaHat))
+      coreD N := by
+    convert
+      (hArpow.mul_const (Real.rpow K ((sigmaHat - 1) / sigmaHat))).add
+        (hGrpow.mul_const (Real.rpow L ((sigmaHat - 1) / sigmaHat))) using 1; (
+      dsimp [G, coreD]; ring)
+  have hcorePos : 0 < core := by
+    dsimp [core]
+    positivity
+  have houter := hcore.rpow_const (Or.inl (ne_of_gt hcorePos))
+      (p := sigmaHat / (sigmaHat - 1))
+  have hC : 0 < B / (1 - etaEffective) := div_pos hB (sub_pos.mpr heta)
+  have hprod : HasDerivAt
+      (fun u ↦ production12 gamma B etaEffective sigmaHat t u K L)
+      ((B / (1 - etaEffective)) *
+        (coreD * (sigmaHat / (sigmaHat - 1)) *
+          Real.rpow core (sigmaHat / (sigmaHat - 1) - 1))) N := by
+    simpa only [production12, G, core, coreD] using
+      houter.const_mul (B / (1 - etaEffective))
+  have hprodPos : 0 < production12 gamma B etaEffective sigmaHat t N K L := by
+    rw [production12]
+    exact mul_pos hC (Real.rpow_pos_of_pos hcorePos _)
+  have hlog := hprod.log (ne_of_gt hprodPos)
+  rw [hlog.deriv]
+  have hCne : B / (1 - etaEffective) ≠ 0 := ne_of_gt hC
+  have hcoreNe : core ≠ 0 := ne_of_gt hcorePos
+  have hpowNe : Real.rpow core (sigmaHat / (sigmaHat - 1) - 1) ≠ 0 :=
+    ne_of_gt (Real.rpow_pos_of_pos hcorePos _)
+  have hpowrel : Real.rpow core (sigmaHat / (sigmaHat - 1)) =
+      Real.rpow core (sigmaHat / (sigmaHat - 1) - 1) * core := by
+    conv_lhs => rw [show sigmaHat / (sigmaHat - 1) =
+      (sigmaHat / (sigmaHat - 1) - 1) + 1 by ring]
+    simpa only [Real.rpow_one] using
+      Real.rpow_add hcorePos (sigmaHat / (sigmaHat - 1) - 1) 1
+  rw [production12]
+  change
+    (B / (1 - etaEffective) *
+      (coreD * (sigmaHat / (sigmaHat - 1)) *
+        Real.rpow core (sigmaHat / (sigmaHat - 1) - 1))) /
+      (B / (1 - etaEffective) * Real.rpow core (sigmaHat / (sigmaHat - 1))) = _
+  rw [hpowrel]
+  change
+    (B / (1 - etaEffective) *
+      (coreD * (sigmaHat / (sigmaHat - 1)) *
+        Real.rpow core (sigmaHat / (sigmaHat - 1) - 1))) /
+      (B / (1 - etaEffective) *
+        (Real.rpow core (sigmaHat / (sigmaHat - 1) - 1) * core)) =
+      (sigmaHat / (sigmaHat - 1)) * (coreD / core)
+  apply (div_eq_iff (mul_ne_zero hCne (mul_ne_zero hpowNe hcoreNe))).2
+  field_simp [hcoreNe]
+
 /-- Equation (6) turns the cutoff's relative-price identity into equality of
 the rental rate and the effective wage at the cutoff. -/
 lemma cutoff_effectiveCost_eq

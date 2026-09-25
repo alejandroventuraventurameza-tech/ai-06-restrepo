@@ -8,8 +8,8 @@
   "repository_visibility": "private_only",
   "build_target": "lake build +AR18RaceManMachine",
   "status": "scaffold",
-  "main_caveat": "The source-pinned Proposition 3 specification and exact-type endpoint compile, but the proof body is intentionally deferred and contains sorry.",
-  "human_summary": "Statement-first formalization of all clauses of Proposition 3 from the June 2017 NBER revision; proofs are scheduled for the next session.",
+  "main_caveat": "The maintainer-approved correction of Proposition 3(a)'s false capital-threshold sentence is encoded and the FTC, CES derivative, sign, ordering, and assembly helper lemmas compile, but the exact endpoint still contains sorry because the frozen path hypotheses do not yet yield the constrained C3 ordering or the six equilibrium response partials.",
+  "human_summary": "Partial proof formalization of Proposition 3 from the June 2017 NBER revision, including the approved correction of the printed capital-threshold error and checked analytic/algebraic support lemmas; the final equilibrium-response proof remains open.",
   "human_summary_review": {
     "status": "draft",
     "note": "Set to human_approved only after a human has written or explicitly approved this summary; do not rewrite a human_approved summary without explicit human instruction."
