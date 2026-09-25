@@ -317,7 +317,7 @@ Las curvas terminan donde se viola el Supuesto~3.
 % =====================================================================
 
 \begin{frame}{La corrida requerida (AppliedModelingLib, \texttt{gpt-5.6-sol})}
-\footnotesize
+\scriptsize
 \begin{columns}[T]
 \column{0.5\textwidth}
 \textbf{Configuración y desviaciones declaradas}
@@ -326,22 +326,18 @@ Las curvas terminan donde se viola el Supuesto~3.
   \item Texto literal del issue más un anexo de alcance (D2): condiciones C1–C8, sin predicados \texttt{→ Prop}, sin releer la fuente, compilar hasta cerrar.
   \item \textbf{D1}: todo en esfuerzo \texttt{high}, no \texttt{xhigh}; la cuota diaria se agotó dos veces.
 \end{itemize}
-\textbf{Lo que produjo}
-\begin{itemize}\setlength\itemsep{1pt}
-  \item Un \texttt{proposition3Spec} con las diferenciales como \emph{derivadas reales} de funciones de equilibrio.
-  \item Excluye $\sh=1$ y el caso (F); $\eta\to0$ como sucesión.
-\end{itemize}
+\textbf{Lo que produjo}: un \texttt{proposition3Spec} con las diferenciales como \emph{derivadas reales} de funciones de equilibrio; excluye $\sh=1$ y el caso (F); $\eta\to0$ como sucesión.
 \column{0.47\textwidth}
-\textbf{Estado y checks} \emph{(se completa con la sesión 2)}
+\textbf{Estado final (4 sesiones, cuota agotada 4 veces)}
 \begin{itemize}\setlength\itemsep{1pt}
-  \item \texttt{lake build}: \emph{[pendiente]}
-  \item \texttt{paper\_contribution.py check --fast}: \emph{[pendiente]}
-  \item cláusulas probadas / falsas / abiertas: \emph{[pendiente]}
+  \item \texttt{lake build}: \textcolor{posc}{éxito}; queda 1 \texttt{sorry}, el ensamblaje de \texttt{proposition3}. \texttt{check --fast}: \textcolor{posc}{éxito}.
+  \item \textbf{Probado}: orden de precios en (L), positividad de ambos coeficientes de productividad, la \emph{condición corregida} del salario (3 casos), la rama impresa negativa es vacía, el ensamblaje de las fórmulas y las derivadas de la ec.~(12) (TFC con límite variable).
+  \item \textbf{Abierto} (el bloqueo exacto): el orden de precios en (R) no se sigue de las premisas del Spec (las sendas de equilibrio no imponen positividad ni regularidad en otros $K$), y falta conectar las derivadas de (12) con $W$ y $R$ de equilibrio.
 \end{itemize}
 \textbf{Revisión humana}
 \begin{itemize}\setlength\itemsep{1pt}
   \item \textcolor{negc}{E2}: copió mal $B=\tilde B^{\frac{\sigma-1}{\sh-1}}$; eso reducía en silencio el dominio a $\tilde B=1$. Corregido.
-  \item La cláusula del umbral quedó codificada \emph{tal cual está impresa}.
+  \item Umbral: 3 sesiones sin detectar la dirección (E3); en la sesión 3 le dimos la corrección (D3).
 \end{itemize}
 \end{columns}
 \end{frame}

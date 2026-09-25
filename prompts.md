@@ -661,6 +661,71 @@ derivatives of variable-limit integrals and implicit differentiation of the equi
 $W/\gamma(I)>R>W/\gamma(N)$ is also still open. The algebraic layer is proved. The run stopped because the daily Codex quota ran out
 three times; no Spec was weakened to make a proof go through.
 
+### B.10 — Session 4 · effort `high` · last attempt at the calculus layer — prompt as drafted
+
+Decided by Alejandro at 19:38: continue the formalization from Codex (not in Claude's sandbox), with a hard stop around 21:00
+so that the PR can be merged before the deadline. Sent with `codex resume --last`. Verbatim text in `extra/lean-run/session4_prompt.txt`:
+
+````text
+Continue exactly where you stopped (the previous turn was interrupted by a usage limit). Same source pin, target, conditions C1-C8, rules R1-R5, and the two maintainer decisions of the previous message (regime scope approved; printed threshold kept as a named source error; corrected sign condition in the Spec). Do not change the Spec any further.
+
+Remaining work, in this order. Keep `lake build` green after each lemma. Hard stop: after at most ~80 minutes of work, or earlier if everything closes.
+1. The constrained-regime price ordering W/γ(I*) > R > W/γ(N) (P3.a), from the regime condition, Assumption 1, and the Assumption 3 hypotheses already in the Spec.
+2. The six partial-derivative identities that the assembly lemmas `proposition3_constrainedDifferentialFormulas` and `proposition3_freeDifferentialFormulas` take as hypotheses. Derive them from the equilibrium-path equations in `proposition3EquilibriumPaths`. For the variable-limit integrals, use Mathlib's `intervalIntegral.integral_hasDerivAt_left` / `integral_hasDerivAt_right`. For the equilibrium responses, differentiate the path identities (8)-(11) and solve the resulting linear system; this is where (B9)-(B10) come from. Prove each identity as its own named lemma.
+3. If 1-2 close, assemble `theorem proposition3 : proposition3Spec` and remove the last `sorry`. Otherwise leave the endpoint `sorry` and every finished piece as a separate, sorry-free lemma.
+
+At the end, report in the chat: (1) files changed; (2) the status of each P3 clause under R4; (3) the output of the last `lake build` and of `python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`; (4) the exact remaining blocker, if any.
+````
+
+### B.11 — Session 4 · effort `high` · 2026-09-24 19:39–19:50 (Lima) · interrupted by the usage limit · final state of the run
+
+Prompt: B.10 verbatim. Raw transcript `extra/lean-run/session4-transcript.jsonl` (git-ignored); last messages in
+`extra/lean-run/session4-final-report.md`. The last message (raw, verbatim):
+
+```text
+The variable-limit FTC work and both raw equation (12) log derivatives are now checked and the build remains green. The proof cannot presently cross from those derivatives to the full endpoint: C3 names an equilibrium at `KUnder`, but the path hypotheses only require positivity at the current `K`; they allow nonpositive comparison-capital prices/employment and impose no regularity in the capital argument. That prevents deriving the constrained cutoff comparison needed for P3.a's ordering from the frozen hypotheses. I'm recording that exact blocker and preserving the completed lemmas before the final checks.
+```
+
+**Checks after session 4 (raw), the final state copied to `lean/` with `rsync -a --delete` at 20:18:**
+
+```text
+# checks: session4  —  2026-09-24 20:01:37 -05
+# AppliedModelingLib commit: 2db7d108
+
+## 1. abstract predicates (-> Prop / → Prop); every hit is reviewed by hand
+(no hits)
+
+## 2. sorry / admit / axiom
+papers/AR18RaceManMachine/ProofInterface.lean:413:  sorry
+
+## 3. lake build AR18RaceManMachine (last 40 lines)
+⚠ [8315/8317] Replayed AR18RaceManMachine.ProofInterface
+warning: papers/AR18RaceManMachine/ProofInterface.lean:412:8: declaration uses `sorry`
+Build completed successfully (8317 jobs).
+lake build exit code: 0
+
+## 4. paper_contribution check --fast
++ lake build +AR18RaceManMachine.PaperInterface
+Build completed successfully (8314 jobs).
++ git diff --check -- papers/AR18RaceManMachine papers/AR18RaceManMachine.lean lakefile.toml ':(exclude)papers/AR18RaceManMachine/source/'
+check exit code: 0
+```
+
+**New lemmas in session 4 (sorry-free):** `gammaRpow_interval_derivatives` (derivative of the variable-limit integral
+$\int_{I}^{N}\gamma^{\hat\sigma-1}$ in both limits), `production12_logDeriv_lower`, `production12_logDeriv_upper` (log-derivative of eq. (12)
+with respect to $I^*$ and $N$).
+
+**FINAL BLOCKER (as submitted).** `theorem proposition3 : proposition3Spec` still has one `sorry`. Two things are missing:
+1. **The constrained-regime price ordering** $W/\gamma(I)>R>W/\gamma(N)$. The agent's diagnosis: Assumption 3 is encoded as an equilibrium at
+   `KUnder`, but the equilibrium-path hypotheses require positivity only at the current $K$ and impose no regularity in the capital argument.
+   So the comparison between capital levels needed for the ordering does not follow from the frozen hypotheses. It is a **defect of the Spec's
+   premises** (underdetermined paths), not a false statement.
+2. **Linking the raw derivatives of (12) to the equilibrium price paths**: the six identities with $W$, $R$ and (B9)–(B10).
+
+What is proved in the run: the free-regime ordering, both productivity coefficients $>0$, the corrected wage condition (3 cases),
+the printed negative branch is vacuous, the assembly of the differential formulas, and the FTC and eq. (12) log-derivatives.
+The Codex daily quota ran out four times (sessions 1a, 1b→2, 3, 4).
+
 ### Checks Alejandro runs after each session (from the AppliedModelingLib root)
 
 ```bash

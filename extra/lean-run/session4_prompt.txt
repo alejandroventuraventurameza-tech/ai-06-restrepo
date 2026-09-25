@@ -1,0 +1,8 @@
+Continue exactly where you stopped (the previous turn was interrupted by a usage limit). Same source pin, target, conditions C1-C8, rules R1-R5, and the two maintainer decisions of the previous message (regime scope approved; printed threshold kept as a named source error; corrected sign condition in the Spec). Do not change the Spec any further.
+
+Remaining work, in this order. Keep `lake build` green after each lemma. Hard stop: after at most ~80 minutes of work, or earlier if everything closes.
+1. The constrained-regime price ordering W/γ(I*) > R > W/γ(N) (P3.a), from the regime condition, Assumption 1, and the Assumption 3 hypotheses already in the Spec.
+2. The six partial-derivative identities that the assembly lemmas `proposition3_constrainedDifferentialFormulas` and `proposition3_freeDifferentialFormulas` take as hypotheses. Derive them from the equilibrium-path equations in `proposition3EquilibriumPaths`. For the variable-limit integrals, use Mathlib's `intervalIntegral.integral_hasDerivAt_left` / `integral_hasDerivAt_right`. For the equilibrium responses, differentiate the path identities (8)-(11) and solve the resulting linear system; this is where (B9)-(B10) come from. Prove each identity as its own named lemma.
+3. If 1-2 close, assemble `theorem proposition3 : proposition3Spec` and remove the last `sorry`. Otherwise leave the endpoint `sorry` and every finished piece as a separate, sorry-free lemma.
+
+At the end, report in the chat: (1) files changed; (2) the status of each P3 clause under R4; (3) the output of the last `lake build` and of `python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`; (4) the exact remaining blocker, if any.
