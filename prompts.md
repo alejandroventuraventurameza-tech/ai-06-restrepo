@@ -855,3 +855,8 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
   the symptom, three repairs of the encoding, never a question about the economics. Caught by Claude and Alejandro in the derivation
   (Thm 4.2, Cor 4.3), the simulation (P5, P7) and the Lean sandbox (`printed_threshold_claim_false`). Test of A.2 closed here;
   correction supplied in session 3 (D3).
+- **E4 — Claude, 2026-09-24 20:37, operational (repository hygiene), the same kind of mistake as E1.** To check that `main` had everything,
+  Claude ran `git fetch`. That is not a read-only operation: it writes objects to `.git/`, and because the sandbox could not delete them it left a
+  `.git/objects/maintenance.lock` and a temporary object that could have blocked GitHub Desktop. Claude noticed from the warning, asked for delete
+  permission and removed both files. It **broke its own rule from E1** (only `git --no-optional-locks` and only read commands). Lesson: `fetch`,
+  `pull` and `gc` are writes too.
