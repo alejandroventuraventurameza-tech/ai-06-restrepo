@@ -1,0 +1,463 @@
+% =====================================================================
+% Own derivation: a hand-derivable special case of Acemoglu & Restrepo
+% (NBER WP 22252, June 2017), static model, that reproduces the trap:
+% the exact condition under which automation RAISES the wage, and the
+% correct direction of the capital threshold in Proposition 3.
+% No numerical examples here by design; numbers live in sim/.
+% Compile: latexmk -pdf derivation.tex
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}\usepackage{microtype}}{}
+\IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands,es-nodecimaldot]{babel}}{}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+\numberwithin{equation}{section}
+\theoremstyle{definition}
+\newtheorem{definicion}{Definición}[section]
+\newtheorem{supuestoS}{Supuesto}
+\renewcommand{\thesupuestoS}{\textsf{\arabic{supuestoS}}}
+\theoremstyle{plain}
+\newtheorem{lema}[definicion]{Lema}
+\newtheorem{proposicion}[definicion]{Proposición}
+\newtheorem{teorema}[definicion]{Teorema}
+\newtheorem{corolario}[definicion]{Corolario}
+\theoremstyle{remark}
+\newtheorem{observacion}[definicion]{Observación}
+\providecommand{\proofname}{Demostración}\renewcommand{\proofname}{Demostración}
+\providecommand{\contentsname}{Índice}\renewcommand{\contentsname}{Índice}
+
+\newtcolorbox{nota}[1][]{colback=blue!3,colframe=blue!40!black,boxrule=0.5pt,arc=2pt,
+  fonttitle=\bfseries\small,title={#1}}
+
+\newcommand{\It}{\tilde I}
+\newcommand{\Is}{I^{*}}
+\newcommand{\Kl}{\underline K}
+\newcommand{\Kb}{\overline K}
+\newcommand{\Kh}{\hat K}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\sh}{\hat\sigma}
+\newcommand{\wt}{\tilde\omega}
+
+\title{\textbf{Derivación propia: cuándo la automatización sube el salario}\\[2pt]
+\large Un caso especial derivable a mano del modelo estático de Acemoglu \& Restrepo (NBER WP 22252, jun.\ 2017)}
+\author{Alejandro Ventura \\ \small repositorio \texttt{ai-06-restrepo}, carpeta \texttt{derivation/}}
+\date{Septiembre 2026}
+
+\begin{document}
+\maketitle
+
+\begin{nota}[Qué hace este documento]
+Construye un caso especial del modelo estático del paper (Sección 2) en el que todo sale en forma cerrada.
+En él se demuestra, como teorema:
+\begin{enumerate}[nosep]
+  \item la condición exacta bajo la cual la automatización \textbf{sube} el salario, con cada fuerza y su signo;
+  \item que existe un umbral de capital $\Kh$ tal que la automatización \textbf{baja} el salario si $K<\Kh$ y lo
+        \textbf{sube} si $K>\Kh$, que es la dirección \emph{opuesta} a la frase impresa en la Prop.~3;
+  \item que la frase impresa (``existe $\Kb>\Kl$ tal que\ldots'') es falsa en este caso especial, que satisface
+        todos los supuestos del paper.
+\end{enumerate}
+Cada supuesto tiene nombre. En cada resultado se enumeran todos los casos admisibles. No hay ejemplos numéricos:
+los números están en \texttt{sim/}. La Sección~\ref{sec:noreproduce} dice dónde este caso especial \emph{no}
+reproduce al paper.
+\end{nota}
+
+\tableofcontents
+
+% =====================================================================
+\section{Primitivas y supuestos}
+% =====================================================================
+
+\paragraph{Primitivas.} Un índice de tareas nuevas $N\in\RR$, una tecnología de automatización $I$, capital
+$K>0$, una función de ventaja comparativa $\gamma:\RR\to(0,\infty)$ y una oferta de trabajo
+$L^s:(0,\infty)\to(0,\infty)$. Notación que se usa en todo el documento, dado un umbral de equilibrio $\Is$:
+\begin{equation}\label{eq:ab}
+  a\equiv \Is-N+1\ \ \text{(tareas con capital)},\qquad b\equiv N-\Is=1-a\ \ \text{(tareas con trabajo)}.
+\end{equation}
+
+\paragraph{Supuestos del paper que se mantienen.}
+\begin{supuestoS}[\textsf{A1}, ventaja comparativa]\label{A1}
+$\gamma$ es estrictamente creciente.
+\end{supuestoS}
+\begin{supuestoS}[\textsf{A3}, las tareas nuevas se usan]\label{A3}
+En equilibrio, $R>W/\gamma(N)$.
+\end{supuestoS}
+\begin{supuestoS}[\textsf{LS}, oferta de trabajo]\label{LS}
+$L^s$ es continua, estrictamente creciente y diferenciable, con elasticidad
+$\eps_L(\omega)\equiv \omega L^{s\prime}(\omega)/L^s(\omega)\in(0,\infty)$.
+\end{supuestoS}
+\begin{supuestoS}[\textsf{Dom}, dominio]\label{Dom}
+$I\in(N-1,N)$, $K>0$.
+\end{supuestoS}
+
+\paragraph{Simplificaciones (todas admitidas por el paper).}
+\begin{supuestoS}[\textsf{S-$\eta$}]\label{Seta}
+$\eta=0$: sin intermedios. Es la rama (i) del Supuesto~2 del paper ($\eta\to0$), tomada en el límite. La tarea
+$i$ se produce con $y(i)=k(i)+\gamma(i)l(i)$ si $i\le I$, y con $y(i)=\gamma(i)l(i)$ si $i>I$. Entonces
+$\sh=\sigma$.
+\end{supuestoS}
+\begin{supuestoS}[\textsf{S-$\sigma$}]\label{Ssigma}
+$\sigma=1$: Cobb--Douglas entre tareas, $\ln Y=\int_{N-1}^{N}\ln y(i)\dd i$ (normalizando $\tilde B=1$). El paper
+admite $\sigma\in(0,\infty)$ y usa este mismo caso en su Corolario~1. Con \textsf{S-$\eta$}, $\sh=1$.
+\end{supuestoS}
+\begin{supuestoS}[\textsf{C}, continuidad]\label{C}
+$\gamma$ es continua. El paper diferencia $\int_{I}^{N}\gamma$ sin enunciarlo; aquí se declara.
+\end{supuestoS}
+
+\begin{definicion}[equilibrio]\label{def:eq}
+Dados $(N,I,K)$, un equilibrio es $(W,R,L,Y,\It,\Is)$ con $W,R,L,Y>0$ tal que:
+\begin{enumerate}[nosep,label=(E\arabic*)]
+  \item el productor del bien final (numerario) elige $y(\cdot)$ tomando los precios de tareas $p(\cdot)$ como dados;
+  \item cada tarea se produce al mínimo costo: $p(i)=\min\{R,W/\gamma(i)\}$ si $i\le I$, $p(i)=W/\gamma(i)$ si $i>I$;
+  \item $W/R=\gamma(\It)$ e $\Is=\min\{I,\It\}$, y se usa capital en caso de indiferencia;
+  \item los mercados de capital y trabajo se vacían: $\int k(i)\dd i=K$, $\int l(i)\dd i=L$;
+  \item $L=L^s(\omega)$ con $\omega\equiv W/(RK)$.
+\end{enumerate}
+\end{definicion}
+
+% =====================================================================
+\section{Lemas}
+% =====================================================================
+
+\begin{lema}[asignación por umbral]\label{lem:umbral}
+Bajo \textsf{A1}, en equilibrio se usa capital exactamente en las tareas $i\in[N-1,\Is]$ y trabajo en $(\Is,N]$.
+\end{lema}
+\begin{proof}
+Si $i>I$, el capital no es factible. Si $i\le I$, se usa capital si y solo si $R\le W/\gamma(i)$, es decir
+$\gamma(i)\le W/R=\gamma(\It)$, y por \textsf{A1} eso equivale a $i\le\It$. Luego se usa capital si y solo si
+$i\le I$ e $i\le\It$, o sea $i\le\Is$.
+\end{proof}
+
+\begin{lema}[gasto por tarea con Cobb--Douglas]\label{lem:gasto}
+Bajo \textsf{S-$\sigma$}, en cualquier asignación óptima del productor final se cumple $p(i)y(i)=Y$ para toda tarea $i$.
+\end{lema}
+\begin{proof}
+El productor final maximiza $Y-\int p(i)y(i)\dd i$ con $\ln Y=\int\ln y(i)\dd i$. La derivada funcional de $Y$
+respecto de $y(i)$ es $Y\cdot\frac{1}{y(i)}$. La condición de primer orden es $Y/y(i)=p(i)$.
+\end{proof}
+
+\begin{lema}[precios de factores, producto y participación]\label{lem:precios}
+Bajo \textsf{A1}, \textsf{S-$\eta$}, \textsf{S-$\sigma$} y \textsf{C}, en todo equilibrio con $\Is\in(N-1,N)$:
+\begin{align}
+  k(i)&=\frac{K}{a}\ (i\le\Is),\qquad l(i)=\frac{L}{b}\ (i>\Is), \label{eq:asign}\\
+  R&=\frac{aY}{K},\qquad W=\frac{bY}{L},\qquad \wt\equiv\frac WR=\frac{bK}{aL},\qquad \omega=\frac{W}{RK}=\frac{b}{aL}, \label{eq:precios}\\
+  \ln Y&=a\ln\frac{K}{a}+b\ln\frac{L}{b}+\int_{\Is}^{N}\ln\gamma(i)\dd i, \label{eq:lnY}\\
+  s_L&\equiv\frac{WL}{WL+RK}=b=N-\Is. \label{eq:sL}
+\end{align}
+\end{lema}
+\begin{proof}
+Por el Lema~\ref{lem:umbral}, en las tareas $i\le\Is$ se tiene $y(i)=k(i)$ y $p(i)=R$, y el Lema~\ref{lem:gasto} da
+$Rk(i)=Y$. Entonces $k(i)=Y/R$ es constante; integrando sobre una masa $a$, $K=aY/R$. En las tareas $i>\Is$,
+$y(i)=\gamma(i)l(i)$ y $p(i)=W/\gamma(i)$, así que $Wl(i)=Y$. Entonces $l(i)=Y/W$ y $L=bY/W$. De ahí salen
+\eqref{eq:asign} y \eqref{eq:precios}. Sustituyendo $y(i)=K/a$ y $y(i)=\gamma(i)L/b$ en $\ln Y=\int\ln y$ se
+obtiene \eqref{eq:lnY}; la integral de $\ln\gamma$ existe por \textsf{C}. Por último,
+$WL=bY$ y $RK=aY$, así que $s_L=b/(a+b)=b$.
+\end{proof}
+
+\begin{lema}[empleo de equilibrio]\label{lem:empleo}
+Bajo \textsf{LS}, para cada $u>0$ existe un único $\omega^*(u)>0$ con $\omega^*(u)\,L^s(\omega^*(u))=u$. La función
+$\omega^*$ es continua y estrictamente creciente, y cumple $\omega^*(u)\to\infty$ cuando $u\to\infty$ y
+$\omega^*(u)\to0$ cuando $u\to0^+$. En equilibrio, $u=b/a$, $\omega=\omega^*(b/a)$ y $L=L^s(\omega)=b/(a\,\omega)$.
+El empleo depende de la tecnología (vía $a,b$) pero \textbf{no} de $K$.
+\end{lema}
+\begin{proof}
+$h(\omega)\equiv\omega L^s(\omega)$ es continua y estrictamente creciente, porque es producto de dos funciones
+positivas y crecientes, una de ellas estrictamente. Si $\omega\to0^+$, entonces
+$h(\omega)\le\omega L^s(1)\to0$ para $\omega<1$. Si $\omega\to\infty$, entonces
+$h(\omega)\ge\omega L^s(1)\to\infty$ para $\omega>1$. Por el teorema del valor intermedio, $h$ es una biyección
+continua y creciente de $(0,\infty)$ en sí mismo; su inversa $\omega^*$ hereda las propiedades. Por
+\eqref{eq:precios}, $\omega=b/(aL)$, y (E5) dice $L=L^s(\omega)$. Luego $\omega L^s(\omega)=b/a$.
+\end{proof}
+
+\begin{proposicion}[existencia, unicidad y los tres regímenes]\label{prop:eq}
+Bajo \textsf{A1}, \textsf{LS}, \textsf{S-$\eta$}, \textsf{S-$\sigma$}, \textsf{C} y \textsf{Dom}, definimos para $x\in(N-1,N)$
+\[
+  \phi(x)\equiv K\,\omega^*\!\left(\frac{N-x}{x-N+1}\right)\qquad\text{(la relación $W/R$ si el umbral fuera $x$)}.
+\]
+Existe un único $\hat x\in(N-1,N)$ con $\phi(\hat x)=\gamma(\hat x)$, y el equilibrio tiene $\Is=\min\{I,\hat x\}$.
+Hay exactamente tres casos:
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Caso & Condición & Umbral & Relación de precios\\
+\midrule
+(R) restringido & $I<\hat x$ & $\Is=I<\It$ & $\wt=\phi(I)>\gamma(I)$\\
+(F) frontera & $I=\hat x$ & $\Is=I=\It$ & $\wt=\gamma(I)$\\
+(L) libre & $I>\hat x$ & $\Is=\It=\hat x<I$ & $\wt=\gamma(\hat x)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Si además vale \textsf{A3}, el equilibrio existe, es único y cumple $\wt<\gamma(N)$. En los casos (F) y (L),
+\textsf{A3} se cumple automáticamente. En el caso (R) equivale a $\phi(I)<\gamma(N)$.
+\end{proposicion}
+\begin{proof}
+\emph{$\phi$ es continua y estrictamente decreciente}, porque $x\mapsto(N-x)/(x-N+1)$ lo es y $\omega^*$ es continua
+y estrictamente creciente (Lema~\ref{lem:empleo}). Además $\phi(x)\to\infty$ cuando $x\to(N-1)^+$ y $\phi(x)\to0$
+cuando $x\to N^-$. Como $\gamma$ es continua y estrictamente creciente, $g\equiv\phi-\gamma$ es continua y
+estrictamente decreciente, positiva cerca de $N-1$ y negativa cerca de $N$ (porque $\gamma(N)>0$). Por el teorema
+del valor intermedio existe un único cero $\hat x$.
+
+\emph{Todo equilibrio tiene $\Is=\min\{I,\hat x\}$.} Por el Lema~\ref{lem:precios}, $\wt=\phi(\Is)$, y (E3)
+exige $\gamma(\It)=\phi(\Is)$ con $\Is=\min\{I,\It\}$. Hay dos posibilidades, y son excluyentes:
+\begin{itemize}[nosep]
+  \item $\Is=\It$. Entonces $g(\Is)=0$, así que $\Is=\hat x$, y esto exige $\hat x\le I$.
+  \item $\Is=I<\It$. Entonces $\gamma(I)<\gamma(\It)=\phi(I)$, es decir $g(I)>0$, así que $I<\hat x$.
+\end{itemize}
+Si $I<\hat x$ solo es posible la segunda; si $I\ge\hat x$, solo la primera. En los dos casos $\Is=\min\{I,\hat x\}$.
+
+\emph{Existencia.} Dado $\Is=\min\{I,\hat x\}$, $L$ y $\omega$ salen del Lema~\ref{lem:empleo}, $Y$ de
+\eqref{eq:lnY}, $W,R$ de \eqref{eq:precios}, y $\It$ se define por $\gamma(\It)=\wt$. En el caso (R),
+$\wt=\phi(I)\in(\gamma(I),\gamma(N))$ bajo \textsf{A3}, y por el valor intermedio existe $\It\in(I,N)$. En (F) y
+(L), $\It=\hat x<N$, así que $\wt=\gamma(\hat x)<\gamma(N)$.
+\end{proof}
+
+% =====================================================================
+\section{Estática comparativa}
+% =====================================================================
+
+Las derivadas son \emph{totales} respecto de la tecnología ($I$ o $N$), manteniendo $K$ fijo y dejando que el
+empleo se ajuste. Es la misma convención de la Prop.~3 del paper. Escribimos
+\[
+  \pi_I\equiv\ln\frac{\wt}{\gamma(I)},\qquad \pi_N\equiv\ln\frac{\gamma(N)}{\wt},\qquad
+  \eps_L\equiv\eps_L(\omega)\ \text{en el equilibrio}.
+\]
+
+\begin{lema}[efecto productividad]\label{lem:prod}
+En el caso (R), con $K$ y $L$ fijos: $\ \dfrac{\partial\ln Y}{\partial I}\Big|_{K,L}=\pi_I>0$ y
+$\dfrac{\partial\ln Y}{\partial N}\Big|_{K,L}=\pi_N>0$ (esto último bajo \textsf{A3}).
+\end{lema}
+\begin{proof}
+En (R), $\Is=I$, y la condición $I<\hat x$ es abierta, así que el caso (R) se mantiene para cambios pequeños de $I$ y
+de $N$. Derivamos \eqref{eq:lnY} con $a=I-N+1$, $b=N-I$:
+\[
+  \frac{\partial}{\partial I}\Big[a\ln\tfrac Ka\Big]=\ln\tfrac Ka-1,\qquad
+  \frac{\partial}{\partial I}\Big[b\ln\tfrac Lb\Big]=-\ln\tfrac Lb+1,\qquad
+  \frac{\partial}{\partial I}\int_I^N\ln\gamma=-\ln\gamma(I),
+\]
+donde la última igualdad es el teorema fundamental del cálculo (usa \textsf{C}). Sumando, los $\pm1$ se cancelan:
+$\ln\frac{bK}{aL\gamma(I)}=\ln\frac{\wt}{\gamma(I)}$ por \eqref{eq:precios}. Para $N$: $\partial a/\partial N=-1$,
+$\partial b/\partial N=1$ y $\partial_N\int_I^N\ln\gamma=\ln\gamma(N)$, lo que da
+$-\ln\frac Ka+\ln\frac Lb+\ln\gamma(N)=\ln\frac{\gamma(N)}{\wt}$. Signos: en (R), $\wt>\gamma(I)$; bajo \textsf{A3},
+$\wt<\gamma(N)$.
+\end{proof}
+
+\begin{lema}[respuesta del empleo]\label{lem:dL}
+En el caso (R):
+$\ \dfrac{d\ln L}{dI}=-\dfrac{\eps_L}{1+\eps_L}\cdot\dfrac{1}{ab}<0$ y $\dfrac{d\ln L}{dN}=\dfrac{\eps_L}{1+\eps_L}\cdot\dfrac{1}{ab}>0$.
+\end{lema}
+\begin{proof}
+Del Lema~\ref{lem:empleo}, $\ln\omega+\ln L^s(\omega)=\ln b-\ln a$. Diferenciando,
+$(1+\eps_L)\,d\ln\omega=d\ln b-d\ln a$, y $d\ln L=\eps_L\,d\ln\omega$. Con $dI$: $d\ln b-d\ln a=-\frac1b-\frac1a=-\frac{1}{ab}$
+(porque $a+b=1$). Con $dN$ el signo se invierte.
+\end{proof}
+
+\begin{teorema}[fuerzas y signos en el caso especial]\label{thm:fuerzas}
+Bajo \textsf{A1}, \textsf{A3}, \textsf{LS}, \textsf{S-$\eta$}, \textsf{S-$\sigma$}, \textsf{C} y \textsf{Dom}:
+
+\smallskip\noindent\textbf{Caso (R)}, $\Is=I<\It$:
+\begin{align}
+  \frac{d\ln W}{dI}&=\underbrace{\pi_I}_{\text{productividad}\,(+)}\;-\;\underbrace{\frac{1}{b\,(1+\eps_L)}}_{\text{desplazamiento}\,(-)}, \label{eq:dWdI}\\
+  \frac{d\ln R}{dI}&=\pi_I+\frac{1}{a\,(1+\eps_L)}>0,\qquad
+  \frac{ds_L}{dI}=-1<0,\qquad \frac{d\ln L}{dI}<0,\label{eq:dRdI}\\
+  \frac{d\ln W}{dN}&=\pi_N+\frac{1}{b\,(1+\eps_L)}>0,\qquad
+  \frac{d\ln R}{dN}=\pi_N-\frac{1}{a\,(1+\eps_L)}\ \ (\text{signo ambiguo}),\qquad \frac{ds_L}{dN}=1. \label{eq:dN}
+\end{align}
+\textbf{Caso (L)}, $\Is=\It<I$: $W,R,L,Y,s_L$ no dependen de $I$ localmente, y todas las derivadas respecto de $I$
+valen cero.
+
+\noindent\textbf{Caso (F)}: se excluye, porque las derivadas laterales respecto de $I$ difieren. Por la derecha
+valen cero; por la izquierda están dadas por las fórmulas de (R) con $\pi_I=0$.
+\end{teorema}
+\begin{proof}
+Caso (R). Por \eqref{eq:precios}, $\ln W=\ln b+\ln Y-\ln L$, y por \eqref{eq:lnY},
+$d\ln Y=\pi_I\,dI+b\,d\ln L$, porque $\partial\ln Y/\partial\ln L=b$. Entonces
+\[
+  \frac{d\ln W}{dI}=-\frac1b+\pi_I+(b-1)\frac{d\ln L}{dI}
+  =\pi_I-\frac1b+a\cdot\frac{\eps_L}{1+\eps_L}\cdot\frac{1}{ab}
+  =\pi_I-\frac{1}{b}\Big(1-\frac{\eps_L}{1+\eps_L}\Big)=\pi_I-\frac{1}{b(1+\eps_L)}.
+\]
+Análogamente, $\ln R=\ln a+\ln Y-\ln K$ da $\frac{d\ln R}{dI}=\frac1a+\pi_I+b\frac{d\ln L}{dI}=\pi_I+\frac1a\big(1-\frac{\eps_L}{1+\eps_L}\big)$.
+Por \eqref{eq:sL}, $s_L=N-I$. Para $N$ se repite el cálculo con $\partial a/\partial N=-1$, $\partial b/\partial N=1$
+y el Lema~\ref{lem:dL}. Caso (L): $\Is=\hat x$ no depende de $I$ (Prop.~\ref{prop:eq}), y ninguna de las ecuaciones
+\eqref{eq:precios}–\eqref{eq:sL} ni el Lema~\ref{lem:empleo} contienen $I$ fuera de $\Is$.
+\end{proof}
+
+\begin{observacion}[coincide con la Prop.~3 del paper]\label{obs:coincide}
+Las fórmulas del paper, evaluadas en $\sh=1$, $\eta=0$, dan exactamente \eqref{eq:dWdI}–\eqref{eq:dN}. Con
+$\sh=1$, $\Gamma=\int_I^N\gamma^0=b$, así que $\Lambda_I=\frac1b+\frac1a=\frac{1}{ab}$, $\Lambda_N=\frac1b+\frac1a$, y
+$1-s_L=a$. Entonces el desplazamiento del paper es
+$(1-s_L)\frac{\Lambda_I}{\sh+\eps_L}=\frac{a}{ab(1+\eps_L)}=\frac{1}{b(1+\eps_L)}$, que es el de \eqref{eq:dWdI}.
+El efecto productividad del paper es $B^{\sh-1}\int_R^{W/\gamma(I)}x^{-\sh}\dd x=\ln\frac{W}{\gamma(I)R}=\pi_I$. El
+caso especial no es un modelo distinto: es la Prop.~3 donde se puede calcular todo.
+\end{observacion}
+
+% =====================================================================
+\section{La trampa: el umbral de capital}\label{sec:trampa}
+% =====================================================================
+
+Fijamos $(N,I)$ con $I\in(N-1,N)$ y variamos solo $K$. En el caso (R), $\Is=I$, así que $a=I-N+1$ y $b=N-I$ son
+constantes. Por el Lema~\ref{lem:empleo}, $\omega$, $L$ y $\eps_L$ tampoco dependen de $K$. Los denotamos
+$\omega_I\equiv\omega^*(b/a)$ y $\eps_I\equiv\eps_L(\omega_I)$. Definimos
+\begin{equation}\label{eq:umbrales}
+  K_I\equiv\frac{\gamma(I)}{\omega_I},\qquad
+  \Kl\equiv\frac{\gamma(N)}{\omega_I},\qquad
+  \Kh\equiv K_I\exp\!\Big(\frac{1}{b\,(1+\eps_I)}\Big).
+\end{equation}
+
+\begin{lema}[regiones en $K$]\label{lem:regiones}
+En el caso (R), $\wt=\omega_I K$, lineal en $K$. El caso (R) ocurre si y solo si $K>K_I$, y \textsf{A3} vale si y
+solo si $K<\Kl$. Además $K_I<\Kl$ y $K_I<\Kh$.
+\end{lema}
+\begin{proof}
+Por \eqref{eq:precios} y el Lema~\ref{lem:empleo}, $\wt=\omega K$ y, en (R), $\omega=\omega_I$. Por la
+Prop.~\ref{prop:eq}, (R) equivale a $I<\hat x$, es decir $g(I)>0$, es decir $\phi(I)=\omega_IK>\gamma(I)$. \textsf{A3}
+en (R) es $\omega_IK<\gamma(N)$. Por último, $\gamma(I)<\gamma(N)$ por \textsf{A1} (y porque $I<N$), y
+$\exp(\cdot)>1$ porque el argumento es positivo.
+\end{proof}
+
+\begin{teorema}[cuándo la automatización sube el salario]\label{thm:trampa}
+Bajo \textsf{A1}, \textsf{A3}, \textsf{LS}, \textsf{S-$\eta$}, \textsf{S-$\sigma$}, \textsf{C} y \textsf{Dom}, y con
+$(N,I)$ fijos, la región admisible del caso (R) es $K\in(K_I,\Kl)$. En ella:
+\[
+  \frac{d\ln W}{dI}>0\iff \frac{W}{R}>\gamma(I)\,e^{\frac{1}{b(1+\eps_I)}}\iff K>\Kh .
+\]
+Enumerando todos los casos en $K>0$ (con \textsf{A3}):
+\begin{center}
+\begin{tabular}{@{}llp{8.2cm}@{}}
+\toprule
+Región de $K$ & Régimen & Efecto de $dI$ sobre $W$\\
+\midrule
+$K<K_I$ & (L) & nulo\\
+$K=K_I$ & (F) & excluido (derivadas laterales $0$ y $-\frac{1}{b(1+\eps_I)}$)\\
+$K_I<K<\min\{\Kh,\Kl\}$ & (R) & \textbf{baja} el salario (nunca es vacía)\\
+$K=\Kh<\Kl$ & (R) & nulo\\
+$\Kh<K<\Kl$ & (R) & \textbf{sube} el salario (no vacía si y solo si $\ln\gamma(N)-\ln\gamma(I)>\frac{1}{b(1+\eps_I)}$)\\
+$K\ge\Kl$ & --- & fuera de \textsf{A3}\\
+\bottomrule
+\end{tabular}
+\end{center}
+En todo el caso (R): la participación laboral baja ($ds_L/dI=-1$), el empleo baja y $R$ sube, \emph{sin importar
+$K$}.
+\end{teorema}
+\begin{proof}
+Por \eqref{eq:dWdI}, $d\ln W/dI>0\iff\pi_I>\frac{1}{b(1+\eps_I)}\iff\ln\frac{\omega_IK}{\gamma(I)}>\frac{1}{b(1+\eps_I)}$.
+Como $\omega_I>0$ y $\ln$ es estrictamente creciente, esto equivale a $K>\frac{\gamma(I)}{\omega_I}e^{1/(b(1+\eps_I))}=\Kh$.
+Lo mismo vale con igualdad y con la desigualdad inversa. Las regiones salen del Lema~\ref{lem:regiones}. La región
+de salario decreciente $(K_I,\min\{\Kh,\Kl\})$ no es vacía porque $K_I<\Kh$ y $K_I<\Kl$. La región de salario
+creciente es no vacía si y solo si $\Kh<\Kl$, es decir
+$\gamma(I)e^{1/(b(1+\eps_I))}<\gamma(N)$. El resto viene del Teorema~\ref{thm:fuerzas}.
+\end{proof}
+
+\begin{nota}[En palabras (para la pizarra)]
+La automatización sube el salario cuando el \emph{ahorro de costos} en la tarea marginal es grande. Ese ahorro es la
+brecha entre el salario efectivo $W/\gamma(I)$ y el costo del capital $R$, en logaritmos $\pi_I$. Tiene que superar
+el \emph{desplazamiento} $\frac{1}{b(1+\eps_L)}$, que es mayor cuanto menos tareas le quedan al trabajo ($b$ pequeño)
+y cuanto más rígida es la oferta de trabajo. Con \textbf{poco} capital, $W/R$ está cerca de $\gamma(I)$ y la
+ganancia es casi nula: son las tecnologías ``más o menos''. Con \textbf{mucho} capital, el capital es barato
+respecto del trabajo y automatizar ahorra mucho.
+\end{nota}
+
+\begin{corolario}[la frase impresa de la Prop.~3 es falsa en este caso]\label{cor:falso}
+La Prop.~3 del paper (p.~13) afirma: existe $\Kb>\Kl$ tal que un aumento de $I$ sube el salario si $K<\Kb$ y lo baja
+si $K>\Kb$. En el caso especial, que satisface los Supuestos 1, 2(i) y 3 del paper y $\eps_L>0$, esa afirmación es
+falsa para \emph{todo} $\Kb$:
+\begin{enumerate}[nosep]
+  \item si $\Kb>K_I$, cualquier $K\in(K_I,\min\{\Kh,\Kl,\Kb\})$ es admisible, cumple $K<\Kb$ y tiene $d\ln W/dI<0$;
+  \item si $\Kb\le K_I$, la cláusula ``la baja si $K>\Kb$'' falla en todo $K\in(K_I,\Kl)$ con $K\ge\Kh$ (si esa región
+        existe), y la cláusula ``la sube si $K<\Kb$'' falla en todo $K<\Kb$, porque ahí el régimen es (L) y el efecto es nulo.
+\end{enumerate}
+Además, con $\Kb>\Kl$, la cláusula ``si $K>\Kb$'' solo se refiere a niveles de capital que violan el Supuesto~3.
+\end{corolario}
+\begin{proof}
+Parte 1: el intervalo no es vacío porque su extremo izquierdo $K_I$ es menor que los otros tres. Ahí rige el
+Teorema~\ref{thm:trampa}. Parte 2: la primera afirmación se sigue del mismo teorema; la segunda, de que $K<\Kb\le K_I$
+implica el régimen (L) (Lema~\ref{lem:regiones}), donde $dW/dI=0$, que no es $>0$.
+\end{proof}
+
+\begin{corolario}[versión correcta del enunciado]\label{cor:correcto}
+En el caso especial existe $\Kh>K_I$ (dado por \eqref{eq:umbrales}) tal que, dentro de la región admisible del
+caso (R), la automatización \textbf{baja} el salario si $K<\Kh$ y lo \textbf{sube} si $K>\Kh$. El cruce es único,
+y $\Kh<\Kl$ si y solo si $\ln\gamma(N)-\ln\gamma(I)>\frac{1}{b(1+\eps_I)}$.
+\end{corolario}
+
+% =====================================================================
+\section{Más allá del caso especial: la dirección con $\sh$ general}
+% =====================================================================
+
+El paso del caso especial al general tiene una parte que se demuestra y otra que no.
+
+\begin{proposicion}[cerca de la frontera la automatización baja el salario, para todo $\sh$]\label{prop:general}
+Considérese el modelo del paper bajo sus Supuestos 1–3, con $\eps_L>0$, $\sh\in(0,\infty)$ y los $(N,I)$ fijos.
+Supóngase además:
+\begin{itemize}[nosep]
+  \item[\textsf{(G1)}] las funciones de equilibrio $K\mapsto W(K),R(K),s_L(K),\eps_L(K)$ son continuas;
+  \item[\textsf{(G2)}] existe $K_I>0$ con $W(K_I)/R(K_I)=\gamma(I)$, y el caso (R) rige en un intervalo $(K_I,K_I+\delta)$.
+\end{itemize}
+Entonces existe $\delta'>0$ tal que $d\ln W/dI<0$ para todo $K\in(K_I,K_I+\delta')$. En consecuencia, la frase impresa
+de la Prop.~3 falla en toda especificación en la que el caso (R) tenga una frontera inferior $K_I$.
+\end{proposicion}
+\begin{proof}
+Por la Prop.~3 del paper y el Lema de signos (tutorial, Lema 7.2),
+$d\ln W/dI=B^{\sh-1}\int_{R}^{W/\gamma(I)}x^{-\sh}\dd x-(1-s_L)\frac{\Lambda_I}{\sh+\eps_L}$. Cuando $K\downarrow K_I$,
+por (G1)–(G2) el límite superior de la integral tiende a su límite inferior, y la integral tiende a $0$. El segundo
+término tiende a $(1-s_L(K_I))\Lambda_I/(\sh+\eps_L(K_I))$, que es estrictamente positivo: $\Lambda_I>0$ no depende
+de $K$, $s_L<1$ y $\eps_L<\infty$. Por continuidad, la diferencia es negativa en un intervalo a la derecha de $K_I$.
+\end{proof}
+
+\begin{nota}[Lo que \emph{no} se demuestra con $\sh\ne1$]
+Que el cruce sea \textbf{único}. Con $\sh\ne1$, $s_L$ depende de $K$ y el desplazamiento $(1-s_L)\Lambda_I/(\sh+\eps_L)$
+se mueve con $K$, así que el argumento de linealidad del Teorema~\ref{thm:trampa} no aplica. Se verifica
+numéricamente en \texttt{sim/} (propiedad P7).
+\end{nota}
+
+% =====================================================================
+\section{Dónde este caso especial no reproduce al paper, y por qué}\label{sec:noreproduce}
+% =====================================================================
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{La participación laboral no depende de $K$.} Con $\sh=1$, $s_L=N-\Is$ es pura tecnología. En el paper,
+        con $\sh\ne1$, $s_L$ también se mueve con $K$ (Prop.~2: $d\ln(W/R)/d\ln K=\frac{1+\eps_L}{\sh+\eps_L}\neq1$).
+        Por eso aquí el desplazamiento es constante en $K$ y el cruce es único y explícito. En general no está garantizado.
+  \item \textbf{El empleo no depende de $K$} (Lema~\ref{lem:empleo}). En el paper, con $\sh\ne1$, $\omega$ y $L$ se mueven
+        con $K$ según $d\ln\omega/d\ln K=(1-\sh)/(\sh+\eps_L)$.
+  \item \textbf{$\eta=0$ exacto en lugar del límite $\eta\to0$}, y sin la rama (ii) $\zeta=1$ del Supuesto~2. No hay
+        intermedios, así que tampoco aparecen $\zeta$ ni $B(\zeta)$, y $\sh=\sigma$.
+  \item \textbf{$\sh=1$ es justamente el valor que las fórmulas impresas no cubren} (dividen entre $1-\sh$), y que la
+        corrida de Lean excluyó explícitamente (hipótesis \texttt{hSigmaHatSide}). La forma integral del efecto
+        productividad cubre este caso sin límites.
+  \item \textbf{No hay $\sigma^{\text{free}}$}: en el régimen (L) solo se probó que $I$ no afecta nada. La estática
+        comparativa de $N$ en (L) (con $\sigma^{\text{free}}=1+\Lambda_I/\eps_\gamma$) no se deriva aquí.
+  \item \textbf{Solo el corto plazo.} Con $K$ endógeno (Sección 3 del paper, Prop.~5), la tasa de alquiler vuelve a
+        $\rho+\delta+\theta g$ y la automatización sube el salario de largo plazo en toda la región interior. El umbral
+        $\Kh$ es un resultado de impacto, no de largo plazo.
+  \item \textbf{La nota de validez del contraejemplo.} El Corolario~\ref{cor:falso} usa $\sigma=1$. El paper admite
+        $\sigma\in(0,\infty)$ y usa $\sigma=1$ en su Corolario~1, así que el caso es legítimo. Para $\sh\ne1$, la
+        Prop.~\ref{prop:general} extiende la falla a todo modelo en el que el caso (R) tenga frontera inferior, bajo los
+        supuestos declarados (G1)–(G2).
+\end{enumerate}
+
+% =====================================================================
+\section{Propiedades a verificar computacionalmente}\label{sec:props}
+% =====================================================================
+
+Estas son las propiedades que \texttt{sim/} comprueba, simbólicamente y sobre miles de sorteos aleatorios de
+primitivas $(N,I,K,\gamma,L^s)$:
+\begin{enumerate}[label=\textbf{P\arabic*},nosep]
+  \item Equilibrio: las ecuaciones (E1)–(E5) se cumplen y $\Is=\min\{I,\hat x\}$ (Prop.~\ref{prop:eq}).
+  \item Productividad: $\partial\ln Y/\partial I|_{K,L}=\pi_I$ y $\partial\ln Y/\partial N|_{K,L}=\pi_N$, contra derivadas numéricas.
+  \item Salario: \eqref{eq:dWdI} y \eqref{eq:dN} contra derivadas numéricas del equilibrio completo.
+  \item Signos que siempre valen en (R): $d\ln R/dI>0$, $ds_L/dI<0$, $d\ln L/dI<0$, $d\ln W/dN>0$.
+  \item Umbral: $\operatorname{sign}(d\ln W/dI)=\operatorname{sign}(K-\Kh)$ en toda la región (R).
+  \item Coincidencia con la Prop.~3 del paper evaluada en $\sh=1$ (Obs.~\ref{obs:coincide}).
+  \item (Modelo general, $\sh\ne1$, $\eta\to0$) Cerca de $K_I$, $d\ln W/dI<0$ (Prop.~\ref{prop:general}); número de cruces de signo en $(K_I,\Kl)$.
+\end{enumerate}
+
+\end{document}

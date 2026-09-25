@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Shell scripts are run from WSL: always LF
+*.sh text eol=lf

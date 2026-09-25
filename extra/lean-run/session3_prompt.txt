@@ -1,0 +1,24 @@
+Maintainer review of your stop report. Two maintainer decisions authorize Spec changes for the capital-threshold sentence of Proposition 3 ONLY; everything else (source pin, target P3.a/P3.b, C1-C8, R1-R5, clause-by-clause work) is unchanged.
+
+1. Regime scope: APPROVED. Your reading is correct. The threshold sentence (printed p. 13) sits inside the bullet whose standing condition is I* = I < Ĩ, and Proposition 3 assumes Assumptions 1-3 throughout. Every comparison capital level k in that clause must satisfy the constrained regime at k (I < freeThreshold I N k) and Assumption 3 at k. Record this as an approved reading in audit/source_proof_fidelity.json (model_conventions) and cite it on the affected source-map item.
+
+2. The printed threshold sentence is false even after that restriction. This is an approved-corrected target. Maintainer analysis (checked by hand, symbolically, numerically, and in Lean in a separate sandbox):
+   (a) With K̄ > K̲ and Assumption 3 (k < K̲), the clause "reduces it when K > K̄" is vacuous.
+   (b) At the lower edge K_I of the constrained regime, W/γ(I) = R. So the productivity coefficient B^(σ̂-1)/(1-σ̂)·((W/γ(I))^(1-σ̂) - R^(1-σ̂)) tends to 0, while the displacement term (1 - s_L)·Λ_I/(σ̂ + ε_L) stays strictly positive. Hence d ln W/dI < 0 for k just above K_I, which contradicts "increases the equilibrium wage when K < K̄".
+   (c) In the special case η = 0, σ = 1, with an increasing labor supply of elasticity ε_L > 0 (the paper's own Corollary 1 setting, with γ strictly increasing), the exact result is d ln W/dI > 0 iff K > K̂ = K_I·exp(1/((N-I)(1+ε_L))). That is the opposite direction.
+   (d) For σ̂ ≠ 1, numerical checks on 400 random economies found at most one sign change, always from - to +. A unique threshold is NOT proved for σ̂ ≠ 1, so do not assert one.
+   Required treatment:
+   - Keep the printed sentence as a separately named statement (it is source-faithful). Record it in docs/FORMALIZATION_WORKING_MEMO.md under "Possible Printed Typos Or Errors" with its exact location, and later in the validation report. If feasible, prove its negation or document an explicit counterexample.
+   - In proposition3Spec, replace the threshold conjunct with the corrected content that follows from the source's own formulas: in the constrained regime,
+       0 < ∂ln W/∂I  ↔  automationCoefficient > (1 - sL) · LambdaI / (sigmaHat + epsilonL),
+     together with the corresponding "< 0" and "= 0" cases.
+   - Do not change any other part of the Spec.
+
+3. Then continue the proof campaign clause by clause, under the same rules, keeping the build green after each clause. Priority:
+   (i) the orderings W/γ(I*) > R > W/γ(N) (constrained regime) and W/γ(I*) = R > W/γ(N) (free regime);
+   (ii) strict positivity of the productivity coefficients (equivalently, the sign of the integral of x^(-σ̂) from R to W/γ(I));
+   (iii) the corrected wage condition of item 2;
+   (iv) the differential formulas and the remaining sign clauses.
+   End this session with a green build even if some clauses remain open, and give each clause's status under R4.
+
+At the end, report in the chat: (1) files created or changed; (2) the final status of each P3 clause under R4, including the printed threshold sentence; (3) the exact Spec change you made, and where the two maintainer decisions are recorded; (4) the output of the last `lake build` and of `python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`; (5) any remaining source ambiguity.

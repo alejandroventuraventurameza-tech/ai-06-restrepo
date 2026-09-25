@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "paper": "AR18RaceManMachine",
+  "source_artifact_path": "papers/AR18RaceManMachine/source/w22252.pdf",
+  "source_artifact_sha256": "441d01202afd56ef8002fc24ffc2beb51191741c0b5accb11d2534620dd616b7",
+  "review_status": "defects_recorded",
+  "reviewed_proof_scopes": [
+    {
+      "source_locator": "printed p. 13; source/w22252.txt:707-708",
+      "semantic_scope": "Standing regime and Assumption 3 scope, the printed two-sided capital-threshold signs, and the corrected coefficient-comparison target.",
+      "outcome": "defect_recorded"
+    }
+  ],
+  "model_conventions": [
+    {
+      "id": "AR18-P3-CAPITAL-COMPARISON-SCOPE-01",
+      "source_locator": "printed p. 13; source/w22252.txt:685-708",
+      "classification": "standing_regime_and_assumption_scope",
+      "formal_meaning": "Every comparison capital in the final sentence of Proposition 3(a) remains under the enclosing technology-constrained regime I < freeThreshold I N k and Proposition 3's standing Assumption 3 condition k < KUnder.",
+      "why_needed": "The threshold sentence is syntactically inside the constrained-regime bullet and Proposition 3 assumes Assumptions 1-3 throughout; dropping those conditions when varying capital changes the domain and conflicts with the technology-free bullet.",
+      "checked_scope": "AR18RaceManMachine.proposition3PrintedCapitalThreshold makes both conditions explicit for every comparison capital. Maintainer approved this reading on 2026-09-24."
+    }
+  ],
+  "checked_proof_steps": [
+    {
+      "id": "AR18-P3-CORRECTED-WAGE-SIGNS",
+      "source_locator": "printed p. 13; source/w22252.txt:695-708",
+      "source_step": "Combine the automation component of the displayed wage differential with the displayed productivity coefficient.",
+      "checked_conclusion": "proposition3_correctedAutomationWageSigns proves the positive, negative, and zero cases by exact ordered-ring algebra from the automation wage partial identity.",
+      "scope": "Maintainer-approved corrected target for the final sentence of Proposition 3(a)."
+    },
+    {
+      "id": "AR18-P3-PRINTED-NEGATIVE-VACUOUS",
+      "source_locator": "printed p. 13; source/w22252.txt:707-708",
+      "source_step": "The printed negative direction is evaluated under Proposition 3's standing Assumption 3 and KBar > KUnder.",
+      "checked_conclusion": "proposition3_printedNegativeBranch_vacuous proves that k < KUnder, KUnder < KBar, and KBar < k are inconsistent.",
+      "scope": "Defect support for AR18-P3-CAPITAL-THRESHOLD-SIGN-02."
+    }
+  ],
+  "model_convention_entry_schema": {
+    "required": [
+      "id",
+      "source_locator",
+      "classification",
+      "formal_meaning",
+      "why_needed",
+      "checked_scope"
+    ],
+    "optional": [
+      "unresolved_relation_to_literal_source"
+    ]
+  },
+  "checked_proof_step_entry_schema": {
+    "required": [
+      "id",
+      "source_locator",
+      "source_step",
+      "checked_conclusion",
+      "scope"
+    ]
+  },
+  "defects": [
+    {
+      "id": "AR18-P3-CAPITAL-THRESHOLD-SIGN-02",
+      "source_locator": "printed p. 13; source/w22252.txt:707-708",
+      "source_claim": "There exists KBar > KUnder such that an increase in I raises the equilibrium wage when K < KBar and reduces it when K > KBar.",
+      "defect_kind": "inequality_direction",
+      "affected_source_locators": [
+        "source/w22252.txt:695-708",
+        "source/w22252.txt:746-758"
+      ],
+      "statement_impact": "source_statement",
+      "status_impact": "formalized_with_caveat",
+      "status_impact_rationale": "The printed strict two-sided threshold is a substantive Proposition 3 conclusion. Its negative branch is vacuous under Assumption 3 and the positive branch has the wrong sign near the lower edge of the constrained regime.",
+      "repair_obligation": "Preserve the printed sentence separately, but replace it in the proved Proposition 3 target by the exact pointwise positive, negative, and zero comparisons between the automation productivity coefficient and (1-sL)*LambdaI/(sigmaHat+epsilonL). Do not assert a unique threshold for sigmaHat != 1.",
+      "acceptance_condition": "proposition3PrintedCapitalThreshold preserves the regime-scoped printed statement; proposition3Spec contains all three corrected coefficient comparisons; the correction is proved and reported without asserting a general unique threshold.",
+      "resolution": "corrected_source_statement",
+      "resolution_evidence": "Maintainer-approved symbolic, numerical, and separate-sandbox Lean analysis; the corrected target is encoded in proposition3Spec and the printed claim is retained as proposition3PrintedCapitalThreshold."
+    }
+  ],
+  "defect_entry_schema": {
+    "required": [
+      "id",
+      "source_locator",
+      "source_claim",
+      "defect_kind",
+      "affected_source_locators",
+      "statement_impact",
+      "repair_obligation",
+      "acceptance_condition",
+      "resolution",
+      "resolution_evidence"
+    ],
+    "defect_kind_values": [
+      "algebra_or_sign",
+      "inequality_direction",
+      "quantifier_or_uniformity",
+      "domain_or_endpoint",
+      "index_or_integrality",
+      "event_or_measure",
+      "normalization_or_scaling",
+      "logical_dependency",
+      "other"
+    ],
+    "statement_impact_values": [
+      "proof_only",
+      "source_statement",
+      "uncertain"
+    ],
+    "status_impact_values": [
+      "formalized_note",
+      "formalized_with_caveat",
+      "partially_formalized"
+    ],
+    "resolution_values": [
+      "repaired_in_lean",
+      "open_proof_obligation",
+      "corrected_source_statement",
+      "resolved_in_current_source"
+    ]
+  },
+  "policy": [
+    "Review source proof text by exact source locator and mathematical claim; Lean declaration names are navigation only and are not evidence.",
+    "Give every defect a stable unique id using letters, digits, dot, underscore, or hyphen so source-map contracts can route its repair without depending on Lean names.",
+    "A source proof defect is not a paper/model assumption. Do not classify its repaired conclusion as validated_source_assumption.",
+    "Record every explicit formalization convention that resolves a source-model ambiguity in model_conventions, with the literal source relation and checked scope. A convention is not a literal source theorem without a source-side semantic bridge.",
+    "Record every source proof step independently checked by Lean in checked_proof_steps, including its exact source step, checked conclusion, and scope. A finite/event-level step does not silently establish an arbitrary-space, pointwise-conditioning, or arbitrary-partition claim.",
+    "For every defect, record the mathematical repair obligation and acceptance condition. Resolve it by a Lean derivation, leave it as an explicit open proof obligation, or record an explicit corrected source statement.",
+    "For every defect, separately record status_impact and status_impact_rationale. statement_impact says which source text changed; status_impact says whether the issue is a formalized note, a substantial source-paper caveat with a fully proved correction, or a partial-formalization boundary.",
+    "A proof-only defect may coexist with a source-faithful final theorem only after the replacement derivation is proved. A minor source-statement repair may also be formalized_note when the substantive advertised endpoint is unchanged. Only a substantial central source-paper error with a fully proved corrected endpoint justifies formalized_with_caveat."
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "paper": "AR18RaceManMachine",
+  "namespace": "AR18RaceManMachine",
+  "paper_interface_module": "",
+  "semantic_route_schema": 2,
+  "closeout_review_policy": {
+    "schema": 1,
+    "source_scope": "all_named_theory",
+    "repeat_final_scope": "main_primary",
+    "required_final_adversary_count": 1,
+    "scheduling": {
+      "initial_semantic_review": [],
+      "final_adversarial_review": []
+    }
+  },
+  "source_version": "NBER Working Paper 22252, revised June 2017 (87 pages)",
+  "include_specs": [
+    "proposition3"
+  ],
+  "source_item_for_spec": {
+    "proposition3": "proposition3"
+  },
+  "evidence_declaration_for_spec": {
+    "proposition3": "AR18RaceManMachine.proposition3"
+  },
+  "source_semantic_declarations": {
+    "static_environment": [
+      "AR18RaceManMachine.taskCES",
+      "AR18RaceManMachine.taskAggregate",
+      "AR18RaceManMachine.effectiveSigma",
+      "AR18RaceManMachine.normalizedB",
+      "AR18RaceManMachine.production12"
+    ],
+    "proposition2_quantities": [
+      "AR18RaceManMachine.lambdaI",
+      "AR18RaceManMachine.lambdaN",
+      "AR18RaceManMachine.laborShare"
+    ]
+  },
+  "paper_semantic_prerequisite_sources": {
+    "AR18RaceManMachine.taskCES": "static_environment",
+    "AR18RaceManMachine.taskAggregate": "static_environment",
+    "AR18RaceManMachine.effectiveSigma": "static_environment",
+    "AR18RaceManMachine.normalizedB": "static_environment",
+    "AR18RaceManMachine.production12": "static_environment",
+    "AR18RaceManMachine.lambdaI": "proposition2_quantities",
+    "AR18RaceManMachine.lambdaN": "proposition2_quantities",
+    "AR18RaceManMachine.laborShare": "proposition2_quantities"
+  },
+  "library_semantic_prerequisite_sources": {},
+  "semantic_context_requirements": {
+    "proposition3": [
+      {
+        "semantic_role": "model",
+        "source_location": "source/w22252.txt:278-532"
+      },
+      {
+        "semantic_role": "definition",
+        "source_location": "source/w22252.txt:599-646"
+      }
+    ]
+  },
+  "model_convention_ids_by_source_item": {
+    "proposition3": [
+      "AR18-P3-CAPITAL-COMPARISON-SCOPE-01"
+    ]
+  },
+  "unselected_item_dispositions": {
+    "proposition1": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer selected exactly Proposition 3 and only its governing prerequisites."
+    },
+    "corollary1": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer selected exactly Proposition 3 and only its governing prerequisites."
+    },
+    "proposition2": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "Proposition 2 itself is outside scope; only its named quantities governing Proposition 3 are retained."
+    },
+    "extractor_equation_holds": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "This dynamic-section extractor presentation is outside the maintainer-selected Proposition 3 scope."
+    },
+    "proposition4": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer expressly excluded Propositions 4-9 and the dynamic sections."
+    },
+    "proposition5": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer expressly excluded Propositions 4-9 and the dynamic sections."
+    },
+    "proposition6": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer expressly excluded Propositions 4-9 and the dynamic sections."
+    },
+    "extractor_proposition4_reference": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "This conservative extractor span is dynamic proof/explanation prose outside Proposition 3 scope."
+    },
+    "corollary2": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer selected exactly Proposition 3 and excluded later dynamic results."
+    },
+    "proposition7": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer expressly excluded Propositions 4-9 and the dynamic sections."
+    },
+    "proposition8": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer expressly excluded Propositions 4-9 and the dynamic sections."
+    },
+    "proposition9": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "The maintainer expressly excluded Propositions 4-9 and the dynamic sections."
+    },
+    "extractor_proposition_separately": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "This conservative appendix extractor span is not a governing prerequisite of Proposition 3."
+    },
+    "extractor_definition_of": {
+      "inventory_role": "source_scope_exclusion",
+      "scope_disposition": "user_approved_scope_exclusion",
+      "reason": "This conservative appendix extractor span is not a governing prerequisite of Proposition 3."
+    }
+  },
+  "source_named_result_inventory_review": {
+    "complete": true,
+    "validator": "AR18RaceManMachine source-first intake curator",
+    "method": "Complete one-time full-source mechanical and holistic inventory before consulting the Lean target; dispositions are recorded in docs/SOURCE_INVENTORY.md.",
+    "validated_at": "2026-09-24T05:00:00Z",
+    "prose_definition_presentations": [
+      {
+        "id": "proposition2_quantities_definition",
+        "source_locator": "source/w22252.txt:599-646",
+        "defined_entity_kind": "object",
+        "defined_object": "ΛI",
+        "scope_disposition": "normal_named_theory_definition"
+      }
+    ],
+    "candidate_presentations": [],
+    "source_region_partition": {
+      "complete": true,
+      "validator": "AR18RaceManMachine source-region curator",
+      "method": "Partition the pinned 4676-line logical extraction (including its terminal form-feed line) at the printed Appendix A and Appendix B headings.",
+      "validated_at": "2026-09-24T05:00:00Z",
+      "regions": [
+        {
+          "id": "main_text",
+          "kind": "main_text",
+          "source_locator": "source/w22252.txt:1-1867"
+        },
+        {
+          "id": "appendix_a",
+          "kind": "appendix",
+          "source_locator": "source/w22252.txt:1868-2578"
+        },
+        {
+          "id": "appendix_b",
+          "kind": "appendix",
+          "source_locator": "source/w22252.txt:2579-4676"
+        }
+      ],
+      "source_item_regions": {
+        "assumption1": "main_text",
+        "assumption2": "main_text",
+        "assumption3": "main_text",
+        "static_environment": "main_text",
+        "proposition2_quantities": "main_text",
+        "proposition1": "main_text",
+        "corollary1": "main_text",
+        "proposition2": "main_text",
+        "proposition3_proof_relations": "appendix_b",
+        "extractor_equation_holds": "main_text",
+        "proposition4": "main_text",
+        "proposition5": "main_text",
+        "proposition6": "main_text",
+        "extractor_proposition4_reference": "main_text",
+        "corollary2": "main_text",
+        "proposition7": "main_text",
+        "proposition8": "main_text",
+        "proposition9": "main_text",
+        "extractor_proposition_separately": "appendix_a",
+        "extractor_definition_of": "appendix_b",
+        "proposition3": "main_text"
+      },
+      "candidate_presentation_regions": {},
+      "prose_definition_presentation_regions": {
+        "proposition2_quantities_definition": "main_text"
+      },
+      "promoted_source_items": [
+        {
+          "source_item": "proposition3_proof_relations",
+          "reason": "Appendix B relations (B9)-(B10) are maintainer-selected governing proof prerequisites of main-text Proposition 3.",
+          "approval": {
+            "schema": 1,
+            "approval_kind": "explicit_user_instruction",
+            "approval_reference": "Original task: include relations (B9)-(B10) from the proof in Appendix B, pp. B-12-B-13.",
+            "approved_at": "2026-09-24T05:00:00Z"
+          }
+        }
+      ]
+    }
+  },
+  "prose_definition_reconciliations": {
+    "proposition2_quantities": {
+      "presentation_id": "proposition2_quantities_definition",
+      "semantic_basis": "The source-map item groups the comparative-static quantities defined in the same Proposition 2 passage, including the displayed ΛI definition used by the routed Lean declarations.",
+      "validator": "AR18RaceManMachine source-to-map curator",
+      "validator_type": "agent",
+      "validated_at": "2026-09-24T05:15:00Z"
+    }
+  }
+}

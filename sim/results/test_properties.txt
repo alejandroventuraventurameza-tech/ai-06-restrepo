@@ -1,0 +1,53 @@
+seed=20260923 draws_S=5000 draws_G=400 grid=25
+time: model S 14.3s, total 33.0s
+
+== Model S, regime R: 99700 checks, 0 failures
+   max err  P1 A3: R > W/gamma(N)                    0.00e+00
+   max err  P1 capital market                        2.33e-15
+   max err  P1 labor market                          4.44e-16
+   max err  P1 labor supply                          2.83e-14
+   max err  P1 lnY = int ln y                        3.55e-15
+   max err  P1 regime R <=> K in (K_I, K_under)      0.00e+00
+   max err  P2 dlnY/dI|KL = pi_I                     6.69e-09
+   max err  P2 dlnY/dN|KL = pi_N                     6.67e-09
+   max err  P3 dlnL/dI                               1.85e-07
+   max err  P3 dlnR/dI                               1.98e-07
+   max err  P3 dlnR/dN                               1.98e-07
+   max err  P3 dlnW/dI                               2.68e-07
+   max err  P3 dlnW/dN                               2.68e-07
+   max err  P3 dsL/dI = -1                           1.77e-11
+   max err  P3 sL = N - I                            1.11e-16
+   max err  P4 dlnL/dI < 0                           0.00e+00
+   max err  P4 dlnR/dI > 0                           0.00e+00
+   max err  P4 dlnW/dN > 0                           0.00e+00
+   max err  P4 dsL/dI < 0                            0.00e+00
+   max err  P5 sign(dlnW/dI) = sign(K - K_hat)       0.00e+00
+
+== Model S, regime L: 49850 checks, 0 failures
+   max err  P1 A3: R > W/gamma(N)                    0.00e+00
+   max err  P1 capital market                        5.07e-12
+   max err  P1 labor market                          4.44e-16
+   max err  P1 labor supply                          2.78e-14
+   max err  P1 lnY = int ln y                        5.33e-15
+   max err  PL d lnL/dI = 0                          0.00e+00
+   max err  PL d lnR/dI = 0                          0.00e+00
+   max err  PL d lnW/dI = 0                          0.00e+00
+   max err  PL d lnY/dI = 0                          0.00e+00
+   max err  PL regime is L when K < K_I              0.00e+00
+
+== Model G (paper, sigma != 1): 18089 checks, 0 failures
+   max err  P1G A3                                   0.00e+00
+   max err  P1G eq. (12)                             1.42e-14
+   max err  P1G labor market (9)                     1.33e-14
+   max err  P2G dlnY/dI|KL = paper                   5.01e-08
+   max err  P2G dlnY/dN|KL = paper                   1.45e-08
+   max err  P3G dlnR/dI = paper                      3.05e-07
+   max err  P3G dlnR/dN = paper                      3.33e-07
+   max err  P3G dlnW/dI = paper                      8.38e-07
+   max err  P3G dlnW/dN = paper                      7.42e-07
+   max err  P7a dlnW/dI < 0 near K_I                 0.00e+00
+   max err  P7b first crossing is - to +             0.00e+00
+
+== P7 sign changes of dlnW/dI on (K_I, K_under), Model G
+   0 change(s): 171 draws
+   1 change(s): 229 draws

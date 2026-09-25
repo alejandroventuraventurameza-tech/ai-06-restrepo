@@ -1,0 +1,19 @@
+[OK] S1 dlnY/dI|KL = ln(W/(gamma(I) R))
+[OK] S1 dlnY/dN|KL = ln(gamma(N) R/W)
+[OK] S2 dlnL/dI = -eps/(1+eps) * 1/(ab)
+[OK] S2 dlnL/dN = +eps/(1+eps) * 1/(ab)
+[OK] S3 d lnY / d lnL = b
+[OK] S3 dlnW/dI = pi_I - 1/(b(1+eps))
+[OK] S3 dlnR/dI = pi_I + 1/(a(1+eps))
+[OK] S3 dlnW/dN = pi_N + 1/(b(1+eps))
+[OK] S3 dlnR/dN = pi_N - 1/(a(1+eps))
+[OK] S4 K_hat is a zero of dlnW/dI
+[OK] S4 dlnW/dI strictly increasing in K (derivative = 1/K > 0)
+[OK] S4 K_hat / K_I = exp(1/(b(1+eps))) with K_I = a L gamma_I / b
+[OK] P6 lim_{s->1} paper productivity = ln(W/(gamma R))
+[OK] P6 integral form = paper productivity (s != 1)
+[OK] P6 paper displacement (1-sL) Lambda_I/(1+eps) = 1/(b(1+eps))
+[OK] P6 paper reinstatement (1-sL) Lambda_N/(1+eps) = 1/(b(1+eps))
+[OK] P6 paper rental term sL Lambda_I/(1+eps) = 1/(a(1+eps))
+
+ALL SYMBOLIC CHECKS PASSED
