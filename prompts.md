@@ -607,6 +607,60 @@ Maintainer review of your stop report. Two maintainer decisions authorize Spec c
 At the end, report in the chat: (1) files created or changed; (2) the final status of each P3 clause under R4, including the printed threshold sentence; (3) the exact Spec change you made, and where the two maintainer decisions are recorded; (4) the output of the last `lake build` and of `python3 scripts/paper_contribution.py check AR18RaceManMachine --fast`; (5) any remaining source ambiguity.
 ````
 
+### B.9 — Session 3 · effort `high` · 2026-09-24 ~11:58–12:11 (Lima) · `codex resume --last` · interrupted by the usage limit
+
+Prompt: B.8 verbatim. Raw transcript `extra/lean-run/session3-transcript.jsonl` (git-ignored). The session hit the daily limit
+before writing a final report. Its last three messages (raw, verbatim):
+
+```text
+I'll apply only the authorized threshold change: preserve the printed sentence as its own source-faithful definition, replace its conjunct in `proposition3Spec` with the three corrected sign equivalences, and record both maintainer decisions in the fidelity ledger and source map. Then I'll prove the algebraic/order/sign clauses first and reassess the derivative obligations against the concrete path hypotheses.
+
+The authorized Spec and audit edits compile. The printed claim is now preserved separately, while the selected endpoint asks only for the exact pointwise sign criterion. I'm moving through the requested priority order now; the free-regime ordering has a short direct Lean proof, while the constrained ordering still requires deriving the capital-threshold monotonicity encoded by C3's equilibrium paths.
+
+The algebraic layer is now checked: both productivity-coefficient sign calculations cover \(\hat\sigma<1\) and \(\hat\sigma>1\); the corrected wage criterion has all three strict/equality cases; and the printed negative threshold branch is formally shown vacuous under \(k<\underline K<\bar K\). The remaining gap is not algebra—it is deriving the six equilibrium partial derivatives (and the constrained cutoff ordering) from the path equations.
+```
+
+**Checks after session 3 (raw):**
+
+```text
+# checks: session3  —  2026-09-24 19:12:50 -05
+# AppliedModelingLib commit: 2db7d108
+
+## 1. abstract predicates (-> Prop / → Prop); every hit is reviewed by hand
+(no hits)
+
+## 2. sorry / admit / axiom
+papers/AR18RaceManMachine/ProofInterface.lean:179:  sorry
+
+## 3. lake build AR18RaceManMachine (last 40 lines)
+⚠ [8315/8317] Replayed AR18RaceManMachine.ProofInterface
+warning: papers/AR18RaceManMachine/ProofInterface.lean:178:8: declaration uses `sorry`
+Build completed successfully (8317 jobs).
+lake build exit code: 0
+
+## 4. paper_contribution check --fast
++ lake build +AR18RaceManMachine.PaperInterface
+Build completed successfully (8314 jobs).
++ git diff --check -- papers/AR18RaceManMachine papers/AR18RaceManMachine.lean lakefile.toml ':(exclude)papers/AR18RaceManMachine/source/'
+check exit code: 0
+```
+
+**State copied to `lean/` (2026-09-24 19:34, `cp -a papers/AR18RaceManMachine lean`), per Claude's reading of `lean/ProofInterface.lean`:**
+
+| Clause-level lemma (proved, no `sorry`) | What it covers |
+|---|---|
+| `proposition3_free_ordering` | P3.b ordering $W/\gamma(I^*)=R>W/\gamma(N)$ |
+| `proposition3_automationCoefficient_pos`, `proposition3_newTaskCoefficient_pos` | both productivity coefficients $>0$, for $\hat\sigma<1$ and $\hat\sigma>1$, given the price orderings |
+| `proposition3_correctedAutomationWageSigns` | corrected clause (D3): sign of $\partial\ln W/\partial I$ is the sign of productivity − $(1-s_L)\Lambda_I/(\hat\sigma+\varepsilon_L)$, three cases |
+| `proposition3_printedNegativeBranch_vacuous` | the printed "reduces it when $K>\overline K$" branch is empty under Assumption 3 and $\overline K>\underline K$ |
+| `proposition3_constrainedDifferentialFormulas`, `proposition3_freeDifferentialFormulas` | assembly of the $d\ln Y$, $d\ln W$, $d\ln R$ formulas **from** the six partial-derivative identities (these are hypotheses of the lemma) |
+
+**Exact blocker (for the submission):** the endpoint `proposition3 : proposition3Spec` is still `sorry`. What is missing is the
+*calculus layer*: deriving the six equilibrium partial derivatives (and, with them, (B9)–(B10)) from the path equations, via
+derivatives of variable-limit integrals and implicit differentiation of the equilibrium paths. The constrained-regime ordering
+$W/\gamma(I)>R>W/\gamma(N)$ is also still open. The algebraic layer is proved. The run stopped because the daily Codex quota ran out
+three times; no Spec was weakened to make a proof go through.
+
 ### Checks Alejandro runs after each session (from the AppliedModelingLib root)
 
 ```bash
