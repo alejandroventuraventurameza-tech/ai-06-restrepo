@@ -3,8 +3,8 @@ on:
   pull_request:
     paths:
       - 'presentation.tex'
-      - 'derivation/**'
-      - 'extra/tutorial/**'
+      - 'derivation/*.tex'
+      - 'extra/tutorial/*.tex'
       - 'hand/**'
       - 'sim/results/**'
       - '.github/workflows/documents.yml'
@@ -54,5 +54,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add presentation.pdf derivation/derivation.pdf extra/tutorial/tutorial.pdf extra/audit/qa-render
+          if git diff --cached --quiet; then echo "PDFs already integrated"; exit 0; fi
           git commit -m "build: compile and render repository 6 documents"
           git push origin "HEAD:refs/heads/work/repository6-pdf-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"

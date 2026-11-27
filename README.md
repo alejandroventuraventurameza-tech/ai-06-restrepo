@@ -22,11 +22,13 @@ Static model, Proposition 3 (Assumptions 1–3, $\varepsilon_L>0$, $\hat\sigma\n
 
 $$\frac{d\ln W}{dI}=\underbrace{B^{\hat\sigma-1}\!\int_{R}^{W/\gamma(I)}\!x^{-\hat\sigma}dx}_{\text{productivity }(+)}\;-\;\underbrace{(1-s_L)\,\frac{\Lambda_I}{\hat\sigma+\varepsilon_L}}_{\text{displacement }(-)},\qquad \Lambda_I=\frac{\gamma(I)^{\hat\sigma-1}}{\int_I^N\gamma^{\hat\sigma-1}}+\frac{1}{I-N+1}>0 .$$
 
-| | constrained regime $I^*=I<\tilde I$ | free regime $I^*=\tilde I<I$ | long run (Prop. 5, $K$ adjusts) |
+| | constrained regime $I^*=I<\tilde I$ | free regime $I^*=\tilde I<I$ | long run (constrained interior BGP, Prop. 5) |
 |---|---|---|---|
 | wage $W$ | **rises iff productivity > displacement** | unchanged | rises |
 | labor share, employment | fall (always, because $\Lambda_I>0$) | unchanged | fall |
 | output $Y$, rental $R$ | rise | unchanged | $R$ returns to $\rho+\delta+\theta g$ |
+
+For the long-run column additionally impose Assumptions 1′ and 2, constant growth g, an interior balanced-growth path, and n=N−I > max{bar n(ρ), tilde n(ρ)}. In an interior free BGP marginal automation leaves effective wages, employment and labor share unchanged (AER 2018, pp. 1508–1509).
 
 Automation raises the wage when the **cost saving in the marginal task**, the gap between $W/\gamma(I)$ and $R$, is large. It lowers the
 wage when that gain is small ("so-so" technologies). Reinstatement enters through **new tasks** ($dN$), which raise $W$, the labor share
@@ -37,7 +39,7 @@ and employment. The word "reinstatement" does not appear in this 2017 version; t
 
 For the Cobb–Douglas case ($\sigma=1$, $\eta\to0$) with elastic labor, **within $K_I<K<\underline K$**,
 $$\frac{d\ln W}{dI}>0\iff K>\hat K=K_I\exp\!\Big(\tfrac{1}{(N-I)(1+\varepsilon_L)}\Big).$$
-The positive region exists iff $\hat K<\underline K$; below $K_I$ additional automation is not adopted. The historical sandbox checks the special-case derivative and threshold under its declared regularity premise. The 400 general-CES draws give numerical evidence, not a general proof. The November continuation derives a single-crossing theorem for general $\hat\sigma>0$ conditional on constant labor-supply elasticity. See [economic audit](extra/audit/ECONOMIC_AUDIT.md) and [derivation](derivation/derivation.tex). Lean verification of the extension is not yet available.
+The positive region exists iff $\hat K<\underline K$; below $K_I$ additional automation is not adopted. The historical sandbox checks the special-case derivative and threshold under its declared regularity premise. The 400 general-CES draws give numerical evidence, not a general proof. The November continuation derives a single-crossing theorem for general $\hat\sigma>0$ conditional on constant labor-supply elasticity. See [economic audit](extra/audit/ECONOMIC_AUDIT.md) and [derivation](derivation/derivation.tex). Eight additional independent theorem endpoints have passed Lean compilation and the axiom audit. [CI 45929885625](https://github.com/alejandroventuraventurameza-tech/ai-06-restrepo/actions/runs/45929885625) also reproduces 11,770 new numerical checks across 500 economies.
 
 ## What is in this repository
 | Path | Content |
@@ -46,10 +48,10 @@ The positive region exists iff $\hat K<\underline K$; below $K_I$ additional aut
 | [`prompts.md`](prompts.md) | Raw prompts and answers (Claude, the Lean agent, the cold question); deviations D1–D2; AI mistakes E1–E2 |
 | [`hand/`](hand/) | Handwritten derivation (see below) |
 | [`presentation.tex`](presentation.tex) / `.pdf` | 20-minute Beamer deck |
-| [`lean/`](lean/) | AppliedModelingLib run (`gpt-5.6-sol`, effort `high`, 4 sessions), copied exactly as generated. Target: Proposition 3. **Partial**: the recorded September 24 `lake build` and `paper_contribution.py check AR18RaceManMachine --fast` succeeded. Proved: the free-regime ordering, positive productivity coefficients, the corrected wage condition, the printed negative branch is vacuous, the formula assembly, and the FTC and eq. (12) log-derivatives. The endpoint keeps one `sorry`. **Exact blocker:** (i) the constrained-regime price ordering does not follow from the Spec's equilibrium-path premises (no positivity or regularity at other capital levels); (ii) linking the eq. (12) derivatives to the equilibrium price paths. The Codex daily quota ran out four times. Details: `prompts.md` §B.3–B.11, checks in `extra/lean-run/` |
+| [`lean/`](lean/) | AppliedModelingLib run (`gpt-5.6-sol`, effort `high`, 4 sessions), preserved as generated except a single upstream-ignored preflight trace removed from the delivery tree (see audit). Target: Proposition 3. **Partial**: the recorded September 24 `lake build` and `paper_contribution.py check AR18RaceManMachine --fast` succeeded. Proved: the free-regime ordering, positive productivity coefficients, the corrected wage condition, the printed negative branch is vacuous, the formula assembly, and the FTC and eq. (12) log-derivatives. The endpoint keeps one `sorry`. **Exact blocker:** (i) the constrained-regime price ordering does not follow from the Spec's equilibrium-path premises (no positivity or regularity at other capital levels); (ii) linking the eq. (12) derivatives to the equilibrium price paths. The Codex daily quota ran out four times. Details: `prompts.md` §B.3–B.11, checks in `extra/lean-run/` |
 | [`derivation/`](derivation/derivation.tex) | Own hand-derivable special case: definitions, lemmas, theorems, and where it does **not** reproduce the paper |
-| [`sim/`](sim/) | SymPy verification (17/17) and randomized property test (167,639 checks, 0 failures) |
-| [`extra/lean-sandbox/`](extra/lean-sandbox/) | Own Lean proofs (443 lines, no `sorry`): productivity sign lemma for every $\hat\sigma$, wage threshold, refutation of the printed claim |
+| [`sim/`](sim/) | SymPy verification (17/17) and randomized property test (167,639 checks, 0 failures) and CES continuation (11,770 checks, 0 failures) |
+| [`extra/lean-sandbox/`](extra/lean-sandbox/) | Independent Lean proofs: 18 audited endpoints, no `sorryAx`; productivity, special-case threshold/refutation, conditional CES crossing |
 | [`extra/tutorial/`](extra/tutorial/tutorial.tex) | Reading tutorial (Spanish): five reading questions, task framework, static model |
 | [`extensions.md`](extensions.md) | Extension that could grow into the term project |
 

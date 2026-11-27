@@ -9,7 +9,7 @@ Toolchain and Mathlib are pinned to the **same versions as the AppliedModelingLi
 `leanprover/lean4:v4.30.0-rc2`, Mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` (see `lakefile.toml`,
 `lake-manifest.json`).
 
-## What is proved (443 lines, 0 `sorry`, only the standard axioms)
+## Original independent results (only the standard axioms)
 
 | File | Theorem | Mathematical content | Source |
 |---|---|---|---|
@@ -35,8 +35,7 @@ Toolchain and Mathlib are pinned to the **same versions as the AppliedModelingLi
   derivative is not assumed; Lean obtains it from the labor-market identity (`hLabor`). The other premises are
   continuity and positivity of $\gamma$ (C) and differentiability of $L^s$ with elasticity $\varepsilon$ (LS).
 * **Domain change with respect to the paper:** the special case $\eta=0$, $\sigma=1$ (the paper's own
-  Corollary 1 setting, with $\gamma$ strictly increasing). The paper's general $\hat\sigma\neq1$ threshold
-  is **not** formalized here; `sim/` covers it numerically (P7).
+  Corollary 1 setting, with $\gamma$ strictly increasing). The unrestricted general-CES threshold is not formalized; the November module verifies a conditional crossing result under isoelastic supply.
 
 ## Build and audit
 
@@ -61,5 +60,4 @@ are the normalized gain's monotonicity and continuity, the necessary and suffici
 interior-root condition (including equality at the excluded upper endpoint),
 the sign ordering, the productivity scaling and wage normalization, and the relative-price
 ordering from the isoelastic equilibrium ratio equation. The source statements and
-historical AML proof hole remain untouched. Do not call these new endpoints Lean-checked
-until the new CI build and axiom audit succeed.
+historical AML proof hole remain untouched. GitHub Actions run 45929885625 compiled the module and audited all 18 named endpoints with only propext, Classical.choice and Quot.sound. The original AML proposition remains partial.
