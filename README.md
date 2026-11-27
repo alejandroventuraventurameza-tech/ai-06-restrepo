@@ -23,7 +23,7 @@ The positive region exists iff $\hat K<\underline K$. Below $K_I$ additional aut
 ## Verification and deliverables
 - [Presentation PDF](presentation.pdf) and [Beamer source](presentation.tex); [20-minute guide](extra/audit/PRESENTATION_GUIDE.md), [tutorial](extra/tutorial/tutorial.pdf).
 - [Historical AML export](lean/): GPT-5.6 Sol high, not xhigh; one original sorry remains in Proposition 3. Successful build and --fast replay do not prove that endpoint. Original generated files preserved except an upstream-ignored preflight trace (see audit). [Agent logs](extra/lean-run/) and [prompts/deviations](prompts.md).
-- [Independent Lean sandbox](extra/lean-sandbox/): [CI 45929885625](https://github.com/alejandroventuraventurameza-tech/ai-06-restrepo/actions/runs/45929885625) verified 18 endpoints, using only standard Lean foundations. [Local derivative bridges](extra/audit/PRICE_DERIVATIVE_BRIDGE.md) are separately audited.
+- [Independent Lean sandbox](extra/lean-sandbox/): [CI 45930791358](https://github.com/alejandroventuraventurameza-tech/ai-06-restrepo/actions/runs/45930791358) verified 25 endpoints with standard Lean foundations, including [seven local derivative bridges](extra/audit/PRICE_DERIVATIVE_BRIDGE.md). [Closeout audit](extra/audit/CLOSEOUT.md).
 - [Numerical verification](sim/): 17 symbolic identities, 167,639 original checks and 11,770 new checks, zero failures. [Extensions](extensions.md) and [requirements](REQUIREMENTS.md).
 
 ## Handwritten evidence (original, unchanged)

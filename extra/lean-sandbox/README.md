@@ -61,3 +61,8 @@ interior-root condition (including equality at the excluded upper endpoint),
 the sign ordering, the productivity scaling and wage normalization, and the relative-price
 ordering from the isoelastic equilibrium ratio equation. The source statements and
 historical AML proof hole remain untouched. GitHub Actions run 45929885625 compiled the module and audited all 18 named endpoints with only propext, Classical.choice and Quot.sound. The original AML proposition remains partial.
+
+
+## Final November verification
+
+PriceDerivativeBridge.lean adds seven independently verified endpoints. Local differentiability and equilibrium identities are explicit premises; the derivative values are deduced. CI 45930791358 compiled 8319 jobs and audited 25 named endpoints with only propext, Classical.choice and Quot.sound. See ../audit/PRICE_DERIVATIVE_BRIDGE.md and ../audit/lean-axioms-20261126.txt. This is not a proof of the complete original AML Spec.
