@@ -75,7 +75,7 @@ jobs:
         run: lake exe cache get
       - name: Build independent sandbox
         run: lake build
-      - name: Audit exactly the 18 independent theorem endpoints
+      - name: Audit exactly the 25 independent theorem endpoints
         run: |
           set -euo pipefail
           lake env lean audit/PrintAxioms.lean | tee lean-axioms.log

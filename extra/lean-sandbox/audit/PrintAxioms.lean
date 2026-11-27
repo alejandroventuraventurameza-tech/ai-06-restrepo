@@ -18,3 +18,10 @@ open AR18Sandbox
 #print axioms ces_productivity_scale
 #print axioms ces_wage_normalization
 #print axioms isoelastic_relative_price_order
+#print axioms constrained_lower_price_order
+#print axioms upper_price_order_iff
+#print axioms boundary_equality_alone_insufficient
+#print axioms ces_relative_price_derivative
+#print axioms ces_dual_price_derivative
+#print axioms ces_dual_weight_normalization
+#print axioms solve_log_factor_prices

@@ -11,6 +11,13 @@ EXPECTED = {
     "ces_interior_root_iff", "ces_no_interior_root_negative", "ces_root_signs",
     "ces_productivity_scale", "ces_wage_normalization",
     "isoelastic_relative_price_order",
+    "constrained_lower_price_order",
+    "upper_price_order_iff",
+    "boundary_equality_alone_insufficient",
+    "ces_relative_price_derivative",
+    "ces_dual_price_derivative",
+    "ces_dual_weight_normalization",
+    "solve_log_factor_prices",
 }
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 s = Path(sys.argv[1]).read_text()
