@@ -21,3 +21,7 @@ In regime R, $da=dI-dN$, $dG=-\gamma(I)^{s-1}dI+\gamma(N)^{s-1}dN$. This recover
 Price ordering: strict monotonicity of $\gamma$ and $W/R=\gamma(\tilde I)$ give $R<W/\gamma(I)$ if $I<\tilde I$, and $W/\gamma(N)<R$ iff $\tilde I<N$ (positive denominators). A boundary equality alone at some other capital level cannot justify the latter. For example $w(k)=1+2/k$, $r(k)=1$ have positive prices for $k>0$ and $r(2)=w(2)/2$, yet $w(1)/2>r(1)$. This example tests only the boundary equality implication, not all premises of the original Spec.
 
 The new independent Lean file states seven precise local/algebraic endpoints, including this limited counterexample. Their compilation and axiom audit must pass before they are called machine-verified. This is a route around two proof obstacles, not a completion or replacement of the original AML target. Global equilibrium regularity, the identification of the local price paths with the frozen Spec, and its other open clauses remain separate obligations.
+
+## First build and repair
+
+CI 45930531521 first compiled the module but reported a single elaboration mismatch at line 34: StrictMono gamma is a dependent function with implicit point arguments, and the goal required an explicit implication at ITilde and N. Replaced exact hm by intro h; exact hm h. The mathematical statement and proof premises are unchanged. The fresh build must confirm the repair.

@@ -31,7 +31,8 @@ theorem upper_price_order_iff {gamma : ℝ → ℝ} {ITilde N W R : ℝ}
   · intro h
     by_contra! hn
     exact (not_lt_of_ge (hm.monotone hn)) h
-  · exact hm
+  · intro h
+    exact hm h
 
 /-- Boundary equality alone does not imply the order below the boundary.
 This is not a counterexample to the full AML Spec. -/
