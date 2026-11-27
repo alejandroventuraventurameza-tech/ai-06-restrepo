@@ -10,3 +10,11 @@ open AR18Sandbox
 #print axioms hasDerivAt_lnWS
 #print axioms automation_raises_wage_iff
 #print axioms AR18Sandbox.hypotheses_satisfiable
+#print axioms normalizedGain_strictMonoOn
+#print axioms normalizedGain_continuousOn
+#print axioms ces_interior_root_iff
+#print axioms ces_no_interior_root_negative
+#print axioms ces_root_signs
+#print axioms ces_productivity_scale
+#print axioms ces_wage_normalization
+#print axioms isoelastic_relative_price_order

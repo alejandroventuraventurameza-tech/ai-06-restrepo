@@ -289,6 +289,26 @@ $\Kh<K<\Kl$ & \textcolor{posc}{sube} $W$ ($\iff \ln\frac{\gamma(N)}{\gamma(I)}>\
 Las curvas se limitan al dominio del Supuesto~3. No prueban unicidad general.
 \end{frame}
 
+\begin{frame}{Extensión: cruce único con oferta laboral isoelástica}
+\small
+Sea $q=W/R$, $a=I-N+1$, $G=\int_I^N\gamma^{\sh-1}$ y $L^s(\omega)=\ell_0\omega^e$.
+Defina $H_s(x)=\int_1^x t^{-s}\,\mathrm dt$.
+\[
+ \frac{\partial_I\ln W}{1-s_L}
+ =\frac{H_{\sh}(q/\gamma(I))}{a}-\frac{\Lambda_I}{\sh+e},
+ \qquad
+ q^{\sh+e}=\frac{G}{a\ell_0}K^{1+e}.
+\]
+Ambas funciones son crecientes en su argumento. En $I<\tilde I<N$ hay un único cero interior si y solo si
+\[
+ \frac{a\Lambda_I}{\sh+e}<H_{\sh}\!\left(\frac{\gamma(N)}{\gamma(I)}\right).
+\]
+Si no se cumple, el salario cae en todo el intervalo admisible. Igualdad solo da un cero en la frontera excluida.
+\begin{block}{Alcance}
+Extensión analítica condicional; no implica unicidad con oferta laboral arbitraria. Ver derivación y módulo de pruebas CES.
+\end{block}
+\end{frame}
+
 \begin{frame}{Verificación computacional (sim/)}
 \begin{columns}[T]
 \column{0.5\textwidth}

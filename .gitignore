@@ -52,3 +52,7 @@ DNI*
 extra/lean-run/*.jsonl
 # Snapshots of the in-progress AppliedModelingLib folder (for review only; lean/ gets the final copy)
 extra/lean-run/*.tgz
+
+# Match the pinned AML upstream policy: private review traces are local.
+lean/.review_traces/*
+!lean/.review_traces/paper_theorem_validations.jsonl

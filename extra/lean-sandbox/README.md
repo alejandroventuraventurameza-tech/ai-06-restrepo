@@ -53,3 +53,13 @@ lake env lean audit/PrintAxioms.lean    # expected: only [propext, Classical.cho
 
 `audit/build-and-axioms.txt` holds the output of these commands from the machine where the files
 were written. Re-run them and keep your own output next to it.
+
+## November continuation: CES crossing
+
+`CESCrossing.lean` implements the analytical extension in the derivation. Its targets
+are the normalized gain's monotonicity and continuity, the necessary and sufficient
+interior-root condition (including equality at the excluded upper endpoint),
+the sign ordering, the productivity scaling and wage normalization, and the relative-price
+ordering from the isoelastic equilibrium ratio equation. The source statements and
+historical AML proof hole remain untouched. Do not call these new endpoints Lean-checked
+until the new CI build and axiom audit succeed.

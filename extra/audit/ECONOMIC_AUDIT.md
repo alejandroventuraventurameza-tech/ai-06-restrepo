@@ -29,3 +29,7 @@ This is an analytical conditional extension, **not** a proof for arbitrary labor
 ## Privacy and provenance
 
 The tracked historical lean/.review_traces/proposition3-preflight.txt requires review against the issue's instructions; do not force-add private traces. The original tree is frozen for now. If a public trace is inappropriate, document and perform a narrowly scoped removal separately rather than rewriting the generated files or claiming it was never committed.
+
+## Publication hygiene, second pass
+
+The pinned AppliedModelingLib root `.gitignore` excludes `**/.review_traces/*` except intentional `paper_theorem_validations.jsonl`. The historical `lean/.review_traces/proposition3-preflight.txt` was tracked contrary to that policy. Remove that single path from the current delivery tree and add the matching ignore rule; all other generated tracked paths remain byte-identical. The original baseline remains in Git history; no history rewrite or claim of retroactive erasure. The trace has not been certified free of sensitive content.
