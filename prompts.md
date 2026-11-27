@@ -860,3 +860,11 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
   `.git/objects/maintenance.lock` and a temporary object that could have blocked GitHub Desktop. Claude noticed from the warning, asked for delete
   permission and removed both files. It **broke its own rule from E1** (only `git --no-optional-locks` and only read commands). Lesson: `fetch`,
   `pull` and `gc` are writes too.
+
+---
+
+## F. November 26 continuation (source audit)
+
+User prompt, verbatim: `Ok, sigue` (following the initial Repository 6 audit). Student reports authorization for GPT-6 xhigh continuation and late email submission. The historical run remains GPT-5.6 Sol high; no claim is made that it used xhigh, or that the current interface exposes its exact reasoning-effort setting.
+
+Actual assistant finding, excerpt: **Nuestra derivación coincide con la dirección corregida en la versión publicada.** The NBER 2017 version, p. 13, has the reversed threshold; AER 2018 p. 1502 corrects it. See `extra/audit/ECONOMIC_AUDIT.md`. Source check uses indexed NBER PDF text (direct render returned 403) and the visually inspected AER page hosted at MIT. The new analytical extension cancels the capital-share factor and proves an interior threshold under constant labor-supply elasticity. Historical raw transcripts not recovered in this session; the present excerpt is not a reconstruction of them.

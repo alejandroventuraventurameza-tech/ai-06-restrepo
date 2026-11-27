@@ -21,7 +21,7 @@ Toolchain and Mathlib are pinned to the **same versions as the AppliedModelingLi
 | `WageThreshold.lean` | `wageResponse_pos_iff`, `_neg_iff`, `_eq_zero_iff` | $\operatorname{sign}(d\ln W/dI)=\operatorname{sign}(K-\hat K)$, with $\hat K=K_I e^{1/(b(1+\varepsilon))}$ | derivation Thm 4.2 |
 | | `KI_lt_Khat`, `KI_lt_KUnder`, `Khat_lt_KUnder_iff` | the wage-lowering region is never empty; the wage-raising one is non-empty iff $\log\gamma(N)-\log\gamma(I)>1/(b(1+\varepsilon))$ | derivation Thm 4.2 |
 | | **`printed_threshold_claim_false`** | the final sentence of Prop. 3 **as printed** ("∃ $\overline K>\underline K$ … raises the wage if $K<\overline K$, lowers it if $K>\overline K$") is **false**, even restricted to the admissible region $(K_I,\underline K)$ | derivation Cor. 4.3 |
-| | `corrected_threshold` | the corrected statement: a single sign change at $\hat K$, from − to + | derivation Cor. 4.4 |
+| | `corrected_threshold` | a sign identity for the response formula; one interior crossing only if $\hat K<\underline K$ | derivation Cor. 4.4 |
 | `ModelSDerivative.lean` | **`hasDerivAt_lnWS`** | from the equilibrium conditions (output, $W=bY/L$, and the labor-market identity $\omega L^s(\omega)=b/a$), $\frac{d\ln W}{dI}=\log\frac{bK}{aL\gamma(I)}-\frac{1}{b(1+\varepsilon)}$. Lean **derives** $d\log\omega/dI$ from the identity; it is not assumed | derivation Lemmas 2.3–3.2, Thm 3.3 |
 | | `automation_raises_wage_iff` | end to end: equilibrium conditions ⟹ $d\ln W/dI>0$ iff $K>\hat K$ | derivation Thm 4.2 |
 | | `hypotheses_satisfiable` | the premises of `hasDerivAt_lnWS` are jointly satisfiable (constant-elasticity witness), so the theorem is not vacuous | — |

@@ -77,7 +77,7 @@ Las afirmaciones marcadas como \emph{preliminares} se verifican con rigor en \te
 \section{Las cinco preguntas de lectura}
 % =====================================================================
 
-Primera respuesta. Se afinan al cierre de la Parte II y en el \texttt{README.md}.
+Respuestas de lectura, con énfasis en el modelo estático y remisión al \texttt{README.md}.
 
 \paragraph{1. ¿Cuál es la pregunta del paper (no el tema)?}
 ¿Puede una economía en la que el capital reemplaza continuamente al trabajo en tareas que antes hacía el trabajo
@@ -102,8 +102,7 @@ tareas nuevas (Prop.~6).
 Combinan un modelo de tareas (continuo de tareas, un umbral que separa capital de trabajo) con cambio técnico
 dirigido. La estática comparativa del modelo estático se sigue por diferenciación directa bajo el Supuesto~2, con
 una excepción importante que discutimos en la Sección~\ref{sec:trampa}: la frase de la Prop.~3 sobre el umbral de
-capital $\Kb$ no se demuestra en el Apéndice~B y, tal como está impresa, parece invertida. La Parte~II revisa si
-los resultados dinámicos se siguen.
+capital $\Kb$ no se demuestra en el Apéndice~B y está invertida en la versión NBER de 2017. AER (2018, p.~1502) ya corrige la dirección. Este tutorial se concentra en el modelo estático.
 
 \paragraph{4. Contribución marginal frente a predecesores.}
 \begin{itemize}[nosep]
@@ -123,7 +122,7 @@ los resultados dinámicos se siguen.
 \begin{enumerate}[nosep,label=(\alph*)]
   \item \textbf{El umbral $\Kb$ de la Prop.~3.} Impreso: ``existe $\Kb>\Kl$ tal que un aumento en $I$ sube el salario
         si $K<\Kb$ y lo baja si $K>\Kb$''. Pero el Supuesto~3 ya impone $K<\Kl$, y el propio texto dice que la
-        ganancia de productividad es pequeña cuando el capital es escaso, no cuando es abundante. Ver
+        fórmula de productividad implica que la ganancia es pequeña cerca de la frontera inferior. AER (2018, p.~1502) corrige la dirección. Ver
         Sección~\ref{sec:trampa}.
   \item \textbf{Homotecia de filo de navaja (Supuesto~2).} Las fórmulas cerradas usan $\eta\to0$ (un límite) o
         $\zeta=1$. El caso general (Apéndice A) solo afirma resultados cualitativos bajo el Supuesto~2$'$.
@@ -510,7 +509,7 @@ when $K<\Kb$ and reduces it when $K>\Kb$''}. Y el texto (p.~14) agrega que la ga
 \emph{``which is guaranteed when $K>\Kb$''}.
 
 \begin{observacion}[preliminar; se demuestra en \texttt{derivation/}]\label{obs:umbral}
-Tal como está impresa, la afirmación no puede ser correcta. Hay dos problemas, y cada uno basta:
+En NBER 2017 hay dos problemas: el primero es una rama vacía y el segundo proporciona la refutación bajo las condiciones indicadas:
 \begin{enumerate}[nosep]
   \item \textbf{Orden de los umbrales.} El Supuesto~3 impone $K<\Kl$. Si $\Kb>\Kl$, toda $K$ admisible cumple $K<\Kb$,
         y la cláusula ``la reduce cuando $K>\Kb$'' queda vacía. Leída literalmente, la frase diría que la
@@ -526,19 +525,18 @@ Lo que sí parece cierto (a verificar): existe un $\hat K$ tal que la automatiza
 $K\in(K_I,\hat K)$ y lo sube para $K\in(\hat K,\Kl)$ si $\hat K<\Kl$. Si el cruce es único no es obvio, porque $s_L$
 también cambia con $K$. Un chequeo numérico rápido (caso $\eta\to0$, trabajo inelástico) encontró a lo sumo un cambio
 de signo, y en esa dirección. Además, el Apéndice~B (pp.~B-12–B-13) demuestra la descomposición pero \emph{no}
-demuestra la existencia del umbral.
+demuestra la existencia del umbral. La versión publicada AER (2018, pp.~1502--1503) ya corrige la dirección; nuestra derivación verifica de manera independiente el texto asignado, no una errata inédita de la versión publicada.
 \end{observacion}
 
 \begin{nota}[Qué se verifica después]
 (1) La derivación propia (\texttt{derivation/}) enuncia el umbral correcto como teorema en un modelo simplificado.
-(2) \texttt{sim/} lo prueba sobre miles de sorteos de primitivas, incluido si el cruce es único.
+(2) \texttt{sim/} lo verifica numéricamente sobre miles de sorteos; ello no demuestra unicidad general. La extensión de noviembre en \texttt{derivation/} prueba el cruce único condicional a oferta isoelástica.
 (3) La corrida de Lean recibió la Prop.~3 \emph{sin aviso} sobre este punto, para ver si el agente lo detecta.
 \end{nota}
 
 \vspace{1em}
 \hrule
 \vspace{0.5em}
-\noindent\emph{Parte II (Secciones 3–5 del paper: crecimiento balanceado, tecnología endógena, extensiones) se
-agrega en el siguiente bloque.}
+\noindent\emph{Alcance: las secciones dinámicas 3--5 no se reproducen íntegramente en este tutorial estático.}
 
 \end{document}

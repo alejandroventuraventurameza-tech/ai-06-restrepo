@@ -2,7 +2,7 @@
 
 Acemoglu, D. & Restrepo, P., NBER WP 22252, **revised June 2017 (87 pp.) — the version read here and pinned for Lean**
 (SHA-256 in [`paper/README.md`](paper/README.md)). Published as *The Race between Man and Machine*, AER 108(6), 2018.
-Page, equation and result numbers below refer to the NBER version.
+Page, equation and result numbers below refer to the NBER version unless marked AER. A November 26 comparison confirms that the AER version already corrected the threshold direction (p. 1502).
 
 ## What question the paper answers
 Can an economy in which capital keeps taking over tasks that labor used to perform grow along a balanced path
@@ -33,15 +33,11 @@ wage when that gain is small ("so-so" technologies). Reinstatement enters throug
 and employment. The word "reinstatement" does not appear in this 2017 version; the paper's two forces for $dI$ are
 *productivity* and *displacement* (see `prompts.md` N1).
 
-**What we found (own derivation, simulation and Lean):** the capital threshold printed in Prop. 3 has the **wrong direction**. The paper
-says "there exists $\overline K>\underline K$ such that an increase in $I$ increases the wage when $K<\overline K$ and reduces it when
-$K>\overline K$". But with Assumption 3 ($K<\underline K$) the second half is vacuous, and near the lower edge $K_I$ of the constrained
-regime the productivity gain vanishes. So automation **lowers** the wage when capital is **scarce** and raises it when capital is abundant.
-In the paper's own Cobb–Douglas case ($\sigma=1$, $\eta\to0$) with elastic labor, the exact condition is
-$$\frac{d\ln W}{dI}>0\iff K>\hat K=K_I\,\exp\!\Big(\tfrac{1}{(N-I)(1+\varepsilon_L)}\Big)$$
-([`derivation/`](derivation/derivation.tex), Thm 4.2). The same statement is machine-checked in Lean
-([`extra/lean-sandbox/`](extra/lean-sandbox/), `printed_threshold_claim_false`, `corrected_threshold`), and confirmed numerically for
-$\hat\sigma\neq1$ over 400 random economies: at most one sign change, always from − to + ([`sim/`](sim/)).
+**What we found:** the capital-threshold sentence in the June 2017 NBER Proposition 3(a), p. 13, reverses the sign ordering. Assumption 3 makes its negative branch vacuous; the nonempty interval just above the adoption boundary supplies a counterexample to its positive branch. AER (2018, p. 1502) already gives the corrected direction. Our work independently verifies the discrepancy in the assigned version; it does not claim a new correction to the published article.
+
+For the Cobb–Douglas case ($\sigma=1$, $\eta\to0$) with elastic labor, **within $K_I<K<\underline K$**,
+$$\frac{d\ln W}{dI}>0\iff K>\hat K=K_I\exp\!\Big(\tfrac{1}{(N-I)(1+\varepsilon_L)}\Big).$$
+The positive region exists iff $\hat K<\underline K$; below $K_I$ additional automation is not adopted. The historical sandbox checks the special-case derivative and threshold under its declared regularity premise. The 400 general-CES draws give numerical evidence, not a general proof. The November continuation derives a single-crossing theorem for general $\hat\sigma>0$ conditional on constant labor-supply elasticity. See [economic audit](extra/audit/ECONOMIC_AUDIT.md) and [derivation](derivation/derivation.tex). Lean verification of the extension is not yet available.
 
 ## What is in this repository
 | Path | Content |
@@ -50,7 +46,7 @@ $\hat\sigma\neq1$ over 400 random economies: at most one sign change, always fro
 | [`prompts.md`](prompts.md) | Raw prompts and answers (Claude, the Lean agent, the cold question); deviations D1–D2; AI mistakes E1–E2 |
 | [`hand/`](hand/) | Handwritten derivation (see below) |
 | [`presentation.tex`](presentation.tex) / `.pdf` | 20-minute Beamer deck |
-| [`lean/`](lean/) | AppliedModelingLib run (`gpt-5.6-sol`, effort `high`, 4 sessions), copied exactly as generated. Target: Proposition 3. **Partial**: `lake build` and `paper_contribution.py check AR18RaceManMachine --fast` succeed. Proved: the free-regime ordering, positive productivity coefficients, the corrected wage condition, the printed negative branch is vacuous, the formula assembly, and the FTC and eq. (12) log-derivatives. The endpoint keeps one `sorry`. **Exact blocker:** (i) the constrained-regime price ordering does not follow from the Spec's equilibrium-path premises (no positivity or regularity at other capital levels); (ii) linking the eq. (12) derivatives to the equilibrium price paths. The Codex daily quota ran out four times. Details: `prompts.md` §B.3–B.11, checks in `extra/lean-run/` |
+| [`lean/`](lean/) | AppliedModelingLib run (`gpt-5.6-sol`, effort `high`, 4 sessions), copied exactly as generated. Target: Proposition 3. **Partial**: the recorded September 24 `lake build` and `paper_contribution.py check AR18RaceManMachine --fast` succeeded. Proved: the free-regime ordering, positive productivity coefficients, the corrected wage condition, the printed negative branch is vacuous, the formula assembly, and the FTC and eq. (12) log-derivatives. The endpoint keeps one `sorry`. **Exact blocker:** (i) the constrained-regime price ordering does not follow from the Spec's equilibrium-path premises (no positivity or regularity at other capital levels); (ii) linking the eq. (12) derivatives to the equilibrium price paths. The Codex daily quota ran out four times. Details: `prompts.md` §B.3–B.11, checks in `extra/lean-run/` |
 | [`derivation/`](derivation/derivation.tex) | Own hand-derivable special case: definitions, lemmas, theorems, and where it does **not** reproduce the paper |
 | [`sim/`](sim/) | SymPy verification (17/17) and randomized property test (167,639 checks, 0 failures) |
 | [`extra/lean-sandbox/`](extra/lean-sandbox/) | Own Lean proofs (443 lines, no `sorry`): productivity sign lemma for every $\hat\sigma$, wage threshold, refutation of the printed claim |
