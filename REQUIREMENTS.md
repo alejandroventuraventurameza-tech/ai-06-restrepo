@@ -5,7 +5,7 @@ Checklist built from the **literal text** of
 (read 2026-09-23 via the GitHub API, 9,601-character body + 4 comments) and from the
 [Course Repository Guide](https://github.com/alexanderquispe/AI-Econ-Modeling/blob/main/syllabus/repository-guide.md)
 that the issue cites as "full detail". Quotes in `>` are verbatim.
-Status: `[ ]` open · `[~]` in progress · `[x]` done · `[!]` deviation (declared in `prompts.md`).
+Status: `[ ]` open · `[~]` in progress · `[x]` done · `[!]` deviation. The detailed original checklist below records the September work plan. The November closeout matrix at the end is the current audit; unchecked historical planning boxes are not a claim of missing deliverables.
 
 ---
 
@@ -146,3 +146,18 @@ Optional in the guide, kept above the floor: `extensions.md`, simulation/SymPy c
 6. [ ] Own Lean formalization in `extra/lean-sandbox/`.
 7. [ ] README, prompts.md, presentation.
 8. [ ] PR, merge, post link on issue #5.
+
+
+## 9. November closeout audit (2026-11-26)
+
+| Requirement | Evidence and status |
+|---|---|
+| Repository name, branch → PR → merge, submission comment | Public repository; PRs #1–4 merged 24 September, 20:26–20:38 Lima time; [original link posted at 20:31 Lima](https://github.com/alexanderquispe/AI-Econ-Modeling/issues/5#issuecomment-5825191292). Current continuation: [PR #5](https://github.com/alejandroventuraventurameza-tech/ai-06-restrepo/pull/5). |
+| Assigned edition | NBER June 2017 pinned, title difference explained; AER correction compared on 26 November. See economic audit; NBER direct download blocked. |
+| README, raw prompts, hand | README and six original images with descriptions. Historical recorded excerpts and cold answer retained; not all raw historical Claude/Codex sessions are recoverable. |
+| Presentation | Source revised for 20-minute format, title link, aggregate economy, three regimes, proof fragment, handwritten evidence and verdict. Suggested timing in extra/audit/PRESENTATION_GUIDE.md, not an actual rehearsal. |
+| Required AML output and check | Generated tracked files unchanged except one upstream-ignored preflight trace; original history retained. CI 45929885625: fast check exit 0, build exit 0; one original sorry retained. |
+| Configuration | Historical GPT-5.6 Sol high, not xhigh, disclosed. Student reports authorization for GPT-6 continuation; actual effort setting unavailable in the current interface. |
+| Independent verification | CI 45929885625: 18 audited theorem endpoints, standard Lean foundations only; 17 symbolic identities, 167,639 original and 11,770 new checks, zero failures. |
+| Remaining theorem boundary | Full historical Proposition 3 not proved. The independent local CES derivative bridges are separately tracked and must be compiled before claiming their verification. |
+| Submission | Original issue comment already exists. November continuation is through PR #5; no new email sent. |

@@ -868,3 +868,12 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
 User prompt, verbatim: `Ok, sigue` (following the initial Repository 6 audit). Student reports authorization for GPT-6 xhigh continuation and late email submission. The historical run remains GPT-5.6 Sol high; no claim is made that it used xhigh, or that the current interface exposes its exact reasoning-effort setting.
 
 Actual assistant finding, excerpt: **Nuestra derivación coincide con la dirección corregida en la versión publicada.** The NBER 2017 version, p. 13, has the reversed threshold; AER 2018 p. 1502 corrects it. See `extra/audit/ECONOMIC_AUDIT.md`. Source check uses indexed NBER PDF text (direct render returned 403) and the visually inspected AER page hosted at MIT. The new analytical extension cancels the capital-share factor and proves an interior threshold under constant labor-supply elasticity. Historical raw transcripts not recovered in this session; the present excerpt is not a reconstruction of them.
+
+
+## G. November 26 continuation (verification and closeout)
+
+User prompt, verbatim: **Sigue y no pares**.
+
+Assistant report, verbatim excerpt: **La formalización histórica de la Proposición 3 conserva un sorry. Su compilación exitosa no significa que esté demostrada íntegramente.**
+
+Audit record: CI 45929885625 successfully reproduced the historical AML check and build, audited 18 independent theorem endpoints and completed 167,639 original plus 11,770 new numerical checks (zero failures). The first PDF render exposed clipped text in the threshold slide; the slide source was repaired and the second candidate reviewed. The earlier long-run claim needed the additional constrained-interior BGP condition; the free BGP does not change effective wages, labor share or employment. This corrects the overly broad interpretation in the historical verdict without rewriting that raw answer. The new price-derivative bridge derives local formulas from equilibrium conditions under explicit differentiability premises. Its additional endpoints are not credited until compilation and audit pass. No original raw response has been invented or backfilled.

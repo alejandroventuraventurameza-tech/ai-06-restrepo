@@ -12,7 +12,7 @@ make automation self-limiting, and when do those forces fail?
 ## The agent's problem, and why the unit of analysis is the aggregate economy
 There is no single interesting optimizer. A unit measure of tasks $i\in[N-1,N]$ is aggregated with a CES
 (elasticity $\sigma$). Tasks $i\le I$ **can** be done by capital. In each task a competitive firm minimizes
-$p(i)=\min\{R,\ W/\gamma(i)\}$, with comparative advantage $\gamma$ strictly increasing (Assumption 1). A household supplies
+$\min\{R,\ W/\gamma(i)\}$ for feasible automation tasks and $W/\gamma(i)$ otherwise (effective factor cost), with comparative advantage $\gamma$ strictly increasing (Assumption 1). A household supplies
 labor $L=L^s(W/RK)$. The object of the paper is the **equilibrium allocation of tasks to factors**, $I^*=\min\{I,\tilde I\}$
 with $W/R=\gamma(\tilde I)$. Two technologies move that allocation: automation ($I$) and new tasks ($N$).
 
@@ -28,7 +28,7 @@ $$\frac{d\ln W}{dI}=\underbrace{B^{\hat\sigma-1}\!\int_{R}^{W/\gamma(I)}\!x^{-\h
 | labor share, employment | fall (always, because $\Lambda_I>0$) | unchanged | fall |
 | output $Y$, rental $R$ | rise | unchanged | $R$ returns to $\rho+\delta+\theta g$ |
 
-For the long-run column additionally impose Assumptions 1′ and 2, constant growth g, an interior balanced-growth path, and n=N−I > max{bar n(ρ), tilde n(ρ)}. In an interior free BGP marginal automation leaves effective wages, employment and labor share unchanged (AER 2018, pp. 1508–1509).
+For the long-run column additionally impose Assumptions 1′ and 2, constant growth g, an interior balanced-growth path, and $n=N-I>\max\{\bar n(\rho),\tilde n(\rho)\}$. In an interior free BGP marginal automation leaves effective wages, employment and labor share unchanged (AER 2018, pp. 1508–1509).
 
 Automation raises the wage when the **cost saving in the marginal task**, the gap between $W/\gamma(I)$ and $R$, is large. It lowers the
 wage when that gain is small ("so-so" technologies). Reinstatement enters through **new tasks** ($dN$), which raise $W$, the labor share
@@ -56,11 +56,11 @@ The positive region exists iff $\hat K<\underline K$; below $K_I$ additional aut
 | [`extensions.md`](extensions.md) | Extension that could grow into the term project |
 
 ## Handwritten derivation
-Six photos in [`hand/`](hand/), the full proof of Theorem 4.2 of the derivation, written out by hand. This is the step where we did not
+Six photos in [`hand/`](hand/), the original hand-written proof of the special-case threshold, retained verbatim; the revised derivation clarifies that the positive interval may be empty. This is the step where we did not
 believe the printed Proposition 3, nor the Lean agent, which never saw the problem (`prompts.md` E3):
 - `hand/hand_1.jpeg` — named assumptions (A1, S-η, S-σ, LS, regime R, A3), notation $a,b$; Lemma 1 (equal expenditure per task, from the FOC).
 - `hand/hand_2.jpeg` — Lemma 2 (factor prices, $\ln Y$, $s_L=b$) and Lemma 3 (employment by implicit differentiation, $d\ln L/dI<0$).
 - `hand/hand_3.jpeg` — Theorem: productivity effect term by term (FTC) and $d\ln W/dI=\ln\frac{W}{\gamma(I)R}-\frac{1}{b(1+\varepsilon_L)}$.
 - `hand/hand_4.jpeg` — the threshold: $K_I$, $\underline K$, and $d\ln W/dI>0\iff K>\hat K=K_I e^{1/(b(1+\varepsilon_L))}$.
-- `hand/hand_5.jpeg` — every region of $K$ and why none is empty.
+- `hand/hand_5.jpeg` — regions of $K$ (the revised text corrects the positive-region existence condition).
 - `hand/hand_6.jpeg` — corollary: the printed "∃ $\overline K>\underline K$ …" is **false**; conclusion: with scarce capital, automation lowers the wage.

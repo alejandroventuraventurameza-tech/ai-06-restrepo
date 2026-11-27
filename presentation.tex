@@ -87,7 +87,7 @@ Aquí nadie resuelve un problema interesante por sí solo:
 \end{itemize}
 El objeto de estudio es la \textbf{asignación de tareas a factores} en toda la economía, y cómo esa asignación fija precios y participaciones.
 \column{0.46\textwidth}
-\begin{block}{``El problema del agente'', reescrito}
+\begin{block}{Costo efectivo de factores ($\eta=0$)}
 \[
   p(i)=\begin{cases}\min\{R,\ W/\gamma(i)\} & i\le I\\ W/\gamma(i) & i>I\end{cases}
 \]
@@ -104,11 +104,11 @@ Un punto fijo: el umbral depende de precios que dependen del umbral.
 \begin{tikzpicture}[x=11cm,y=1cm,>=Stealth]
   \draw[thick,->] (0,0) -- (1.05,0);
   \foreach \x/\l in {0/{N-1},0.45/{\Is=I},0.72/{\It},1/{N}} {\draw (\x,0.12)--(\x,-0.12); \node[above] at (\x,0.15) {$\l$};}
-  \draw[decorate,decoration={brace,mirror,amplitude=6pt}] (0,-0.25) -- (0.45,-0.25) node[midway,below=7pt] {capital: $p=R$};
-  \draw[decorate,decoration={brace,mirror,amplitude=6pt}] (0.45,-0.25) -- (1,-0.25) node[midway,below=7pt] {trabajo: $p=W/\gamma(i)$};
+  \draw[decorate,decoration={brace,mirror,amplitude=6pt}] (0,-0.25) -- (0.45,-0.25) node[midway,below=7pt] {capital: $R$};
+  \draw[decorate,decoration={brace,mirror,amplitude=6pt}] (0.45,-0.25) -- (1,-0.25) node[midway,below=7pt] {trabajo: $W/\gamma(i)$};
   \draw[->,negc,thick] (0.45,0.9) -- (0.55,0.9) node[right,font=\small] {$dI$: automatización (desplaza)};
   \draw[->,posc,thick] (1,-1.35) -- (1.1,-1.35) node[right,font=\small] {$dN$};
-  \node[posc,font=\small,align=left] at (0.84,-1.35) {tareas nuevas: entra $N$, sale $N-1$};
+  \node[posc,font=\small,align=left] at (0.69,-1.35) {entra $N$, sale $N-1$};
 \end{tikzpicture}
 
 \vspace{6pt}
@@ -256,7 +256,7 @@ Además, el empleo no depende de $K$: $\omega=\omega^*(b/a)$.
 \]
 \[
 \begin{array}{ll}
-K<K_I & \text{no se adopta}\\
+K<K_I & \text{avance sin efecto}\\
 K_I<K<\min(\Kh,\Kl)&\textcolor{negc}{W\text{ baja}}\\
 K=\Kh<\Kl&\text{efecto cero}\\
 \Kh<K<\Kl&\textcolor{posc}{W\text{ sube}}
