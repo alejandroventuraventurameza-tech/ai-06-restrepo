@@ -1,0 +1,111 @@
+name: Repository 6 validation
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repo6-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  economics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned numerical environment
+        run: python -m pip install -r sim/requirements-lock.txt
+      - name: Verify preservation and run numerical checks
+        run: |
+          set -euo pipefail
+          python extra/audit/check_preservation.py
+          cd sim
+          python verify_symbolic.py | tee ../symbolic.log
+          python test_properties.py --draws-s 5000 --draws-g 400 --grid 25 --seed 20260923 | tee ../property.log
+          python ces_crossing.py --draws 500 --seed 20261126 | tee ../ces-crossing.log
+          python -m pytest -q test_properties.py
+          python figure_data.py | tee ../figure.log
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          import subprocess
+          import numpy as np
+          p=Path("results/wage_response_curves.csv")
+          old=list(csv.DictReader(subprocess.check_output(["git","show","HEAD:sim/results/wage_response_curves.csv"],text=True).splitlines()))
+          new=list(csv.DictReader(p.read_text().splitlines()))
+          assert len(old)==len(new)==240
+          for x,y in zip(old,new):
+              assert np.allclose([float(x[k]) for k in x], [float(y[k]) for k in x], rtol=2e-6, atol=2e-7), (x,y)
+          print("Recomputed figure points agree with the tracked CSV.")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: economic-validation
+          path: |
+            symbolic.log
+            property.log
+            ces-crossing.log
+            figure.log
+            sim/results/wage_response_curves.csv
+
+  lean-sandbox:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: extra/lean-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch pinned Mathlib cache
+        run: lake exe cache get
+      - name: Build independent sandbox
+        run: lake build
+      - name: Audit exactly the 18 independent theorem endpoints
+        run: |
+          set -euo pipefail
+          lake env lean audit/PrintAxioms.lean | tee lean-axioms.log
+          python3 ../audit/check_axioms.py lean-axioms.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: independent-lean-axioms
+          path: extra/lean-sandbox/lean-axioms.log
+
+  aml-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: nikhgarg/AppliedModelingLib
+          ref: 2db7d108cd3a2cb10148974bb2a77856e7d87428
+          path: aml-replay
+      - name: Install elan
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Replay historical AML export (one sorry remains)
+        run: |
+          set -o pipefail
+          bash extra/audit/replay_aml.sh aml-replay 2>&1 | tee aml-replay.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: historical-aml-replay
+          path: aml-replay.log
