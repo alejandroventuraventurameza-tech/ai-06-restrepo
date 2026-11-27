@@ -4,7 +4,7 @@
 % every equation is typeset. Compile: latexmk -pdf presentation.tex
 % =====================================================================
 \documentclass[aspectratio=169,10pt]{beamer}
-\usetheme[progressbar=frametitle,numbering=fraction]{metropolis}
+\usetheme[progressbar=frametitle,numbering=fraction,sectionpage=none]{metropolis}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands,es-nodecimaldot]{babel}}{}
@@ -39,8 +39,8 @@
 \title{La carrera entre la máquina y el hombre}
 \subtitle{Acemoglu \& Restrepo (NBER WP 22252, jun.\ 2017)}
 \author{Alejandro Ventura}
-\institute{IA y Modelamiento Económico — UP 2026-II\quad\textbullet\quad Repositorio: \url{\repourl}}
-\date{25 de septiembre de 2026; revisión: 26 de noviembre de 2026}
+\institute{IA y Modelamiento Económico — UP 2026-II\\ \href{\repourl}{GitHub: ai-06-restrepo}}
+\date{Revisión del 26 de noviembre de 2026}
 
 \begin{document}
 \maketitle
@@ -60,7 +60,7 @@ tareas del trabajo, \emph{sin} volver redundante al trabajo? ¿Qué fuerzas de m
 \textbf{Respuesta}, en tres capas:
 \begin{enumerate}\setlength\itemsep{2pt}
   \item \emph{Estática}: en el régimen restringido, la automatización baja participación y empleo, y \emph{puede} bajar el salario.
-  \item \emph{Capital endógeno}: a largo plazo el salario sube; la participación sigue bajando.
+  \item \emph{Capital endógeno}: en el BGP interior restringido, el salario sube; la participación sigue bajando.
   \item \emph{Tecnología endógena}: la senda con tareas nuevas y automatización a la par es estable, salvo que el capital sea muy barato.
 \end{enumerate}
 \column{0.45\textwidth}
@@ -151,7 +151,7 @@ En (R) las firmas querrían automatizar más: $W/\gamma(I)>R$. En (F) las deriva
 \section{El resultado principal, con todas sus condiciones}
 % =====================================================================
 
-\begin{frame}{Prop.~2: la automatización siempre sesga contra el trabajo}
+\begin{frame}{Prop.~2: la automatización adoptada sesga contra el trabajo}
 De $\ \sh\ln\omega+\ln L^s(\omega)=\ln\Gamma(\Is)-\ln a(\Is)+(1-\sh)\ln K$, con $\omega=W/(RK)$:
 \[
 \frac{d\ln\omega}{dI}=-\frac{\Lambda_I}{\sh+\eps_L}<0,\qquad
@@ -196,27 +196,26 @@ $dN$ & productividad & $+$ & $+$ & 0\\
 \end{columns}
 \end{frame}
 
-\begin{frame}{La trampa: ¿la automatización baja necesariamente salarios y participación?}
+\begin{frame}{La trampa: ¿caen necesariamente salarios y participación?}
 \centering\small
-\begin{tabular}{@{}p{2.6cm}>{\centering\arraybackslash}p{4.6cm}>{\centering\arraybackslash}p{2.4cm}>{\centering\arraybackslash}p{3.2cm}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.4cm}>{\centering\arraybackslash}p{4.2cm}>{\centering\arraybackslash}p{2.0cm}>{\centering\arraybackslash}p{3.1cm}@{}}
 \toprule
- & corto plazo, (R) & corto plazo, (L) & largo plazo (Prop.~5)\\
+ & corto plazo (R) & corto plazo (L) & largo plazo (R, Prop.~5)\\
 \midrule
-salario $W$ & \textbf{sube si y solo si} productividad $>$ desplazamiento & $=$ & \textcolor{posc}{sube}\\
-participación $s_L$ & \textcolor{negc}{baja} & $=$ & \textcolor{negc}{baja}\\
-empleo $L$ & \textcolor{negc}{baja} & $=$ & \textcolor{negc}{baja}\\
-producto, $R$ & \textcolor{posc}{suben} & $=$ & $R\to\rho+\delta+\theta g$\\
+salario $W$ & sube sii productividad $>$ desplazamiento & sin cambio & \textcolor{posc}{sube}\\
+participación $s_L$ & \textcolor{negc}{baja} & sin cambio & \textcolor{negc}{baja}\\
+empleo $L$ & \textcolor{negc}{baja} & sin cambio & \textcolor{negc}{baja}\\
+renta $R$ & sube & sin cambio & $R\to\rho+\delta+\theta g$\\
 \bottomrule
 \end{tabular}
-
-\vspace{8pt}
-\begin{alertblock}{La condición bajo la cual la automatización sube el salario}
+\begin{alertblock}{Condición salarial de corto plazo (R)}
 \[
-B^{\sh-1}\!\int_{R}^{W/\gamma(I)}\!x^{-\sh}\,dx\;>\;(1-s_L)\frac{\Lambda_I}{\sh+\eps_L}
+B^{\sh-1}\!\int_R^{W/\gamma(I)}x^{-\sh}\,dx
+>(1-s_L)\frac{\Lambda_I}{\sh+\eps_L}.
 \]
-El ahorro de costos en la tarea marginal debe superar el amontonamiento del trabajo en menos tareas.
-Las tecnologías ``más o menos'' ($W/\gamma(I)\approx R$) son las que bajan el salario.
 \end{alertblock}
+\footnotesize BGP interior: Supuestos 1$'$ y 2, $g$ constante, $n=N-I>\max\{\bar n(\rho),\tilde n(\rho)\}$. En el BGP interior libre ($n<\bar n(\rho)$), la automatización marginal no cambia salarios efectivos, empleo ni participación.
 \end{frame}
 
 % =====================================================================
@@ -240,31 +239,36 @@ Coincide exactamente con la Prop.~3 evaluada en $\sh=1$, $\eta=0$ (verificado si
 Además, el empleo no depende de $K$: $\omega=\omega^*(b/a)$.
 \end{frame}
 
-\begin{frame}{El umbral: discrepancia NBER (2017) y AER (2018)}
-\begin{columns}[T]
-\column{0.5\textwidth}
-\textbf{NBER 2017 (p.~13):} existe $\Kb>\Kl$ tal que automatizar \textcolor{posc}{sube} $W$ si $K<\Kb$ y lo \textcolor{negc}{baja} si $K>\Kb$.
-
-\medskip
-\textbf{Problemas}
-\begin{enumerate}
-  \item El Supuesto~3 impone $K<\Kl<\Kb$: la segunda mitad es vacía.
-  \item Cerca del borde $K_I$ (donde $W/R=\gamma(I)$), la productividad tiende a 0 y el desplazamiento no, así que $W$ \textcolor{negc}{baja}.
-\end{enumerate}
-\column{0.47\textwidth}
-\begin{block}{Teorema 4.2 (correcto)}
-\[
-\frac{d\ln W}{dI}>0\iff K>\Kh=K_I\,e^{\frac{1}{b(1+\eps_L)}}
-\]
+\begin{frame}{El umbral: NBER (2017) frente a AER (2018)}
 \small
-\begin{tabular}{@{}ll@{}}
-$K<K_I$ & (L): efecto nulo\\
-$K_I<K<\min\{\Kh,\Kl\}$ & \textcolor{negc}{baja} $W$\\
-$\Kh<K<\Kl$ & \textcolor{posc}{sube} $W$ ($\iff \ln\frac{\gamma(N)}{\gamma(I)}>\frac{1}{b(1+\eps_L)}$)\\
-\end{tabular}
-\end{block}
-\textbf{Corolario 4.3}: falso para todo $\Kb>\Kl$. AER (2018, p.~1502) ya corrige la dirección.
+\begin{columns}[T]
+\column{0.47\textwidth}
+\textbf{NBER 2017, p.~13:} $\Kb>\Kl$ y signo positivo si $K<\Kb$.
+\begin{itemize}
+\item El Supuesto 3 impone $K<\Kl$: la rama $K>\Kb$ es vacía.
+\item Justo encima de $K_I$, el desplazamiento domina a la productividad.
+\item AER 2018, p.~1502: dirección corregida.
+\end{itemize}
+\column{0.49\textwidth}
+\textbf{Teorema 4.2 (caso Cobb--Douglas)}
+\[
+\Kh=K_I\exp\!\left(\frac{1}{b(1+\eps_L)}\right)
+\]
+\[
+\begin{array}{ll}
+K<K_I & \text{no se adopta}\\
+K_I<K<\min(\Kh,\Kl)&\textcolor{negc}{W\text{ baja}}\\
+K=\Kh<\Kl&\text{efecto cero}\\
+\Kh<K<\Kl&\textcolor{posc}{W\text{ sube}}
+\end{array}
+\]
 \end{columns}
+\begin{block}{¿Cuándo es no vacía la región positiva?}
+\[
+\Kh<\Kl\iff \ln\!\frac{\gamma(N)}{\gamma(I)}
+>\frac{1}{b(1+\eps_L)}.
+\]
+\end{block}
 \end{frame}
 
 \begin{frame}{Evidencia numérica con $\sh\neq1$}
@@ -305,31 +309,31 @@ Ambas funciones son crecientes en su argumento. En $I<\tilde I<N$ hay un único 
 \]
 Si no se cumple, el salario cae en todo el intervalo admisible. Igualdad solo da un cero en la frontera excluida.
 \begin{block}{Alcance}
-Extensión analítica condicional; no implica unicidad con oferta laboral arbitraria. Ver derivación y módulo de pruebas CES.
+Ocho resultados Lean auditados (CI 45929885625): ganancia, monotonicidad, cruce y normalización. No implican unicidad con oferta laboral arbitraria.
 \end{block}
 \end{frame}
 
-\begin{frame}{Verificación computacional (sim/)}
+\begin{frame}{Verificación computacional reproducida}
+\small
 \begin{columns}[T]
-\column{0.5\textwidth}
-\textbf{Simbólica (SymPy, sin números): 17/17}
-\begin{itemize}\small
-  \item re-deriva los Lemas 3.1–3.2, el Teorema 3.3 y $\Kh$;
-  \item la Prop.~3 del paper en $\sh=1$ da mis términos, y $\lim_{\sh\to1}$ de su fórmula es $\ln\frac{W}{\gamma R}$.
+\column{0.48\textwidth}
+\textbf{Pruebas originales}
+\begin{itemize}
+\item 17/17 identidades simbólicas.
+\item 167\,639 comprobaciones numéricas; cero fallos.
+\item 400 economías CES generales: evidencia de signo, no demostración de unicidad.
 \end{itemize}
-\textbf{Test aleatorio: 167\,639 checks, 0 fallos}
-\begin{itemize}\small
-  \item 5\,000 economías del caso especial: $\operatorname{sign}(d\ln W/dI)=\operatorname{sign}(K-\Kh)$ siempre;
-  \item 400 economías con $\sh\neq1$: las fórmulas de la Prop.~3 coinciden a $\sim10^{-8}$.
+\column{0.48\textwidth}
+\textbf{Extensión isoelástica}
+\begin{itemize}
+\item 500 economías; 11\,770 comprobaciones, cero fallos.
+\item 377 raíces interiores; 123 sin raíz interior.
+\item Error máximo de derivada salarial: $9.944\times10^{-9}$.
 \end{itemize}
-\column{0.47\textwidth}
-\textbf{Con $\sh\neq1$} (400 sorteos, malla de 25 puntos en $K$):
-\begin{itemize}\small
-  \item $d\ln W/dI<0$ justo encima de $K_I$: 400/400;
-  \item 0 cambios de signo: 171; 1 cambio: 229, siempre de $-$ a $+$; más de 1: ninguno.
-\end{itemize}
-\textbf{¿El test detecta errores?} Quité el ajuste del empleo del desplazamiento ($\frac1b$ en vez de $\frac{1}{b(1+\eps_L)}$) y obtuve 349 fallos.
 \end{columns}
+\begin{block}{Reproducibilidad}
+GitHub Actions 45929885625: simbólica, pruebas aleatorias, 240 puntos de las curvas y auditoría Lean exitosos.
+\end{block}
 \end{frame}
 
 % =====================================================================
@@ -362,45 +366,26 @@ Extensión analítica condicional; no implica unicidad con oferta laboral arbitr
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Diapositiva Lean: la frase del umbral, enunciada y refutada}
-\scriptsize
-\textbf{1. Afirmación del paper (Prop.~3, p.~13):}\quad
-Sea $\mathcal D=\{K>0:K<\Kl,\ I<\tilde I(K)\}$. NBER 2017: $\exists\,\Kb>\Kl:\ \forall K\in\mathcal D,\ (K<\Kb\Rightarrow\partial_I\ln W>0)\land(K>\Kb\Rightarrow\partial_I\ln W<0)$.
+\begin{frame}[fragile]{Lean: refutación del umbral NBER}
+\footnotesize
+\textbf{1. Enunciado original (p.~13).} Sea $\mathcal D=\{K>0:K<\Kl,\ I<\tilde I(K)\}$.
+NBER 2017 afirma que existe $\Kb>\Kl$ tal que $\partial_I\ln W>0$ para todo $K\in\mathcal D$ con $K<\Kb$.
 
 \smallskip
-\textbf{2. En Lean.} El enunciado de la corrida (izquierda) y nuestra prueba de que es falso en el caso especial (derecha, \texttt{extra/lean-sandbox}):
-\begin{columns}[T]
-\column{0.44\textwidth}
-\begin{lstlisting}[basicstyle=\ttfamily\tiny]
-(*$\exists$*) KBar, KUnder < KBar (*$\wedge$*)
-  ((*$\forall$*) k, 0 < k (*$\to$*) k < KUnder (*$\to$*)
-    I < freeThreshold I N k (*$\to$*) k < KBar (*$\to$*)
-    0 < partialLogFirst
-      (fun i n (*$\mapsto$*) wage i n k) I N) (*$\wedge$*)
-  ((*$\forall$*) k, 0 < k (*$\to$*) k < KUnder (*$\to$*)
-    I < freeThreshold I N k (*$\to$*) KBar < k (*$\to$*)
-    partialLogFirst
-      (fun i n (*$\mapsto$*) wage i n k) I N < 0)
-\end{lstlisting}
-\column{0.54\textwidth}
-\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+\textbf{2. Enunciado y fragmento de la prueba.} \texttt{WageThreshold.lean}, caso Cobb--Douglas:
+\begin{lstlisting}
 theorem printed_threshold_claim_false ... :
     (*$\neg$*) PrintedThresholdClaim a b eps L gammaI gammaN := by
-  rintro (*$\langle$*)KBar, hBar, hbelow, -(*$\rangle$*)
-  -- K between K_I and min(K_hat, K_under): admissible, K < KBar
+  ...
   have hpos := hbelow K hK1 hKU (hKU.trans hBar)
   have hneg := (wageResponse_neg_iff ha hb hL hg
       (hk0.trans hK1)).mpr hKhat
   exact absurd hpos (not_lt.mpr hneg.le)
 \end{lstlisting}
-\end{columns}
-\textbf{3. Qué representa y qué verifica Lean.}
-\begin{itemize}\setlength\itemsep{-1pt}
-  \item \texttt{wageResponse} es $\ln\frac{bK}{aL\gamma(I)}-\frac1{b(1+\eps)}$. Otro teorema, \texttt{hasDerivAt\_lnWS}, prueba que es la derivada de $\ln W$ de equilibrio.
-  \item Paso clave: se elige $K=\frac{K_I+\min\{\Kh,\Kl\}}{2}$. Es admisible y cumple $K<\Kl<\Kb$, así que la cláusula exige $>0$; pero $K<\Kh$ da $<0$. Contradicción.
-  \item \textbf{Exacto} dentro del caso especial ($\eta=0$, $\sigma=1$). La corrida final restringe el dominio a capital admisible y régimen (R); la refutación independiente solo cubre el caso especial.
-  \item Checks: \texttt{lake build} limpio, sin \texttt{sorry}; solo los axiomas \texttt{propext}, \texttt{Classical.choice} y \texttt{Quot.sound}.
-\end{itemize}
+\textbf{3. Interpretación.} Elija $K=(K_I+\min\{\Kh,\Kl\})/2$: admisible, $K<\Kl<\Kb$, pero $K<\Kh$. La hipótesis exige signo positivo y el umbral probado, negativo.
+
+\smallskip
+Solo caso especial; no prueba toda la Prop.~3. Auditoría de 18 teoremas, sin \texttt{sorryAx} (CI 45929885625).
 \end{frame}
 
 \begin{frame}[fragile]{Lean: la derivada sale de las condiciones de equilibrio}
