@@ -1,68 +1,35 @@
-# Repository 6 — Acemoglu & Restrepo, *The Race Between Machine and Man*
+# Repository 6 — Acemoglu & Restrepo
 
-Acemoglu, D. & Restrepo, P., NBER WP 22252, **revised June 2017 (87 pp.) — the version read here and pinned for Lean**
-(SHA-256 in [`paper/README.md`](paper/README.md)). Published as *The Race between Man and Machine*, AER 108(6), 2018.
-Page, equation and result numbers below refer to the NBER version.
+**Assigned source:** NBER Working Paper 22252, *The Race Between Machine and Man*, revised June 2017 (87 pp., [source pin](paper/README.md)). Published as *The Race between Man and Machine*, AER 108(6), 1488–1542 (2018). All source numbering is NBER unless marked AER. [Assignment](https://github.com/alexanderquispe/AI-Econ-Modeling/issues/5).
 
-## What question the paper answers
-Can an economy in which capital keeps taking over tasks that labor used to perform grow along a balanced path
-**without making labor redundant**, that is, with a stable labor share and stable employment? Which market forces
-make automation self-limiting, and when do those forces fail?
+## Question and model
+Can continuing automation coexist with balanced growth, a stable labor share and employment? The unit of analysis is the **aggregate task allocation**, rather than one optimizer. A CES aggregates tasks $i\in[N-1,N]$. Capital can perform $i\le I$; firms choose the cheaper feasible factor ($R$ versus $W/\gamma(i)$), with $\gamma$ strictly increasing. Households supply $L=L^s(W/(RK))$. The equilibrium cutoff is $I^*=\min(I,\tilde I)$ with $W/R=\gamma(\tilde I)$. Automation increases $I$; new tasks increase $N$.
 
-## The agent's problem, and why the unit of analysis is the aggregate economy
-There is no single interesting optimizer. A unit measure of tasks $i\in[N-1,N]$ is aggregated with a CES
-(elasticity $\sigma$). Tasks $i\le I$ **can** be done by capital. In each task a competitive firm minimizes
-$p(i)=\min\{R,\ W/\gamma(i)\}$, with comparative advantage $\gamma$ strictly increasing (Assumption 1). A household supplies
-labor $L=L^s(W/RK)$. The object of the paper is the **equilibrium allocation of tasks to factors**, $I^*=\min\{I,\tilde I\}$
-with $W/R=\gamma(\tilde I)$. Two technologies move that allocation: automation ($I$) and new tasks ($N$).
+## Main result and conditions
+Under Assumptions 1–3 (comparative advantage, homothetic demand and adoption of new tasks), $\varepsilon_L>0$, $\hat\sigma>0$, $\hat\sigma\ne1$ in the printed formula, and the **strict restricted regime** $I^*=I<\tilde I<N$, Proposition 3 gives
+$$
+\frac{d\ln W}{dI}=
+\underbrace{B^{\hat\sigma-1}\int_R^{W/\gamma(I)}x^{-\hat\sigma}dx}_{\text{productivity }(+)}
+-\underbrace{\frac{(1-s_L)\Lambda_I}{\hat\sigma+\varepsilon_L}}_{\text{displacement }(-)},\quad
+\Lambda_I=\frac{\gamma(I)^{\hat\sigma-1}}{\int_I^N\gamma^{\hat\sigma-1}}+\frac1{I-N+1}>0.
+$$
+The wage rises iff productivity exceeds displacement; the labor share and employment fall. In the strict free regime $\tilde I<I$, marginal automation has no effect; the boundary is excluded. New tasks counter displacement through reinstatement. In the interior constrained BGP (Prop. 5; Assumptions 1′ and 2, constant $g$, $n=N-I>\max\{\bar n(\rho),\tilde n(\rho)\}$), effective wages rise and labor share/employment fall; the interior free BGP instead has zero marginal automation effect (AER pp. 1508–1509).
 
-## Main result, with all its conditions (the trap of issue §5)
-*Does automation necessarily reduce wages and the labor share?* **No, and the answer depends on the variable, the regime and the horizon.**
-Static model, Proposition 3 (Assumptions 1–3, $\varepsilon_L>0$, $\hat\sigma\neq1$ in the printed formulas):
+## Our analysis
+NBER 2017 p. 13 reverses the capital-threshold signs; AER 2018 p. 1502 already corrects them. Under the Cobb–Douglas/no-intermediate special case and elastic labor, for $K_I<K<\underline K$ the wage rises iff
+$$K>\hat K=K_I\exp\!\left(\frac1{(N-I)(1+\varepsilon_L)}\right).$$
+The positive region exists iff $\hat K<\underline K$. Below $K_I$ additional automation is not adopted. The independent counterexample refutes the assigned wording, not the corrected publication. The November CES extension proves an interior-crossing condition under isoelastic labor supply, not arbitrary supply. See [economic audit](extra/audit/ECONOMIC_AUDIT.md) and [derivation](derivation/derivation.pdf).
 
-$$\frac{d\ln W}{dI}=\underbrace{B^{\hat\sigma-1}\!\int_{R}^{W/\gamma(I)}\!x^{-\hat\sigma}dx}_{\text{productivity }(+)}\;-\;\underbrace{(1-s_L)\,\frac{\Lambda_I}{\hat\sigma+\varepsilon_L}}_{\text{displacement }(-)},\qquad \Lambda_I=\frac{\gamma(I)^{\hat\sigma-1}}{\int_I^N\gamma^{\hat\sigma-1}}+\frac{1}{I-N+1}>0 .$$
+## Verification and deliverables
+- [Presentation PDF](presentation.pdf) and [Beamer source](presentation.tex); [20-minute guide](extra/audit/PRESENTATION_GUIDE.md), [tutorial](extra/tutorial/tutorial.pdf).
+- [Historical AML export](lean/): GPT-5.6 Sol high, not xhigh; one original sorry remains in Proposition 3. Successful build and --fast replay do not prove that endpoint. Original generated files preserved except an upstream-ignored preflight trace (see audit). [Agent logs](extra/lean-run/) and [prompts/deviations](prompts.md).
+- [Independent Lean sandbox](extra/lean-sandbox/): [CI 45930791358](https://github.com/alejandroventuraventurameza-tech/ai-06-restrepo/actions/runs/45930791358) verified 25 endpoints with standard Lean foundations, including [seven local derivative bridges](extra/audit/PRICE_DERIVATIVE_BRIDGE.md). [Closeout audit](extra/audit/CLOSEOUT.md).
+- [Numerical verification](sim/): 17 symbolic identities, 167,639 original checks and 11,770 new checks, zero failures. [Extensions](extensions.md) and [requirements](REQUIREMENTS.md).
 
-| | constrained regime $I^*=I<\tilde I$ | free regime $I^*=\tilde I<I$ | long run (Prop. 5, $K$ adjusts) |
-|---|---|---|---|
-| wage $W$ | **rises iff productivity > displacement** | unchanged | rises |
-| labor share, employment | fall (always, because $\Lambda_I>0$) | unchanged | fall |
-| output $Y$, rental $R$ | rise | unchanged | $R$ returns to $\rho+\delta+\theta g$ |
-
-Automation raises the wage when the **cost saving in the marginal task**, the gap between $W/\gamma(I)$ and $R$, is large. It lowers the
-wage when that gain is small ("so-so" technologies). Reinstatement enters through **new tasks** ($dN$), which raise $W$, the labor share
-and employment. The word "reinstatement" does not appear in this 2017 version; the paper's two forces for $dI$ are
-*productivity* and *displacement* (see `prompts.md` N1).
-
-**What we found (own derivation, simulation and Lean):** the capital threshold printed in Prop. 3 has the **wrong direction**. The paper
-says "there exists $\overline K>\underline K$ such that an increase in $I$ increases the wage when $K<\overline K$ and reduces it when
-$K>\overline K$". But with Assumption 3 ($K<\underline K$) the second half is vacuous, and near the lower edge $K_I$ of the constrained
-regime the productivity gain vanishes. So automation **lowers** the wage when capital is **scarce** and raises it when capital is abundant.
-In the paper's own Cobb–Douglas case ($\sigma=1$, $\eta\to0$) with elastic labor, the exact condition is
-$$\frac{d\ln W}{dI}>0\iff K>\hat K=K_I\,\exp\!\Big(\tfrac{1}{(N-I)(1+\varepsilon_L)}\Big)$$
-([`derivation/`](derivation/derivation.tex), Thm 4.2). The same statement is machine-checked in Lean
-([`extra/lean-sandbox/`](extra/lean-sandbox/), `printed_threshold_claim_false`, `corrected_threshold`), and confirmed numerically for
-$\hat\sigma\neq1$ over 400 random economies: at most one sign change, always from − to + ([`sim/`](sim/)).
-
-## What is in this repository
-| Path | Content |
-|---|---|
-| [`REQUIREMENTS.md`](REQUIREMENTS.md) | Checklist built from the literal text of issue #5 |
-| [`prompts.md`](prompts.md) | Raw prompts and answers (Claude, the Lean agent, the cold question); deviations D1–D2; AI mistakes E1–E2 |
-| [`hand/`](hand/) | Handwritten derivation (see below) |
-| [`presentation.tex`](presentation.tex) / `.pdf` | 20-minute Beamer deck |
-| [`lean/`](lean/) | AppliedModelingLib run (`gpt-5.6-sol`, effort `high`, 4 sessions), copied exactly as generated. Target: Proposition 3. **Partial**: `lake build` and `paper_contribution.py check AR18RaceManMachine --fast` succeed. Proved: the free-regime ordering, positive productivity coefficients, the corrected wage condition, the printed negative branch is vacuous, the formula assembly, and the FTC and eq. (12) log-derivatives. The endpoint keeps one `sorry`. **Exact blocker:** (i) the constrained-regime price ordering does not follow from the Spec's equilibrium-path premises (no positivity or regularity at other capital levels); (ii) linking the eq. (12) derivatives to the equilibrium price paths. The Codex daily quota ran out four times. Details: `prompts.md` §B.3–B.11, checks in `extra/lean-run/` |
-| [`derivation/`](derivation/derivation.tex) | Own hand-derivable special case: definitions, lemmas, theorems, and where it does **not** reproduce the paper |
-| [`sim/`](sim/) | SymPy verification (17/17) and randomized property test (167,639 checks, 0 failures) |
-| [`extra/lean-sandbox/`](extra/lean-sandbox/) | Own Lean proofs (443 lines, no `sorry`): productivity sign lemma for every $\hat\sigma$, wage threshold, refutation of the printed claim |
-| [`extra/tutorial/`](extra/tutorial/tutorial.tex) | Reading tutorial (Spanish): five reading questions, task framework, static model |
-| [`extensions.md`](extensions.md) | Extension that could grow into the term project |
-
-## Handwritten derivation
-Six photos in [`hand/`](hand/), the full proof of Theorem 4.2 of the derivation, written out by hand. This is the step where we did not
-believe the printed Proposition 3, nor the Lean agent, which never saw the problem (`prompts.md` E3):
-- `hand/hand_1.jpeg` — named assumptions (A1, S-η, S-σ, LS, regime R, A3), notation $a,b$; Lemma 1 (equal expenditure per task, from the FOC).
-- `hand/hand_2.jpeg` — Lemma 2 (factor prices, $\ln Y$, $s_L=b$) and Lemma 3 (employment by implicit differentiation, $d\ln L/dI<0$).
-- `hand/hand_3.jpeg` — Theorem: productivity effect term by term (FTC) and $d\ln W/dI=\ln\frac{W}{\gamma(I)R}-\frac{1}{b(1+\varepsilon_L)}$.
-- `hand/hand_4.jpeg` — the threshold: $K_I$, $\underline K$, and $d\ln W/dI>0\iff K>\hat K=K_I e^{1/(b(1+\varepsilon_L))}$.
-- `hand/hand_5.jpeg` — every region of $K$ and why none is empty.
-- `hand/hand_6.jpeg` — corollary: the printed "∃ $\overline K>\underline K$ …" is **false**; conclusion: with scarce capital, automation lowers the wage.
+## Handwritten evidence (original, unchanged)
+- [1](hand/hand_1.jpeg): assumptions and expenditure FOC.
+- [2](hand/hand_2.jpeg): factor prices, labor share and employment derivative.
+- [3](hand/hand_3.jpeg): productivity and wage-response derivation.
+- [4](hand/hand_4.jpeg): capital thresholds.
+- [5](hand/hand_5.jpeg): capital regions (revised derivation clarifies when the positive interval is empty).
+- [6](hand/hand_6.jpeg): counterexample to the printed NBER threshold.

@@ -860,3 +860,23 @@ how it was caught, and the fix. This section feeds item 5 of the presentation.
   `.git/objects/maintenance.lock` and a temporary object that could have blocked GitHub Desktop. Claude noticed from the warning, asked for delete
   permission and removed both files. It **broke its own rule from E1** (only `git --no-optional-locks` and only read commands). Lesson: `fetch`,
   `pull` and `gc` are writes too.
+
+---
+
+## F. November 26 continuation (source audit)
+
+User prompt, verbatim: `Ok, sigue` (following the initial Repository 6 audit). Student reports authorization for GPT-6 xhigh continuation and late email submission. The historical run remains GPT-5.6 Sol high; no claim is made that it used xhigh, or that the current interface exposes its exact reasoning-effort setting.
+
+Actual assistant finding, excerpt: **Nuestra derivación coincide con la dirección corregida en la versión publicada.** The NBER 2017 version, p. 13, has the reversed threshold; AER 2018 p. 1502 corrects it. See `extra/audit/ECONOMIC_AUDIT.md`. Source check uses indexed NBER PDF text (direct render returned 403) and the visually inspected AER page hosted at MIT. The new analytical extension cancels the capital-share factor and proves an interior threshold under constant labor-supply elasticity. Historical raw transcripts not recovered in this session; the present excerpt is not a reconstruction of them.
+
+
+## G. November 26 continuation (verification and closeout)
+
+User prompt, verbatim: **Sigue y no pares**.
+
+Assistant report, verbatim excerpt: **La formalización histórica de la Proposición 3 conserva un sorry. Su compilación exitosa no significa que esté demostrada íntegramente.**
+
+Audit record: CI 45929885625 successfully reproduced the historical AML check and build, audited 18 independent theorem endpoints and completed 167,639 original plus 11,770 new numerical checks (zero failures). The first PDF render exposed clipped text in the threshold slide; the slide source was repaired and the second candidate reviewed. The earlier long-run claim needed the additional constrained-interior BGP condition; the free BGP does not change effective wages, labor share or employment. This corrects the overly broad interpretation in the historical verdict without rewriting that raw answer. The new price-derivative bridge derives local formulas from equilibrium conditions under explicit differentiability premises. Its additional endpoints are not credited until compilation and audit pass. No original raw response has been invented or backfilled.
+
+
+Assistant correction and verification: CI 45930531521 reported a single elaboration error applying StrictMono with implicit arguments to an explicit implication; fixed in 976f990. The subsequent run 45930791358 compiled all 25 independent endpoints and audited only standard Lean foundations. The original AML theorem remains incomplete. The final document run 45930791328 compiled the deck, derivation and tutorial; visual sheets and exact hashes are stored under extra/audit/qa-render. No claim of a new historical agent run or a recovered full raw transcript.

@@ -39,3 +39,7 @@ python3 -m pytest -q test_properties.py  # small version, as unit tests (optiona
 
 Replacing the displacement term $1/(b(1+\varepsilon_L))$ by $1/b$, which drops the adjustment of employment,
 makes 349 of 5,960 checks fail (P3 and P5) on 300 draws. So the test detects an error of that size.
+
+## November conditional CES checks
+
+`python3 ces_crossing.py --draws 500 --seed 20261126` compares the analytical normalization, equilibrium relative-price identity and predicted threshold to recomputed equilibrium wages for six elasticities, including the Cobb–Douglas limit. It explicitly distinguishes an interior zero from an excluded upper boundary. The historical results above are unchanged. CI 45929885625 reproduced 167,639 old and 11,770 new checks, zero failures; 377 of the 500 new economies have an interior root and 123 do not. Maximum absolute wage-derivative discrepancy: 9.944e-9; maximum log relative-price residual: 3.997e-15. All 240 tracked figure points match recomputation within the workflow tolerances.

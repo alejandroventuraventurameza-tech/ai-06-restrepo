@@ -9,7 +9,7 @@ Toolchain and Mathlib are pinned to the **same versions as the AppliedModelingLi
 `leanprover/lean4:v4.30.0-rc2`, Mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` (see `lakefile.toml`,
 `lake-manifest.json`).
 
-## What is proved (443 lines, 0 `sorry`, only the standard axioms)
+## Original independent results (only the standard axioms)
 
 | File | Theorem | Mathematical content | Source |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Toolchain and Mathlib are pinned to the **same versions as the AppliedModelingLi
 | `WageThreshold.lean` | `wageResponse_pos_iff`, `_neg_iff`, `_eq_zero_iff` | $\operatorname{sign}(d\ln W/dI)=\operatorname{sign}(K-\hat K)$, with $\hat K=K_I e^{1/(b(1+\varepsilon))}$ | derivation Thm 4.2 |
 | | `KI_lt_Khat`, `KI_lt_KUnder`, `Khat_lt_KUnder_iff` | the wage-lowering region is never empty; the wage-raising one is non-empty iff $\log\gamma(N)-\log\gamma(I)>1/(b(1+\varepsilon))$ | derivation Thm 4.2 |
 | | **`printed_threshold_claim_false`** | the final sentence of Prop. 3 **as printed** ("∃ $\overline K>\underline K$ … raises the wage if $K<\overline K$, lowers it if $K>\overline K$") is **false**, even restricted to the admissible region $(K_I,\underline K)$ | derivation Cor. 4.3 |
-| | `corrected_threshold` | the corrected statement: a single sign change at $\hat K$, from − to + | derivation Cor. 4.4 |
+| | `corrected_threshold` | a sign identity for the response formula; one interior crossing only if $\hat K<\underline K$ | derivation Cor. 4.4 |
 | `ModelSDerivative.lean` | **`hasDerivAt_lnWS`** | from the equilibrium conditions (output, $W=bY/L$, and the labor-market identity $\omega L^s(\omega)=b/a$), $\frac{d\ln W}{dI}=\log\frac{bK}{aL\gamma(I)}-\frac{1}{b(1+\varepsilon)}$. Lean **derives** $d\log\omega/dI$ from the identity; it is not assumed | derivation Lemmas 2.3–3.2, Thm 3.3 |
 | | `automation_raises_wage_iff` | end to end: equilibrium conditions ⟹ $d\ln W/dI>0$ iff $K>\hat K$ | derivation Thm 4.2 |
 | | `hypotheses_satisfiable` | the premises of `hasDerivAt_lnWS` are jointly satisfiable (constant-elasticity witness), so the theorem is not vacuous | — |
@@ -35,8 +35,7 @@ Toolchain and Mathlib are pinned to the **same versions as the AppliedModelingLi
   derivative is not assumed; Lean obtains it from the labor-market identity (`hLabor`). The other premises are
   continuity and positivity of $\gamma$ (C) and differentiability of $L^s$ with elasticity $\varepsilon$ (LS).
 * **Domain change with respect to the paper:** the special case $\eta=0$, $\sigma=1$ (the paper's own
-  Corollary 1 setting, with $\gamma$ strictly increasing). The paper's general $\hat\sigma\neq1$ threshold
-  is **not** formalized here; `sim/` covers it numerically (P7).
+  Corollary 1 setting, with $\gamma$ strictly increasing). The unrestricted general-CES threshold is not formalized; the November module verifies a conditional crossing result under isoelastic supply.
 
 ## Build and audit
 
@@ -53,3 +52,17 @@ lake env lean audit/PrintAxioms.lean    # expected: only [propext, Classical.cho
 
 `audit/build-and-axioms.txt` holds the output of these commands from the machine where the files
 were written. Re-run them and keep your own output next to it.
+
+## November continuation: CES crossing
+
+`CESCrossing.lean` implements the analytical extension in the derivation. Its targets
+are the normalized gain's monotonicity and continuity, the necessary and sufficient
+interior-root condition (including equality at the excluded upper endpoint),
+the sign ordering, the productivity scaling and wage normalization, and the relative-price
+ordering from the isoelastic equilibrium ratio equation. The source statements and
+historical AML proof hole remain untouched. GitHub Actions run 45929885625 compiled the module and audited all 18 named endpoints with only propext, Classical.choice and Quot.sound. The original AML proposition remains partial.
+
+
+## Final November verification
+
+PriceDerivativeBridge.lean adds seven independently verified endpoints. Local differentiability and equilibrium identities are explicit premises; the derivative values are deduced. CI 45930791358 compiled 8319 jobs and audited 25 named endpoints with only propext, Classical.choice and Quot.sound. See ../audit/PRICE_DERIVATIVE_BRIDGE.md and ../audit/lean-axioms-20261126.txt. This is not a proof of the complete original AML Spec.

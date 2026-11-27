@@ -50,7 +50,7 @@
 \title{\textbf{Derivación propia: cuándo la automatización sube el salario}\\[2pt]
 \large Un caso especial derivable a mano del modelo estático de Acemoglu \& Restrepo (NBER WP 22252, jun.\ 2017)}
 \author{Alejandro Ventura \\ \small repositorio \texttt{ai-06-restrepo}, carpeta \texttt{derivation/}}
-\date{Septiembre 2026}
+\date{Revisión de noviembre de 2026}
 
 \begin{document}
 \maketitle
@@ -60,10 +60,10 @@ Construye un caso especial del modelo estático del paper (Sección 2) en el que
 En él se demuestra, como teorema:
 \begin{enumerate}[nosep]
   \item la condición exacta bajo la cual la automatización \textbf{sube} el salario, con cada fuerza y su signo;
-  \item que existe un umbral de capital $\Kh$ tal que la automatización \textbf{baja} el salario si $K<\Kh$ y lo
-        \textbf{sube} si $K>\Kh$, que es la dirección \emph{opuesta} a la frase impresa en la Prop.~3;
+  \item que, en el régimen restringido y admisible $K_I<K<\Kl$, la automatización \textbf{baja} el salario si $K<\Kh$ y lo
+        \textbf{sube} si $K>\Kh$. Es la dirección opuesta a la frase NBER de 2017 y coincide con AER (2018, p.~1502);
   \item que la frase impresa (``existe $\Kb>\Kl$ tal que\ldots'') es falsa en este caso especial, que satisface
-        todos los supuestos del paper.
+        los supuestos del caso límite Cobb--Douglas, no las fórmulas impresas para $\sh\ne1$.
 \end{enumerate}
 Cada supuesto tiene nombre. En cada resultado se enumeran todos los casos admisibles. No hay ejemplos numéricos:
 los números están en \texttt{sim/}. La Sección~\ref{sec:noreproduce} dice dónde este caso especial \emph{no}
@@ -365,26 +365,22 @@ ganancia es casi nula: son las tecnologías ``más o menos''. Con \textbf{mucho}
 respecto del trabajo y automatizar ahorra mucho.
 \end{nota}
 
-\begin{corolario}[la frase impresa de la Prop.~3 es falsa en este caso]\label{cor:falso}
-La Prop.~3 del paper (p.~13) afirma: existe $\Kb>\Kl$ tal que un aumento de $I$ sube el salario si $K<\Kb$ y lo baja
-si $K>\Kb$. En el caso especial, que satisface los Supuestos 1, 2(i) y 3 del paper y $\eps_L>0$, esa afirmación es
-falsa para \emph{todo} $\Kb$:
-\begin{enumerate}[nosep]
-  \item si $\Kb>K_I$, cualquier $K\in(K_I,\min\{\Kh,\Kl,\Kb\})$ es admisible, cumple $K<\Kb$ y tiene $d\ln W/dI<0$;
-  \item si $\Kb\le K_I$, la cláusula ``la baja si $K>\Kb$'' falla en todo $K\in(K_I,\Kl)$ con $K\ge\Kh$ (si esa región
-        existe), y la cláusula ``la sube si $K<\Kb$'' falla en todo $K<\Kb$, porque ahí el régimen es (L) y el efecto es nulo.
-\end{enumerate}
-Además, con $\Kb>\Kl$, la cláusula ``si $K>\Kb$'' solo se refiere a niveles de capital que violan el Supuesto~3.
+\begin{corolario}[Refutación de la frase NBER de 2017]\label{cor:falso}
+La Prop.~3(a) de la versión NBER (junio de 2017, p.~13) afirma, dentro del régimen restringido y bajo el Supuesto~3,
+que existe $\Kb>\Kl$ con respuesta salarial positiva para $K<\Kb$ y negativa para $K>\Kb$.
+En el caso especial, no existe ningún $\Kb>\Kl$ que satisfaga ese enunciado.
 \end{corolario}
 \begin{proof}
-Parte 1: el intervalo no es vacío porque su extremo izquierdo $K_I$ es menor que los otros tres. Ahí rige el
-Teorema~\ref{thm:trampa}. Parte 2: la primera afirmación se sigue del mismo teorema; la segunda, de que $K<\Kb\le K_I$
-implica el régimen (L) (Lema~\ref{lem:regiones}), donde $dW/dI=0$, que no es $>0$.
+Por el Lema~\ref{lem:regiones}, $K_I<\min\{\Kh,\Kl\}$. Elija
+$K=(K_I+\min\{\Kh,\Kl\})/2$. Es admisible, cumple $K<\Kl<\Kb$ y $K<\Kh$.
+El Teorema~\ref{thm:trampa} da $d\ln W/dI<0$, contradiciendo la rama positiva.
+La rama negativa es vacía porque $K<\Kl<\Kb$.
+No se afirma que todo umbral de dirección invertida fuera de la restricción $\Kb>\Kl$ sea refutable.
 \end{proof}
 
 \begin{corolario}[versión correcta del enunciado]\label{cor:correcto}
 En el caso especial existe $\Kh>K_I$ (dado por \eqref{eq:umbrales}) tal que, dentro de la región admisible del
-caso (R), la automatización \textbf{baja} el salario si $K<\Kh$ y lo \textbf{sube} si $K>\Kh$. El cruce es único,
+caso (R), la automatización \textbf{baja} el salario si $K<\Kh$ y lo \textbf{sube} si $K>\Kh$. Hay exactamente un cruce interior si $\Kh<\Kl$; en otro caso no hay cruce interior,
 y $\Kh<\Kl$ si y solo si $\ln\gamma(N)-\ln\gamma(I)>\frac{1}{b(1+\eps_I)}$.
 \end{corolario}
 
@@ -398,7 +394,7 @@ El paso del caso especial al general tiene una parte que se demuestra y otra que
 Considérese el modelo del paper bajo sus Supuestos 1–3, con $\eps_L>0$, $\sh\in(0,\infty)$ y los $(N,I)$ fijos.
 Supóngase además:
 \begin{itemize}[nosep]
-  \item[\textsf{(G1)}] las funciones de equilibrio $K\mapsto W(K),R(K),s_L(K),\eps_L(K)$ son continuas;
+  \item[\textsf{(G1)}] las funciones de equilibrio $K\mapsto W(K),R(K),s_L(K),\eps_L(K)$ se extienden continuamente a $K_I$, con precios positivos, $0<s_L(K_I)<1$ y $0<\eps_L(K_I)<\infty$;
   \item[\textsf{(G2)}] existe $K_I>0$ con $W(K_I)/R(K_I)=\gamma(I)$, y el caso (R) rige en un intervalo $(K_I,K_I+\delta)$.
 \end{itemize}
 Entonces existe $\delta'>0$ tal que $d\ln W/dI<0$ para todo $K\in(K_I,K_I+\delta')$. En consecuencia, la frase impresa
@@ -414,11 +410,56 @@ de $K$, $s_L<1$ y $\eps_L<\infty$. Por continuidad, la diferencia es negativa en
 
 \begin{nota}[Lo que \emph{no} se demuestra con $\sh\ne1$]
 Que el cruce sea \textbf{único}. Con $\sh\ne1$, $s_L$ depende de $K$ y el desplazamiento $(1-s_L)\Lambda_I/(\sh+\eps_L)$
-se mueve con $K$, así que el argumento de linealidad del Teorema~\ref{thm:trampa} no aplica. Se verifica
-numéricamente en \texttt{sim/} (propiedad P7).
+se mueve con $K$, así que el argumento de linealidad del Teorema~\ref{thm:trampa} no aplica. La propiedad P7 de \texttt{sim/} aporta evidencia numérica, no una prueba general. La extensión siguiente da una condición suficiente.
 \end{nota}
 
 % =====================================================================
+
+\subsection{Cruce único con oferta laboral isoelástica: extensión de noviembre}
+Fijemos $(I,N)$, $a=I-N+1>0$, $G=\int_I^N\gamma(i)^{\sh-1}\dd i>0$,
+$q=W/R$, $g_I=\gamma(I)$ y $g_N=\gamma(N)$. Supongamos el modelo homotético bajo
+el Supuesto~2, equilibrio interior restringido, $\sh>0$, $\sh\ne1$, y oferta
+$L^s(\omega)=\ell_0\omega^e$, con $\ell_0>0$ y $e>0$ constantes.
+Por (8)--(10) del NBER, $1-s_L=aB^{\sh-1}R^{1-\sh}>0$. Al dividir la fórmula salarial de
+la Proposición~3 por esta expresión y cambiar variables en la integral,
+\[
+ \frac{1}{1-s_L}\frac{d\ln W}{dI}
+ =\frac{1}{a}H_{\sh}(q/g_I)-\frac{\Lambda_I}{\sh+e},
+ \qquad H_s(x)=\int_1^x t^{-s}\dd t .
+\]
+La ecuación (13), con $\omega=q/K$, da
+\[
+ q^{\sh+e}=\frac{G}{a\ell_0}K^{1+e},\qquad
+ c=\frac{a\Lambda_I}{\sh+e}>0 .
+\]
+Como $q$ crece estrictamente con $K$ y $H_s'(x)=x^{-s}>0$, se obtiene:
+\begin{proposicion}[Existencia y unicidad del cruce admisible]
+En la región $g_I<q<g_N$, la respuesta salarial tiene el signo de $H_{\sh}(q/g_I)-c$.
+Existe exactamente un cero interior si y solo si $c<H_{\sh}(g_N/g_I)$.
+En ese caso,
+\[
+ q_c=g_I[1+(1-\sh)c]^{1/(1-\sh)},\qquad
+ K_c=\left(\frac{a\ell_0}{G}q_c^{\sh+e}\right)^{1/(1+e)}.
+\]
+La respuesta es negativa por debajo de $K_c$ y positiva por encima, siempre dentro
+del régimen admisible. Si $c\ge H_{\sh}(g_N/g_I)$, la respuesta es estrictamente negativa
+en todo el intervalo abierto.
+\end{proposicion}
+\begin{proof}
+El signo reducido se deduce de la expresión anterior. En el borde inferior
+$H_{\sh}(1)-c=-c<0$; en el borde superior el límite es $H_{\sh}(g_N/g_I)-c$.
+Por continuidad y monotonicidad estricta hay un cero interior exactamente cuando
+este último límite es positivo. Resolver $H_{\sh}(q_c/g_I)=c$ y (13) da las fórmulas.
+La condición de existencia garantiza que la base $1+(1-\sh)c$ es positiva incluso
+si $\sh>1$. Si el límite superior es cero, el cero está excluido por el Supuesto~3.
+\end{proof}
+En el límite $\sh=1$, $H_1(x)=\ln x$, $a\Lambda_I=1/b$ y se recupera el Teorema~\ref{thm:trampa}.
+Para una elasticidad variable, la reducción vale con $e=\eps_L(K)$; una condición suficiente
+para monotonía estricta del signo reducido es que $\eps_L(K)$ sea no decreciente en $K$,
+pues (13) implica $d\ln q/d\ln K=(1+\eps_L)/(\sh+\eps_L)>0$.
+No se afirma cruce único incondicional con oferta arbitraria. Es una derivación analítica
+de la continuación; ocho resultados independientes, incluidos monotonicidad, continuidad, existencia y unicidad del cruce y normalización, fueron auditados en Lean (GitHub Actions 45929885625).
+
 \section{Dónde este caso especial no reproduce al paper, y por qué}\label{sec:noreproduce}
 % =====================================================================
 
@@ -436,7 +477,7 @@ numéricamente en \texttt{sim/} (propiedad P7).
   \item \textbf{No hay $\sigma^{\text{free}}$}: en el régimen (L) solo se probó que $I$ no afecta nada. La estática
         comparativa de $N$ en (L) (con $\sigma^{\text{free}}=1+\Lambda_I/\eps_\gamma$) no se deriva aquí.
   \item \textbf{Solo el corto plazo.} Con $K$ endógeno (Sección 3 del paper, Prop.~5), la tasa de alquiler vuelve a
-        $\rho+\delta+\theta g$ y la automatización sube el salario de largo plazo en toda la región interior. El umbral
+        $\rho+\delta+\theta g$ y la automatización sube el salario en el BGP interior restringido; en el BGP interior libre no cambia el salario efectivo. El umbral
         $\Kh$ es un resultado de impacto, no de largo plazo.
   \item \textbf{La nota de validez del contraejemplo.} El Corolario~\ref{cor:falso} usa $\sigma=1$. El paper admite
         $\sigma\in(0,\infty)$ y usa $\sigma=1$ en su Corolario~1, así que el caso es legítimo. Para $\sh\ne1$, la
